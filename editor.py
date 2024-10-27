@@ -17,6 +17,7 @@ class LevelEditor:
         self.clock = pygame.time.Clock()
         
         self.tilemap = Tilemap(self, 16, self.display_size)
+        self.tilemap.load_map('data/maps/main.json')
         self.assets = Assets()
         self.font = Font('data/fonts/small_font.png', (208, 223, 215))
         
@@ -141,8 +142,8 @@ class LevelEditor:
                         self.placement_mode = 'offgrid' if self.placement_mode == 'grid' else 'grid'
                     if event.key == pygame.K_l:
                         self.layer_opacity = not self.layer_opacity
-                    # if event.key == pygame.K_o:
-                    #     self.tilemap.write_map('data/maps/0.json')
+                    if event.key == pygame.K_o:
+                        self.tilemap.write_map('data/maps/main.json')
                 if event.type == pygame.KEYUP:
                     if event.key == pygame.K_a:
                         self.movement[0] = False

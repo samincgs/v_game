@@ -5,6 +5,7 @@
 - 
 
 # Game/Coding
+- Fix dt
 - Create map
 - Create animation class
 - Create entity class

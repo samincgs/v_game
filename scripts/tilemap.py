@@ -64,7 +64,6 @@ class Tilemap:
                     self.offgrid_tiles[layer].remove(tile_data)
                 
                 
-        
     def render(self, surf, offset=(0, 0)):
         
         for layer in self.offgrid_tiles:
