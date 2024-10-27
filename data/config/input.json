@@ -1,0 +1,30 @@
+{
+  "click": {
+    "trigger": "hold",
+    "binding": ["mouse", 1]
+  },
+  "right_click": {
+    "trigger": "press",
+    "binding": ["mouse", 3]
+  },
+  "up": {
+    "trigger": "hold",
+    "binding": ["keyboard", 119]
+  },
+  "down": {
+    "trigger": "hold",
+    "binding": ["keyboard", 115]
+  },
+  "right": {
+    "trigger": "hold",
+    "binding": ["keyboard", 100]
+  },
+  "left": {
+    "trigger": "hold",
+    "binding": ["keyboard", 97]
+  },
+  "esc": {
+    "trigger": "press",
+    "binding": ["keyboard", 27]
+  }
+}
