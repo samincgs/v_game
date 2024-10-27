@@ -33,7 +33,7 @@ class LevelEditor:
         self.tile_group = 0
         self.tile_variant = 0
         self.selected_group = self.tile_list[0]
-        
+        self.layer_opacity = False
         self.sidebar_size = 130
         
         self.placement_mode = 'grid'
@@ -51,6 +51,7 @@ class LevelEditor:
             # mouse pos
             mpos = pygame.mouse.get_pos()
             mpos = (int(mpos[0] / self.display_scale), int(mpos[1] / self.display_scale))
+            scaled_mpos = (mpos[0] + self.scroll[0], mpos[1] + self.scroll[1])
             tile_pos = (int(mpos[0] + self.scroll[0]) // self.tilemap.tile_size, int(mpos[1] + self.scroll[1]) // self.tilemap.tile_size)
             
             current_tile = self.assets.tiles[self.tile_list[self.tile_group]][self.tile_variant].copy()
@@ -66,11 +67,11 @@ class LevelEditor:
                         self.tilemap.remove_tile(tile_data, self.current_layer)
                         # remove grid tile
                 else: # offgrid
-                    tile_data = {'type': self.tile_list[self.tile_group], 'variant': self.tile_variant, 'pos': (mpos[0] + self.scroll[0], mpos[1] + self.scroll[1]) }
+                    tile_data = {'type': self.tile_list[self.tile_group], 'variant': self.tile_variant, 'pos': scaled_mpos }
                     if self.click:
                         self.tilemap.add_offgrid_tile(tile_data, self.current_layer)
                     elif self.right_click:
-                        pass
+                        self.tilemap.remove_offgrid_tile(self.current_layer, curr_mpos=scaled_mpos)
                                 
                                 
             # draw topleft sidebar  
@@ -84,6 +85,7 @@ class LevelEditor:
                 tile_sheet = pygame.Rect(1, 2 + ix * 11, self.sidebar_size, 10)
                 if tile_sheet.collidepoint(mpos):
                     if self.clicking:
+                        self.tile_variant = 0
                         self.selected_group = val
                         self.tile_group = self.tile_list.index(self.selected_group)
                     offset_x = 2
@@ -97,14 +99,14 @@ class LevelEditor:
             # SELECT TILES (BOTTOM HALF)
             for ix, val in enumerate(self.assets.tiles[self.tile_list[self.tile_group]]):
                 y_offset = 0
-                tile_rect = pygame.Rect(1, sidebar_surf.get_height() + 1 + (20 * ix), self.tilemap.tile_size, self.tilemap.tile_size)
+                tile_rect = pygame.Rect(1, sidebar_surf.get_height() + 1 + (20 * ix), val.get_width(), val.get_height())
                 if tile_rect.collidepoint(mpos):
                     if self.clicking:
                         self.tile_variant = ix
                     y_offset = 2
                 tile_selector_surf.blit(val, (1, 1 + (20 * ix) - y_offset))
             
-            self.tilemap.render(self.display, offset=render_scroll)
+            self.tilemap.render_editor(self.current_layer, self.layer_opacity, self.display, offset=render_scroll)
             
             if self.placement_mode == 'grid':
                 self.display.blit(tile_choice, (tile_pos[0] * self.tilemap.tile_size - self.scroll[0], tile_pos[1] * self.tilemap.tile_size - self.scroll[1]))
@@ -115,7 +117,7 @@ class LevelEditor:
             
             self.font.render('placement_mode: ' + str(self.placement_mode), self.display, (self.display.get_width() - 98, 4))
             self.font.render('layer: ' + str(self.current_layer), self.display, (self.display.get_width() - 46, 20))
-            self.font.render('pos: ' + str(list(tile_pos) if self.placement_mode == 'grid' else list(mpos)), self.display, (self.display.get_width() - 60, 36))
+            self.font.render('pos: ' + str(list(tile_pos) if self.placement_mode == 'grid' else list(scaled_mpos)), self.display, (self.display.get_width() - 60, 36))
             
             self.click = False
             self.right_click = False
@@ -137,8 +139,10 @@ class LevelEditor:
                         self.movement[3] = True
                     if event.key == pygame.K_g:
                         self.placement_mode = 'offgrid' if self.placement_mode == 'grid' else 'grid'
-                    if event.key == pygame.K_o:
-                        self.tilemap.write_map('data/maps/0.json')
+                    if event.key == pygame.K_l:
+                        self.layer_opacity = not self.layer_opacity
+                    # if event.key == pygame.K_o:
+                    #     self.tilemap.write_map('data/maps/0.json')
                 if event.type == pygame.KEYUP:
                     if event.key == pygame.K_a:
                         self.movement[0] = False

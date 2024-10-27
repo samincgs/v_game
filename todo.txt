@@ -1,0 +1,17 @@
+# Level Editor
+- Add autotiling
+- Add floodfill
+- Add ability to load and save files
+- 
+
+# Game/Coding
+- Create map
+- Create animation class
+- Create entity class
+- Create minimap
+- Create inventory
+- Create visual background
+- Create tooltip when player sees items
+- 
+
+
