@@ -15,7 +15,7 @@ class Window:
         self.render_scale = config['window']['render_scale']
         
         # incorporate delta time
-        self.dt = 0.1 
+        self.dt = 0
         self.last_time = time.time()
         
     def create(self):

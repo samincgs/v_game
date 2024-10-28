@@ -1,8 +1,10 @@
 import pygame
 import sys
+import tkinter as tk
+from tkinter import filedialog
 
 from scripts.tilemap import Tilemap
-from scripts.assets import Assets
+from scripts.asset_manager import AssetManager
 from scripts.font import Font
 
 class LevelEditor:
@@ -16,9 +18,10 @@ class LevelEditor:
         self.display = pygame.Surface(self.display_size)
         self.clock = pygame.time.Clock()
         
+        self.file_name = None
+        
         self.tilemap = Tilemap(self, 16, self.display_size)
-        self.tilemap.load_map('data/maps/main.json')
-        self.assets = Assets()
+        self.assets = AssetManager()
         self.font = Font('data/fonts/small_font.png', (208, 223, 215))
         
         self.scroll = [0, 0]
@@ -106,7 +109,7 @@ class LevelEditor:
                         self.tile_variant = ix
                     y_offset = 2
                 tile_selector_surf.blit(val, (1, 1 + (20 * ix) - y_offset))
-            
+                  
             self.tilemap.render_editor(self.current_layer, self.layer_opacity, self.display, offset=render_scroll)
             
             if self.placement_mode == 'grid':
@@ -116,9 +119,10 @@ class LevelEditor:
             
             self.display.blit(current_tile, (self.sidebar_size + 20, 20))
             
-            self.font.render('placement_mode: ' + str(self.placement_mode), self.display, (self.display.get_width() - 98, 4))
-            self.font.render('layer: ' + str(self.current_layer), self.display, (self.display.get_width() - 46, 20))
-            self.font.render('pos: ' + str(list(tile_pos) if self.placement_mode == 'grid' else list(scaled_mpos)), self.display, (self.display.get_width() - 60, 36))
+            self.font.render('file: ' + (str(self.file_name.split('/')[-1]) if self.file_name else 'None'), self.display, ((self.display.get_width() - 70 if self.file_name else self.display.get_width() - 53), 5))
+            self.font.render('placement_mode: ' + str(self.placement_mode), self.display, (self.display.get_width() - 98, 20))
+            self.font.render('layer: ' + str(self.current_layer), self.display, (self.display.get_width() - 46, 35))
+            self.font.render('pos: ' + str(list(tile_pos) if self.placement_mode == 'grid' else list(scaled_mpos)), self.display, (self.display.get_width() - 60, 50))
             
             self.click = False
             self.right_click = False
@@ -143,7 +147,22 @@ class LevelEditor:
                     if event.key == pygame.K_l:
                         self.layer_opacity = not self.layer_opacity
                     if event.key == pygame.K_o:
-                        self.tilemap.write_map('data/maps/main.json')
+                        root = tk.Tk()
+                        root.withdraw()
+                        if self.file_name:
+                            self.tilemap.write_map(self.file_name)
+                        else:
+                            file = filedialog.asksaveasfile(title='Save Map', filetypes=[('json files', '*.json'), ('all files', "*.*")])
+                            if file:
+                                self.tilemap.write_map(file.name)
+                                self.file_name = file.name
+                                
+                    if event.key == pygame.K_i:
+                        root = tk.Tk()
+                        root.withdraw()
+                        self.file_name = filedialog.askopenfilename(title='Select Map', filetypes=[('json files', '*.json'), ('all files', "*.*")])
+                        if self.file_name:
+                            self.tilemap.load_map(self.file_name)
                 if event.type == pygame.KEYUP:
                     if event.key == pygame.K_a:
                         self.movement[0] = False

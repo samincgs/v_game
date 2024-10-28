@@ -4,7 +4,7 @@
     "binding": ["mouse", 1]
   },
   "right_click": {
-    "trigger": "press",
+    "trigger": "hold",
     "binding": ["mouse", 3]
   },
   "up": {

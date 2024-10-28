@@ -6,7 +6,7 @@ from .utils import load_image
 
 BASE_PATH = 'data/images/'  
 
-class Assets:
+class AssetManager:
     def __init__(self):
         self.misc = self.load_dir('misc')
         self.tiles = self.load_dir_list('tiles')

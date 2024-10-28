@@ -1,8 +1,7 @@
 # Level Editor
 - Add autotiling
 - Add floodfill
-- Add ability to load and save files
-- 
+- fix layer when map is reopened 
 
 # Game/Coding
 - Fix dt

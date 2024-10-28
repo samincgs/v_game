@@ -78,7 +78,9 @@ class Tilemap:
                 surf.blit(self.game.assets.tiles[tile['type']][tile['variant']], (tile['pos'][0] * self.tile_size - offset[0], tile['pos'][1] * self.tile_size - offset[1]))
                 
     def render_editor(self, curr_layer, layer_opacity, surf, offset=(0,0)):
+                
         for layer in self.offgrid_tiles:
+            print(layer)
             tile_layer = self.offgrid_tiles[layer]
             for tile in tile_layer:
                 if not layer_opacity:
@@ -93,9 +95,9 @@ class Tilemap:
                         img.set_alpha(100)
                         surf.blit(img, (tile['pos'][0] - offset[0], tile['pos'][1] - offset[1]))
         
-        for layer in self.tilemap: # 0
+        for layer in self.tilemap: 
             tile_layer = self.tilemap[layer]
-            for loc in sorted(tile_layer):
+            for loc in tile_layer:
                 tile = tile_layer[loc]
                 if not layer_opacity:
                     img = self.game.assets.tiles[tile['type']][tile['variant']]

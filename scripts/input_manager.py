@@ -3,7 +3,7 @@ import sys
 
 from .config import config
 
-class Input:
+class InputManager:
     def __init__(self, game):
         self.game = game
         self.states = {}
