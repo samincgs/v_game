@@ -23,6 +23,10 @@
     "trigger": "hold",
     "binding": ["keyboard", 97]
   },
+  "jump": {
+    "trigger": "press",
+    "binding": ["keyboard", 32]
+  },
   "esc": {
     "trigger": "press",
     "binding": ["keyboard", 27]

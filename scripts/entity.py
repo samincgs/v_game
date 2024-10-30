@@ -13,3 +13,80 @@ class Entity:
         self.flip = [False, False]
         self.hurt = 0
         self.centered = False
+        self.active_animation = None
+        
+        
+        if self.type + '_idle' in self.game.assets.animations.animations:
+            self.set_action('idle')
+            
+    @property 
+    def img(self):
+        return self.active_animation.img
+    
+    @property
+    def rect(self):
+        if not self.centered:
+            return pygame.Rect(int(self.pos[0]), int(self.pos[1]), self.size[0], self.size[1])
+        else:
+            return pygame.Rect(int(self.pos[0] - self.size[0] // 2), int(self.pos[1] - self.size[1] // 2), self.size[0], self.size[1])
+        
+    def set_action(self, action_id, force=False):
+        if force:
+            self.active_animation = self.game.assets.animations.new(self.type + '_' + action_id)
+        elif (not self.active_animation) or (self.active_animation.data.id != self.type + '_' + action_id):
+            self.active_animation = self.game.assets.animations.new(self.type + '_' + action_id)
+
+    def collisions(self, tilemap, movement=(0, 0)):
+        directions = {d: False for d in ['top', 'right', 'left', 'bottom']}
+        
+        # horizontal
+        self.pos[0] += movement[0]
+        tiles = tilemap.get_nearby_rects(self.pos)
+        hit_list = tilemap.collision_test(self.rect, tiles)
+        temp_rect = self.rect
+        
+        for tile in hit_list:
+            if movement[0] > 0:
+                temp_rect.right = tile.left
+                directions['right'] = True
+            if movement[0] < 0:
+                temp_rect.left = tile.right
+                directions['left'] = True
+            self.pos[0] = temp_rect.x
+            
+            # add centering if needed
+            
+        # vertical
+        self.pos[1] += movement[1] 
+        tiles = tilemap.get_nearby_rects(self.pos)
+        hit_list = tilemap.collision_test(self.rect, tiles)
+        temp_rect = self.rect
+        
+        for tile in hit_list:
+            if movement[1] > 0:
+                temp_rect.bottom = tile.top
+                directions['bottom'] = True
+            if movement[1] < 0:
+                temp_rect.top = tile.bottom
+                directions['top'] = True 
+            self.pos[1] = temp_rect.y
+            
+        return directions
+        
+    
+    def calculate_render_offset(self, offset=(0, 0)):
+        offset = list(offset)
+        if self.active_animation:
+            offset[0] += self.active_animation.data.config['offset'][0]
+            offset[1] += self.active_animation.data.config['offset'][1]
+        if self.centered:
+            offset[0] += self.img.get_width() // 2
+            offset[1] += self.img.get_height() // 2
+        return offset
+    
+    def render(self, surf, offset=(0, 0)):
+        offset = self.calculate_render_offset(offset=offset)
+        surf.blit(self.img, (int(self.pos[0] - offset[0]), int(self.pos[1] - offset[1])))
+          
+    def update(self, dt):
+        self.active_animation.play(dt)

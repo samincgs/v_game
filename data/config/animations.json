@@ -1,0 +1,9 @@
+{
+  "player_idle": {
+    "frames": [12, 5, 5, 5, 5, 5, 5, 5],
+    "loop": true,
+    "speed": 1.0,
+    "centered": false,
+    "offset": [7, 3]
+  }
+}

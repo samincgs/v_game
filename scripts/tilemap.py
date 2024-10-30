@@ -10,7 +10,28 @@ class Tilemap:
         
         self.tilemap = {} # { 0 : {'5;7' : {'type': 'grass', 'variant': 0, 'pos': [x, x]}}}
         self.offgrid_tiles = {} # {0: [{'type': 'grass', 'variant': 0, 'pos': [x, x]}]}
+    
+    def collision_test(self, obj, obj_list):
+        collision_list = []
+        for rect in obj_list:
+            if obj.colliderect(rect):
+                collision_list.append(rect)
         
+        return collision_list
+    
+    def get_nearby_rects(self, pos):
+        rects = []
+        tile_pos = (int(pos[0] // self.tile_size), int(pos[1] // self.tile_size))
+        check_locs = [(-1, -1), (0, -1), (1, -1), (-1, 0), (0, 0), (1, 0), (-1, 1), (0, 1), (1, 1)]
+        for loc in check_locs:
+            tile_loc = (tile_pos[0] + loc[0], tile_pos[1] + loc[1])
+            str_loc = str(tile_loc[0]) + ';' + str(tile_loc[1])
+            for layer in self.tilemap:
+                if str_loc in self.tilemap[layer]:
+                    rects.append(pygame.Rect(tile_loc[0] * self.tile_size, tile_loc[1] * self.tile_size, self.tile_size, self.tile_size))
+        return rects
+                
+    
     def load_map(self, path):
         f = open(path, 'r')
         map_data = json.load(fp=f)
@@ -18,7 +39,7 @@ class Tilemap:
         
         self.tilemap = map_data['tilemap'] 
         self.offgrid_tiles = map_data['offgrid_tiles']
-        
+    
     def write_map(self, path):
         map_data = {
             'tilemap': self.tilemap,
@@ -80,7 +101,6 @@ class Tilemap:
     def render_editor(self, curr_layer, layer_opacity, surf, offset=(0,0)):
                 
         for layer in self.offgrid_tiles:
-            print(layer)
             tile_layer = self.offgrid_tiles[layer]
             for tile in tile_layer:
                 if not layer_opacity:

@@ -1,16 +1,13 @@
 # Level Editor
 - Add autotiling
 - Add floodfill
-- fix layer when map is reopened 
+- fix layer when map is reopened (all loaded tiles are not showing layer opacity)
 
 # Game/Coding
-- Fix dt
 - Create map
-- Create animation class
 - Create entity class
 - Create minimap
 - Create inventory
-- Create visual background
 - Create tooltip when player sees items
 - 
 

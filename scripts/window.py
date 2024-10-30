@@ -15,7 +15,7 @@ class Window:
         self.render_scale = config['window']['render_scale']
         
         # incorporate delta time
-        self.dt = 0
+        self.dt = 0.1
         self.last_time = time.time()
         
     def create(self):
@@ -25,8 +25,9 @@ class Window:
         pygame.display.update()
         self.display.fill(config['window']['bg_color'])
         
-        self.dt = time.time() - self.last_time
-        self.last_time = time.time()
+        
+        self.dt = max(time.time() - self.last_time, 0.0001)
+        self.last_time =time.time()
         
         
         

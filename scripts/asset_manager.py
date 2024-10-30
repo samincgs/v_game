@@ -3,11 +3,13 @@ import os
 
 from .config import config
 from .utils import load_image
+from .animation_manager import AnimationManager
 
 BASE_PATH = 'data/images/'  
 
 class AssetManager:
     def __init__(self):
+        self.animations = AnimationManager()
         self.misc = self.load_dir('misc')
         self.tiles = self.load_dir_list('tiles')
     

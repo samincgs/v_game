@@ -27,6 +27,7 @@ class InputManager:
         mpos = pygame.mouse.get_pos()
         self.mpos = (int(mpos[0] / self.game.window.render_scale), int(mpos[1] / self.game.window.render_scale))
         
+        
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
