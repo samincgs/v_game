@@ -11,7 +11,9 @@ class AssetManager:
     def __init__(self):
         self.animations = AnimationManager()
         self.misc = self.load_dir('misc')
+        self.weapons = self.load_dir('weapons')
         self.tiles = self.load_dir_list('tiles')
+        print(self.animations)
     
     def load_dir(self, path):
         image_dir = {}

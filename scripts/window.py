@@ -25,7 +25,6 @@ class Window:
         pygame.display.update()
         self.display.fill(config['window']['bg_color'])
         
-        
         self.dt = max(time.time() - self.last_time, 0.0001)
         self.last_time =time.time()
         

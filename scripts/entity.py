@@ -21,7 +21,10 @@ class Entity:
             
     @property 
     def img(self):
-        return self.active_animation.img
+        img = self.active_animation.img
+        if any(self.flip):
+            img = pygame.transform.flip(img, self.flip[0], self.flip[1])
+        return img
     
     @property
     def rect(self):
@@ -29,6 +32,13 @@ class Entity:
             return pygame.Rect(int(self.pos[0]), int(self.pos[1]), self.size[0], self.size[1])
         else:
             return pygame.Rect(int(self.pos[0] - self.size[0] // 2), int(self.pos[1] - self.size[1] // 2), self.size[0], self.size[1])
+    
+    @property
+    def center(self):
+        if self.centered:
+            return self.pos.copy()
+        else:
+            return [self.pos[0] + self.size[0] // 2, self.pos[1] + self.size[1] // 2]
         
     def set_action(self, action_id, force=False):
         if force:

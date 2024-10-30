@@ -1,9 +1,17 @@
 {
   "click": {
+    "trigger": "press",
+    "binding": ["mouse", 1]
+  },
+  "click_hold": {
     "trigger": "hold",
     "binding": ["mouse", 1]
   },
   "right_click": {
+    "trigger": "press",
+    "binding": ["mouse", 3]
+  },
+  "right_click_hold": {
     "trigger": "hold",
     "binding": ["mouse", 3]
   },

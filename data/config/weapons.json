@@ -1,0 +1,8 @@
+{
+  "revolver": {
+    "projectile_type": "revolver",
+    "trigger": "click_hold",
+    "capacity": 7,
+    "attack_rate": 0.01
+  }
+}

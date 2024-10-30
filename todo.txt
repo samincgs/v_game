@@ -1,7 +1,6 @@
 # Level Editor
 - Add autotiling
 - Add floodfill
-- fix layer when map is reopened (all loaded tiles are not showing layer opacity)
 
 # Game/Coding
 - Create map

@@ -1,6 +1,8 @@
 import pygame
+import math
 
 from .entity import Entity
+from .weapon import Weapon
 
 class Player(Entity):
     def __init__(self, game, pos, size, e_type):
@@ -11,9 +13,10 @@ class Player(Entity):
         self.jumps = self.max_jumps
         self.dash = 0
         self.aim_angle = 0
+        self.weapon = Weapon(game, 'revolver')
         
         self.last_collisions = {k : False for k in ['top', 'left', 'right', 'bottom']}
-        self.frame_motion = [0, 0]
+        self.frame_movement = [0, 0]
         
 
     def jump(self):
@@ -27,10 +30,10 @@ class Player(Entity):
             self.flip[0] = False
         if direction < 0:
             self.flip[0] = True
-        self.frame_motion[0] += 120 * direction
+        self.frame_movement[0] += 120 * direction
         
     def update(self, dt):
-        self.frame_motion = self.velocity.copy()
+        self.frame_movement = self.velocity.copy()
         
         super().update(dt)
         self.air_timer += dt
@@ -44,20 +47,31 @@ class Player(Entity):
             self.move(-1)
             
         self.velocity[1] = min(500, self.velocity[1] + dt * 700)
+                
+        self.frame_movement[0] *= dt
+        self.frame_movement[1] *= dt
         
-        self.frame_motion[0] *= dt
-        self.frame_motion[1] *= dt
-        
-        self.last_collisions = self.collisions(self.game.world.tilemap, self.frame_motion)
+        self.last_collisions = self.collisions(self.game.world.tilemap, self.frame_movement)
         if self.last_collisions['bottom'] or self.last_collisions['top']:
             if self.last_collisions['bottom']:
                 self.jumps = self.max_jumps
             self.velocity[1] = 0
             self.air_timer = 0
             
+        if self.air_timer > 0.07:
+            self.set_action('jump')
+        else:
+            self.set_action('idle')
             
+        # weapon
+        angle = math.atan2(self.game.input.mpos[1] - self.center[1] + self.game.world.camera.pos[1], self.game.input.mpos[0] - self.center[0] + self.game.world.camera.pos[0])
+        self.aim_angle = angle
+        self.weapon.rotation = math.degrees(angle)
+        
     def render(self, surf, offset=(0, 0)):
         super().render(surf, offset=offset)
+        self.weapon.render(surf, (self.center[0] - offset[0], self.center[1] - offset[1] + 2))
+        
         
             
     
