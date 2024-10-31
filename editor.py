@@ -48,31 +48,31 @@ class LevelEditor:
         self.selection_rect = None
         
         self.placement_mode = 'grid'
-        self.current_layer = 0
+        self.current_layer = "0"
     
     def autotile(self):
-        for layer in sorted(self.tilemap.tilemap):
-            if self.selection_rect: # only with rect
-                for str_tile in self.tilemap.tilemap[layer]:
-                        tile = self.tilemap.tilemap[layer][str_tile]
-                        neighbours = []
-                        for offset in self.config['check_offsets']:
-                            tile_loc = (tile['pos'][0] + offset[0], tile['pos'][1] + offset[1])
-                            if not self.selection_rect.collidepoint((tile_loc[0] * self.tilemap.tile_size, tile_loc[1] * self.tilemap.tile_size)):  # only with rect
-                                continue  
-                            str_loc = str(tile_loc[0]) + ';' + str(tile_loc[1])
-                            if str_loc in self.tilemap.tilemap[layer]:
-                                if tile['type'] == self.tilemap.tilemap[layer][str_loc]['type']:
-                                    neighbours.append(offset)
-                        neighbours = sorted(neighbours)
-                        for border in self.config['tile_borders']:
-                            replacement_tile = border['tile']
-                            border_list = sorted(border['border_list'])
-                            if neighbours == border_list:
-                                tile['variant'] = replacement_tile
+        if self.selection_rect: # only with rect
+            for layer in self.tilemap.tilemap:
+                    for str_tile in self.tilemap.tilemap[layer]:
+                            tile = self.tilemap.tilemap[layer][str_tile]
+                            neighbours = []
+                            for offset in self.config['check_offsets']:
+                                tile_loc = (tile['pos'][0] + offset[0], tile['pos'][1] + offset[1])
+                                if not self.selection_rect.collidepoint((tile_loc[0] * self.tilemap.tile_size, tile_loc[1] * self.tilemap.tile_size)):  # only with rect
+                                    continue  
+                                str_loc = str(tile_loc[0]) + ';' + str(tile_loc[1])
+                                if str_loc in self.tilemap.tilemap[layer]:
+                                    if tile['type'] == self.tilemap.tilemap[layer][str_loc]['type']:
+                                        neighbours.append(offset)
+                            neighbours = sorted(neighbours)
+                            for border in self.config['tile_borders']:
+                                replacement_tile = border['tile']
+                                border_list = sorted(border['border_list'])
+                                if neighbours == border_list:
+                                    tile['variant'] = replacement_tile
         
-            self.selection_rect = None # only with rect
-            self.selection_points = [] # only with rect
+        self.selection_rect = None # only with rect
+        self.selection_points = [] # only with rect
             
     def run(self):
         while True:
@@ -155,7 +155,6 @@ class LevelEditor:
             self.font.render('layer: ' + str(self.current_layer), self.display, (self.display.get_width() - 46, 35))
             self.font.render('pos: ' + str(list(tile_pos) if self.placement_mode == 'grid' else list(scaled_mpos)), self.display, (self.display.get_width() - 60, 50))
             
-            
             if len(self.selection_points):
                 start_point = self.selection_points[0]
                 if self.selection_points[1] != None:
@@ -164,11 +163,12 @@ class LevelEditor:
                         self.selection_rect = pygame.Rect(start_point[0], start_point[1], (end_point[0] - start_point[0]), (end_point[1] - start_point[1]))
                     else:
                         self.selection_rect = pygame.Rect(end_point[0], end_point[1], (start_point[0] - end_point[0]), (start_point[1] - end_point[1]))
-                
-                    self.selection_rect.x -= self.scroll[0]
-                    self.selection_rect.y -= self.scroll[1]
+
+                    displayed_rect = self.selection_rect.copy()
+                    displayed_rect.x -= self.scroll[0]
+                    displayed_rect.y -= self.scroll[1]
                     if self.selection_points[2] != True:
-                        pygame.draw.rect(self.display, (0, 0, 152), self.selection_rect, 1)
+                        pygame.draw.rect(self.display, (0, 0, 152), displayed_rect, 1)
                     else:
                         self.selection_points = []
                         self.selection_rect = None
@@ -238,9 +238,11 @@ class LevelEditor:
                         self.right_clicking = True
                         self.right_click = True
                     if event.button == 4:
-                        self.current_layer += 1
+                        self.current_layer = int(self.current_layer) + 1
+                        self.current_layer = str(self.current_layer)
                     if event.button == 5:
-                        self.current_layer -= 1
+                        self.current_layer = int(self.current_layer) - 1
+                        self.current_layer = str(self.current_layer)
                 if event.type == pygame.MOUSEBUTTONUP:
                     if event.button == 1:
                         self.clicking = False

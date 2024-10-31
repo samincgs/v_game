@@ -63,7 +63,7 @@ class Tilemap:
     # gives grid positions (USES GRID POS)
     def add_tile(self, tile, layer):
             pos = tile['pos']
-            if layer in self.tilemap:
+            if layer in sorted(self.tilemap):
                 tile_loc = str(pos[0]) + ';' + str(pos[1])
                 self.tilemap[layer][tile_loc] = tile
             else:
@@ -72,7 +72,7 @@ class Tilemap:
     # gives grid positions (USES GRID POS)
     def remove_tile(self, tile, layer):
         pos = tile['pos']
-        if layer in self.tilemap.copy():
+        if layer in sorted(self.tilemap).copy():
             tile_loc = str(pos[0]) + ';' + str(pos[1])
             if tile_loc in self.tilemap[layer]:
                 del self.tilemap[layer][tile_loc]
