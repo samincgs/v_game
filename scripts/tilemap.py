@@ -26,7 +26,7 @@ class Tilemap:
         for loc in check_locs:
             tile_loc = (tile_pos[0] + loc[0], tile_pos[1] + loc[1])
             str_loc = str(tile_loc[0]) + ';' + str(tile_loc[1])
-            for layer in self.tilemap:
+            for layer in sorted(self.tilemap):
                 if str_loc in self.tilemap[layer]:
                     rects.append(pygame.Rect(tile_loc[0] * self.tile_size, tile_loc[1] * self.tile_size, self.tile_size, self.tile_size))
         return rects

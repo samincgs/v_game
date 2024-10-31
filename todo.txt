@@ -1,5 +1,4 @@
 # Level Editor
-- Add autotiling
 - Add floodfill
 
 # Game/Coding

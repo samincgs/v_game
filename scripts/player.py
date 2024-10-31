@@ -71,6 +71,11 @@ class Player(Entity):
         self.aim_angle = angle
         self.weapon.rotation = math.degrees(angle)
         
+        if (self.weapon.rotation % 360 > 90) and (self.weapon.rotation % 360 < 270):
+            self.flip[0] = True
+        else:
+            self.flip[0] = False
+        
         for proj in self.projectiles.copy():
             kill = proj.update(dt)
             proj.render(self.game.window.display, self.game.world.camera.pos)

@@ -7,6 +7,8 @@ from scripts.tilemap import Tilemap
 from scripts.asset_manager import AssetManager
 from scripts.font import Font
 
+from scripts.config import config
+
 class LevelEditor:
     def __init__(self, display_size, display_scale):
         self.display_size = display_size
@@ -23,6 +25,7 @@ class LevelEditor:
         self.tilemap = Tilemap(self, 16, self.display_size)
         self.assets = AssetManager()
         self.font = Font('data/fonts/small_font.png', (208, 223, 215))
+        self.config = config['autotile']
         
         self.scroll = [0, 0]
         self.scroll_speed = 2
@@ -39,10 +42,38 @@ class LevelEditor:
         self.selected_group = self.tile_list[0]
         self.layer_opacity = False
         self.sidebar_size = 130
+        self.sidebar_color = (20, 36, 50)
+        self.sidebar_rect_color = (33, 57, 78)
+        self.selection_points = []
+        self.selection_rect = None
         
         self.placement_mode = 'grid'
         self.current_layer = 0
+    
+    def autotile(self):
+        for layer in sorted(self.tilemap.tilemap):
+            if self.selection_rect: # only with rect
+                for str_tile in self.tilemap.tilemap[layer]:
+                        tile = self.tilemap.tilemap[layer][str_tile]
+                        neighbours = []
+                        for offset in self.config['check_offsets']:
+                            tile_loc = (tile['pos'][0] + offset[0], tile['pos'][1] + offset[1])
+                            if not self.selection_rect.collidepoint((tile_loc[0] * self.tilemap.tile_size, tile_loc[1] * self.tilemap.tile_size)):  # only with rect
+                                continue  
+                            str_loc = str(tile_loc[0]) + ';' + str(tile_loc[1])
+                            if str_loc in self.tilemap.tilemap[layer]:
+                                if tile['type'] == self.tilemap.tilemap[layer][str_loc]['type']:
+                                    neighbours.append(offset)
+                        neighbours = sorted(neighbours)
+                        for border in self.config['tile_borders']:
+                            replacement_tile = border['tile']
+                            border_list = sorted(border['border_list'])
+                            if neighbours == border_list:
+                                tile['variant'] = replacement_tile
         
+            self.selection_rect = None # only with rect
+            self.selection_points = [] # only with rect
+            
     def run(self):
         while True:
             self.display.fill((0, 0, 0))
@@ -80,8 +111,8 @@ class LevelEditor:
                                 
             # draw topleft sidebar  
             sidebar_surf = pygame.Surface((self.sidebar_size, 100))
-            sidebar_surf.fill((20, 35, 40))
-            pygame.draw.rect(sidebar_surf, (32, 50, 60), pygame.Rect(-1, -1, sidebar_surf.get_width() + 1, sidebar_surf.get_height() + 1), 1)
+            sidebar_surf.fill(self.sidebar_color)
+            pygame.draw.rect(sidebar_surf, self.sidebar_rect_color, pygame.Rect(-1, -1, sidebar_surf.get_width() + 1, sidebar_surf.get_height() + 1), 1)
             
             # SELECT TYPE OF TILE GROUP (TOP HALF)
             for ix, val in enumerate(self.tile_list):
@@ -97,8 +128,8 @@ class LevelEditor:
             
             # draw bottom left sidebar
             tile_selector_surf = pygame.Surface((sidebar_surf.get_width(), self.display_size[1] - sidebar_surf.get_height()))
-            tile_selector_surf.fill((20, 35, 40))
-            pygame.draw.line(tile_selector_surf, (32, 50, 60), (tile_selector_surf.get_width() - 1, 0), (tile_selector_surf.get_width() - 1, tile_selector_surf.get_height() - 1))
+            tile_selector_surf.fill(self.sidebar_color)
+            pygame.draw.line(tile_selector_surf, self.sidebar_rect_color, (tile_selector_surf.get_width() - 1, 0), (tile_selector_surf.get_width() - 1, tile_selector_surf.get_height() - 1))
             
             # SELECT TILES (BOTTOM HALF)
             for ix, val in enumerate(self.assets.tiles[self.tile_list[self.tile_group]]):
@@ -124,6 +155,25 @@ class LevelEditor:
             self.font.render('layer: ' + str(self.current_layer), self.display, (self.display.get_width() - 46, 35))
             self.font.render('pos: ' + str(list(tile_pos) if self.placement_mode == 'grid' else list(scaled_mpos)), self.display, (self.display.get_width() - 60, 50))
             
+            
+            if len(self.selection_points):
+                start_point = self.selection_points[0]
+                if self.selection_points[1] != None:
+                    end_point = self.selection_points[1]
+                    if end_point[0] > start_point[0]:
+                        self.selection_rect = pygame.Rect(start_point[0], start_point[1], (end_point[0] - start_point[0]), (end_point[1] - start_point[1]))
+                    else:
+                        self.selection_rect = pygame.Rect(end_point[0], end_point[1], (start_point[0] - end_point[0]), (start_point[1] - end_point[1]))
+                
+                    self.selection_rect.x -= self.scroll[0]
+                    self.selection_rect.y -= self.scroll[1]
+                    if self.selection_points[2] != True:
+                        pygame.draw.rect(self.display, (0, 0, 152), self.selection_rect, 1)
+                    else:
+                        self.selection_points = []
+                        self.selection_rect = None
+                    
+                
             self.click = False
             self.right_click = False
             for event in pygame.event.get():
@@ -155,14 +205,22 @@ class LevelEditor:
                             file = filedialog.asksaveasfile(title='Save Map', filetypes=[('json files', '*.json'), ('all files', "*.*")])
                             if file:
                                 self.tilemap.write_map(file.name)
-                                self.file_name = file.name
-                                
+                                self.file_name = file.name              
                     if event.key == pygame.K_i:
                         root = tk.Tk()
                         root.withdraw()
                         self.file_name = filedialog.askopenfilename(title='Select Map', filetypes=[('json files', '*.json'), ('all files', "*.*")])
                         if self.file_name:
                             self.tilemap.load_map(self.file_name)
+                    if event.key == pygame.K_e:
+                        if not len(self.selection_points):
+                            self.selection_points = [scaled_mpos, None, None]
+                        elif self.selection_points[1] == None:
+                            self.selection_points[1] = scaled_mpos
+                        elif self.selection_points[2] == None:
+                            self.selection_points[2] = True
+                    if event.key == pygame.K_t:
+                        self.autotile()
                 if event.type == pygame.KEYUP:
                     if event.key == pygame.K_a:
                         self.movement[0] = False

@@ -23,6 +23,7 @@ class Projectile:
                 directions['right'] = True
             else:
                 directions['left'] = True 
+            return directions
                 
         dy = math.sin(self.rot) * self.speed * dt
         self.pos[1] += dy
@@ -32,6 +33,7 @@ class Projectile:
                 directions['bottom'] = True
             else:
                 directions['top'] = True
+            return directions
         
         return directions
                 
