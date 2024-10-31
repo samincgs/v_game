@@ -13,7 +13,8 @@ class Player(Entity):
         self.jumps = self.max_jumps
         self.dash = 0
         self.aim_angle = 0
-        self.weapon = Weapon(game, 'revolver')
+        self.weapon = Weapon(game, self, 'golden_gun')
+        self.projectiles = []
         
         self.last_collisions = {k : False for k in ['top', 'left', 'right', 'bottom']}
         self.frame_movement = [0, 0]
@@ -45,7 +46,9 @@ class Player(Entity):
             self.move(1)
         if self.game.input.states['left']:
             self.move(-1)
-            
+        if self.game.input.mouse_states['click']:
+            self.weapon.attack()
+             
         self.velocity[1] = min(500, self.velocity[1] + dt * 700)
                 
         self.frame_movement[0] *= dt
@@ -58,7 +61,7 @@ class Player(Entity):
             self.velocity[1] = 0
             self.air_timer = 0
             
-        if self.air_timer > 0.07:
+        if self.air_timer > 0.10:
             self.set_action('jump')
         else:
             self.set_action('idle')
@@ -67,6 +70,13 @@ class Player(Entity):
         angle = math.atan2(self.game.input.mpos[1] - self.center[1] + self.game.world.camera.pos[1], self.game.input.mpos[0] - self.center[0] + self.game.world.camera.pos[0])
         self.aim_angle = angle
         self.weapon.rotation = math.degrees(angle)
+        
+        for proj in self.projectiles.copy():
+            kill = proj.update(dt)
+            proj.render(self.game.window.display, self.game.world.camera.pos)
+            if kill:
+                self.projectiles.remove(proj)
+            
         
     def render(self, surf, offset=(0, 0)):
         super().render(surf, offset=offset)

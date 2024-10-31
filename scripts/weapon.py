@@ -1,10 +1,13 @@
 import pygame
+import math
 
 from .config import config
+from .projectile import Projectile
 
 class Weapon:
-    def __init__(self, game, w_type):
+    def __init__(self, game, owner, w_type):
         self.game = game
+        self.owner = owner
         self.type = w_type
         self.projectile_type = config['weapons'][self.type]['projectile_type']
         self.capacity = config['weapons'][self.type]['capacity']
@@ -14,6 +17,11 @@ class Weapon:
         
         self.rotation = 0
         self.flip = False
+    
+    def attack(self):
+        # if (self.ammo > 0):
+        #     self.ammo -= 1
+        self.game.world.player.projectiles.append(Projectile(self.game, self.owner.center, math.radians(self.rotation), 300, self.type))
         
     def render(self, surf, loc):
         img = self.game.assets.weapons[self.type].copy()

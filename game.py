@@ -15,8 +15,8 @@ class Game:
     def update(self):
         while True:
             self.input.update()
-            self.world.update()
             self.renderer.render()
+            self.world.update()
             self.window.create()
     
     def run(self):

@@ -1,6 +1,6 @@
 {
-  "revolver": {
-    "projectile_type": "revolver",
+  "golden_gun": {
+    "projectile_type": "golden_gun",
     "trigger": "click_hold",
     "capacity": 7,
     "attack_rate": 0.01
