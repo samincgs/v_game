@@ -50,9 +50,10 @@ class LevelEditor:
         self.placement_mode = 'grid'
         self.current_layer = "0"
     
-    def autotile(self):
+    def autotile(self, curr_layer):
         if self.selection_rect: # only with rect
             for layer in self.tilemap.tilemap:
+                if curr_layer == layer:
                     for str_tile in self.tilemap.tilemap[layer]:
                             tile = self.tilemap.tilemap[layer][str_tile]
                             neighbours = []
@@ -220,7 +221,7 @@ class LevelEditor:
                         elif self.selection_points[2] == None:
                             self.selection_points[2] = True
                     if event.key == pygame.K_t:
-                        self.autotile()
+                        self.autotile(self.current_layer)
                 if event.type == pygame.KEYUP:
                     if event.key == pygame.K_a:
                         self.movement[0] = False
