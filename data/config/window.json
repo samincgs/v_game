@@ -1,6 +1,6 @@
 {
-  "base_res": [427, 240],
-  "scaled_res": [854, 480],
+  "base_res": [384, 216],
+  "scaled_res": [768, 432],
   "render_scale": 2,
   "caption": "N/A",
   "bg_color": [0, 0, 0]

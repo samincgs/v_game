@@ -3,6 +3,7 @@ import math
 
 from .entity import Entity
 from .weapon import Weapon
+from .utils import outline
 
 class Player(Entity):
     def __init__(self, game, pos, size, e_type):
@@ -63,6 +64,8 @@ class Player(Entity):
             
         if self.air_timer > 0.10:
             self.set_action('jump')
+        elif self.frame_movement[0] != 0:
+            self.set_action('run')
         else:
             self.set_action('idle')
             

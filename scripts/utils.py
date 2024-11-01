@@ -21,7 +21,7 @@ def palette_swap(img, old_color, new_color):
 
 def outline(surf, img, loc, color=(255, 255, 255)):
     mask_img = pygame.mask.from_surface(img)
-    mask_img = mask_img.to_surface(setcolor=color, unsetcolor=(255, 0, 255, 0))
+    mask_img = mask_img.to_surface(setcolor=color, unsetcolor=(0, 0, 0, 0))
     for offset in [(-1, 0), (0, -1), (1, 0), (0, 1)]:
         surf.blit(mask_img, (loc[0] + offset[0], loc[1] + offset[1]))
     

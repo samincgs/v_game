@@ -1,6 +1,13 @@
 # Level Editor
 - Add floodfill
 
+
+# Pixel art
+- Add player run animation
+- Add more guns
+- Add health bar ui
+- 
+
 # Game/Coding
 - Create map
 - Create entity class

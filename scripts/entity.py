@@ -1,6 +1,7 @@
 import pygame
 
 from .config import config
+from .utils import outline
 
 class Entity:
     def __init__(self, game, pos, size, e_type):
@@ -14,7 +15,6 @@ class Entity:
         self.hurt = 0
         self.centered = False
         self.active_animation = None
-        
         
         if self.type + '_idle' in self.game.assets.animations.animations:
             self.set_action('idle')
@@ -64,8 +64,7 @@ class Entity:
                 directions['left'] = True
             self.pos[0] = temp_rect.x
             
-            # add centering if needed
-            
+            # add centering if needed  
         # vertical
         self.pos[1] += movement[1] 
         tiles = tilemap.get_nearby_rects(self.pos)
@@ -83,7 +82,6 @@ class Entity:
             
         return directions
         
-    
     def calculate_render_offset(self, offset=(0, 0)):
         offset = list(offset)
         if self.active_animation:
@@ -96,6 +94,8 @@ class Entity:
     
     def render(self, surf, offset=(0, 0)):
         offset = self.calculate_render_offset(offset=offset)
+        if self.active_animation.data.config['outline']:
+            outline(surf, self.img, (int(self.pos[0] - offset[0]), int(self.pos[1] - offset[1])), color=self.active_animation.data.config['outline'])
         surf.blit(self.img, (int(self.pos[0] - offset[0]), int(self.pos[1] - offset[1])))
           
     def update(self, dt):
