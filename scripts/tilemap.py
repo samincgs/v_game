@@ -93,23 +93,26 @@ class Tilemap:
                     print('collided')
                     self.offgrid_tiles[layer].remove(tile_data)
                 
-                
+    # be careful of layer in self.tilemap because when converted from json the layer is in STRING          
     def render(self, surf, offset=(0, 0)):
         
-        for layer in self.offgrid_tiles:
+        for layer in sorted([int(key) for key in self.offgrid_tiles.keys()]): # convert layer into int so it can be sorted then convert it back for proper layer opacity functionality
+            layer = str(layer)
             tile_layer = self.offgrid_tiles[layer]
             for tile in tile_layer:
                 surf.blit(self.game.assets.tiles[tile['type']][tile['variant']], (tile['pos'][0] - offset[0], tile['pos'][1] - offset[1]))
         
-        for layer in self.tilemap: # 0
+        for layer in sorted([int(key) for key in self.tilemap.keys()]): # 0
+            layer = str(layer)
             tile_layer = self.tilemap[layer]
-            for loc in sorted(tile_layer):
+            for loc in tile_layer:
                 tile = tile_layer[loc]
                 surf.blit(self.game.assets.tiles[tile['type']][tile['variant']], (tile['pos'][0] * self.tile_size - offset[0], tile['pos'][1] * self.tile_size - offset[1]))
                 
     def render_editor(self, curr_layer, layer_opacity, surf, offset=(0,0)):
                 
-        for layer in self.offgrid_tiles:
+        for layer in sorted([int(key) for key in self.offgrid_tiles.keys()]):
+            layer = str(layer)
             tile_layer = self.offgrid_tiles[layer]
             for tile in tile_layer:
                 if not layer_opacity:
@@ -123,8 +126,9 @@ class Tilemap:
                         img = self.game.assets.tiles[tile['type']][tile['variant']].copy()
                         img.set_alpha(100)
                         surf.blit(img, (tile['pos'][0] - offset[0], tile['pos'][1] - offset[1]))
-        
-        for layer in self.tilemap: 
+                
+        for layer in sorted([int(key) for key in self.tilemap.keys()]): 
+            layer = str(layer)
             tile_layer = self.tilemap[layer]
             for loc in tile_layer:
                 tile = tile_layer[loc]

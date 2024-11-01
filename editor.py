@@ -51,7 +51,7 @@ class LevelEditor:
         self.current_layer = "0"
     
     def autotile(self, curr_layer):
-        if self.selection_rect: # only with rect
+        # if self.selection_rect: # only with rect
             for layer in self.tilemap.tilemap:
                 if curr_layer == layer:
                     for str_tile in self.tilemap.tilemap[layer]:
@@ -59,8 +59,8 @@ class LevelEditor:
                             neighbours = []
                             for offset in self.config['check_offsets']:
                                 tile_loc = (tile['pos'][0] + offset[0], tile['pos'][1] + offset[1])
-                                if not self.selection_rect.collidepoint((tile_loc[0] * self.tilemap.tile_size, tile_loc[1] * self.tilemap.tile_size)):  # only with rect
-                                    continue  
+                                # if not self.selection_rect.collidepoint((tile_loc[0] * self.tilemap.tile_size, tile_loc[1] * self.tilemap.tile_size)):  # only with rect
+                                #     continue  
                                 str_loc = str(tile_loc[0]) + ';' + str(tile_loc[1])
                                 if str_loc in self.tilemap.tilemap[layer]:
                                     if tile['type'] == self.tilemap.tilemap[layer][str_loc]['type']:
@@ -72,8 +72,8 @@ class LevelEditor:
                                 if neighbours == border_list:
                                     tile['variant'] = replacement_tile
         
-        self.selection_rect = None # only with rect
-        self.selection_points = [] # only with rect
+        # self.selection_rect = None # only with rect
+        # self.selection_points = [] # only with rect
             
     def run(self):
         while True:
@@ -141,7 +141,9 @@ class LevelEditor:
                         self.tile_variant = ix
                     y_offset = 2
                 tile_selector_surf.blit(val, (1, 1 + (20 * ix) - y_offset))
-                  
+            
+            print(self.current_layer)
+            
             self.tilemap.render_editor(self.current_layer, self.layer_opacity, self.display, offset=render_scroll)
             
             if self.placement_mode == 'grid':
