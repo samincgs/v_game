@@ -9,7 +9,7 @@ class World:
         self.game = game
         self.camera = Camera(game)
         self.tilemap = Tilemap(game, 16, self.game.window.display.get_size())
-        self.tilemap.load_map('data/maps/test2.json')
+        self.tilemap.load_map('data/maps/intro.json')
         self.player = Player(game, (200, 200), (8, 17), 'player')
         self.camera.set_tracked_entity(self.player)
         

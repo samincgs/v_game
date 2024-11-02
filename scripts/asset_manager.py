@@ -1,11 +1,20 @@
 import pygame
 import os
 
+from .font import Font
 from .config import config
 from .utils import load_image
 from .animation_manager import AnimationManager
 
-BASE_PATH = 'data/images/'  
+BASE_PATH = 'data/images/' 
+BASE_PATH_FONT = 'data/fonts/' 
+
+FONTS = {
+    "small_white": (BASE_PATH_FONT + 'small_font.png', (255, 255, 255)),
+    "small_black": (BASE_PATH_FONT + 'small_font.png', (0, 0, 1)),
+    "large_white": (BASE_PATH_FONT + 'large_font.png', (255, 255, 255)),
+    "large_black": (BASE_PATH_FONT + 'large_font.png', (0, 0, 1)),
+}
 
 class AssetManager:
     def __init__(self):
@@ -13,6 +22,8 @@ class AssetManager:
         self.misc = self.load_dir('misc')
         self.weapons = self.load_dir('weapons')
         self.tiles = self.load_dir_list('tiles')
+        
+        self.fonts = {font_name: Font(font[0], font[1]) for font_name, font in FONTS.items()}
     
     def load_dir(self, path):
         image_dir = {}

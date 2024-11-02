@@ -39,7 +39,7 @@ class Player(Entity):
         
         super().update(dt)
         self.air_timer += dt
-        
+          
         # normalize x axis movement
         if self.game.input.states['jump']:
             self.jump()
@@ -49,7 +49,7 @@ class Player(Entity):
             self.move(-1)
         if self.game.input.mouse_states['click']:
             self.weapon.attack()
-             
+        
         self.velocity[1] = min(500, self.velocity[1] + dt * 700)
                 
         self.frame_movement[0] *= dt
@@ -77,7 +77,8 @@ class Player(Entity):
         if (self.weapon.rotation % 360 > 90) and (self.weapon.rotation % 360 < 270):
             self.flip[0] = True
         else:
-            self.flip[0] = False
+            self.flip[0] = False 
+        
         
         for proj in self.projectiles.copy():
             kill = proj.update(dt)
