@@ -35,12 +35,12 @@ class Tilemap:
     def tile_collide(self, pos):
         tile_pos = (int(pos[0] // self.tile_size), int(pos[1] // self.tile_size))
         tile_loc = str(tile_pos[0]) + ';' + str(tile_pos[1])
-        for layer in sorted(self.tilemap):
+        for layer in sorted([int(key) for key in self.tilemap.keys()]):
+            layer = str(layer)
             if tile_loc in self.tilemap[layer]:
                 return True
-            else:
-                return False
-    
+            
+        
     def load_map(self, path):
         f = open(path, 'r')
         map_data = json.load(fp=f)
