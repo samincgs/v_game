@@ -87,17 +87,14 @@ class Tilemap:
     def remove_offgrid_tile(self, layer, curr_mpos=(0,0)):
         if layer in self.offgrid_tiles:
             for tile_data in self.offgrid_tiles[layer]:
-                print(tile_data)
                 tile_r = pygame.Rect(*tile_data['pos'], self.tile_size, self.tile_size)
                 if tile_r.collidepoint(curr_mpos):
-                    print('collided')
                     self.offgrid_tiles[layer].remove(tile_data)
                 
     # be careful of layer in self.tilemap because when converted from json the layer is in STRING          
     def render(self, surf, offset=(0, 0)):
         
-        for layer in sorted([int(key) for key in self.offgrid_tiles.keys()]): # convert layer into int so it can be sorted then convert it back for proper layer opacity functionality
-            layer = str(layer)
+        for layer in self.offgrid_tiles: # convert layer into int so it can be sorted then convert it back for proper layer opacity functionality
             tile_layer = self.offgrid_tiles[layer]
             for tile in tile_layer:
                 surf.blit(self.game.assets.tiles[tile['type']][tile['variant']], (tile['pos'][0] - offset[0], tile['pos'][1] - offset[1]))
@@ -108,25 +105,18 @@ class Tilemap:
             for loc in tile_layer:
                 tile = tile_layer[loc]
                 surf.blit(self.game.assets.tiles[tile['type']][tile['variant']], (tile['pos'][0] * self.tile_size - offset[0], tile['pos'][1] * self.tile_size - offset[1]))
+        
+        
+    
                 
     def render_editor(self, curr_layer, layer_opacity, surf, offset=(0,0)):
-                
-        for layer in sorted([int(key) for key in self.offgrid_tiles.keys()]):
-            layer = str(layer)
+        
+        for layer in self.offgrid_tiles:
             tile_layer = self.offgrid_tiles[layer]
             for tile in tile_layer:
-                if not layer_opacity:
-                    img = self.game.assets.tiles[tile['type']][tile['variant']]
-                    surf.blit(img, (tile['pos'][0] - offset[0], tile['pos'][1] - offset[1]))
-                else:
-                    if curr_layer == layer:
-                        img = self.game.assets.tiles[tile['type']][tile['variant']]
-                        surf.blit(img, (tile['pos'][0] - offset[0], tile['pos'][1] - offset[1]))
-                    else:
-                        img = self.game.assets.tiles[tile['type']][tile['variant']].copy()
-                        img.set_alpha(100)
-                        surf.blit(img, (tile['pos'][0] - offset[0], tile['pos'][1] - offset[1]))
-                
+                img = self.game.assets.tiles[tile['type']][tile['variant']]
+                surf.blit(img, (tile['pos'][0] - offset[0], tile['pos'][1] - offset[1]))
+                                
         for layer in sorted([int(key) for key in self.tilemap.keys()]): 
             layer = str(layer)
             tile_layer = self.tilemap[layer]
@@ -143,5 +133,8 @@ class Tilemap:
                         img = self.game.assets.tiles[tile['type']][tile['variant']].copy()
                         img.set_alpha(100)
                         surf.blit(img, (tile['pos'][0] * self.tile_size - offset[0], tile['pos'][1] * self.tile_size - offset[1]))
+                        
+                        
+        
                     
                     

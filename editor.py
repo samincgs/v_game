@@ -142,8 +142,6 @@ class LevelEditor:
                     y_offset = 2
                 tile_selector_surf.blit(val, (1, 1 + (20 * ix) - y_offset))
             
-            print(self.current_layer)
-            
             self.tilemap.render_editor(self.current_layer, self.layer_opacity, self.display, offset=render_scroll)
             
             if self.placement_mode == 'grid':
