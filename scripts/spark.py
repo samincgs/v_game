@@ -2,12 +2,13 @@ import pygame
 import math
 
 
-class Spark:
-    def __init__(self, pos, speed, angle, curve, color=(255,255,255), decay_rate=1):
+class SparkLine:
+    def __init__(self, pos, speed, angle, curve, push=3, color=(255,255,255), decay_rate=1):
         self.pos = list(pos)
         self.speed = speed
         self.angle = angle
         self.curve = curve
+        self.push = push
         self.color = color
         self.decay_rate = decay_rate
         
@@ -25,8 +26,8 @@ class Spark:
     
     def render(self, surf, offset=(0, 0)):
         if self.speed:
-            end_pos = (self.pos[0] + math.cos(self.angle) * self.speed * 3 - offset[0], 
-                       self.pos[1] + math.sin(self.angle) * self.speed * 3 - offset[1])
+            end_pos = (self.pos[0] + math.cos(self.angle) * self.speed * self.push - offset[0], 
+                       self.pos[1] + math.sin(self.angle) * self.speed * self.push - offset[1])
             
             pygame.draw.line(surf, self.color, (self.pos[0] - offset[0], self.pos[1] - offset[1]), end_pos, 2)
             
@@ -36,8 +37,9 @@ class SparkManager:
         self.game = game
         self.sparks = []
     
-    def add_spark(self, pos, angle, speed, curve, color=(255, 255, 255), decay_rate=1):
-       self.sparks.append(Spark(pos, speed, angle, curve, color, decay_rate))
+    def add_spark(self, s_type, pos, angle, speed, curve, push=3, color=(255, 255, 255), decay_rate=1):
+        if s_type == 'spark_line':
+            self.sparks.append(SparkLine(pos, speed, angle, curve, push, color, decay_rate))
        
     def update(self, dt):
         for spark in self.sparks.copy():

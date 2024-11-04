@@ -1,14 +1,14 @@
 from scripts.window import Window
-from scripts.input_manager import InputManager
-from scripts.asset_manager import AssetManager
+from scripts.input import Input
+from scripts.asset import Asset
 from scripts.world import World
 from scripts.renderer import Renderer
 
 class Game:
     def __init__(self):
         self.window = Window(self) 
-        self.input = InputManager(self)
-        self.assets = AssetManager()
+        self.input = Input(self)
+        self.assets = Asset()
         self.world = World(self)
         self.renderer = Renderer(self)
         
@@ -23,4 +23,4 @@ class Game:
         self.update()
             
 if __name__ == '__main__':
-    Game().run()
+    Game().run() 

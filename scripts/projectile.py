@@ -1,9 +1,8 @@
 import pygame
 import math
 import random
-
+ 
 from .config import config
-from .spark import Spark
 
 class Projectile:
     def __init__(self, game, pos, rot, speed, p_type):
@@ -51,8 +50,8 @@ class Projectile:
                 angle = math.pi / 2
             if collisions['left']:
                 angle = math.pi
-            for i in range(random.randint(3, 4)):
-                self.game.world.spark_manager.sparks.append(Spark(pos=self.pos, speed=4 + random.random() * 3, curve=(random.random() * 0.1) - 0.05, angle=math.pi + angle))
+            for i in range(random.randint(4,6)):
+                self.game.world.spark_manager.add_spark('spark_line', pos=self.pos, speed=4 + random.random() * 2, curve=(random.random() * 0.1) - 0.05, angle=math.pi + angle, push=2 + random.random() * 2)
             return True
         
         

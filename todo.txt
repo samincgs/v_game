@@ -6,7 +6,13 @@
 - Add player run animation
 - Add more guns
 - Add health bar ui
-- 
+- add jump particles as player jumps
+- create different weapons
+- change player sprite
+- add trees
+- add bridges
+- add decor
+
 
 # Game/Coding
 - Create map
@@ -14,6 +20,7 @@
 - Create minimap
 - Create inventory
 - Create tooltip when player sees items
-- 
+- create items
+- create skills
 
 

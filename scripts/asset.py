@@ -1,10 +1,9 @@
-import pygame
 import os
 
 from .font import Font
 from .config import config
 from .utils import load_image
-from .animation_manager import AnimationManager
+from .animation import AnimationManager
 
 BASE_PATH = 'data/images/' 
 BASE_PATH_FONT = 'data/fonts/' 
@@ -16,7 +15,7 @@ FONTS = {
     "large_black": (BASE_PATH_FONT + 'large_font.png', (0, 0, 1)),
 }
 
-class AssetManager:
+class Asset:
     def __init__(self):
         self.animations = AnimationManager()
         self.misc = self.load_dir('misc')

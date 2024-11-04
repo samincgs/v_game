@@ -4,7 +4,7 @@ import tkinter as tk
 from tkinter import filedialog
 
 from scripts.tilemap import Tilemap
-from scripts.asset_manager import AssetManager
+from scripts.asset import Asset
 from scripts.font import Font
 
 from scripts.config import config
@@ -23,7 +23,7 @@ class LevelEditor:
         self.file_name = None
         
         self.tilemap = Tilemap(self, 16, self.display_size)
-        self.assets = AssetManager()
+        self.assets = Asset()
         self.font = Font('data/fonts/small_font.png', (208, 223, 215))
         self.config = config['autotile']
         
