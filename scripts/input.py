@@ -67,6 +67,6 @@ class Input:
                             if event.key == self.config[binding]['binding'][1]:
                                 self.states[binding] = False 
                         
-            if self.states['esc']:
+            if self.states['quit']:
                 pygame.quit()
                 sys.exit()

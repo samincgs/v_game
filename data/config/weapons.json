@@ -1,8 +1,8 @@
 {
   "golden_gun": {
     "projectile_type": "golden_gun",
-    "trigger": "click_hold",
+    "trigger": "shoot",
     "capacity": 7,
-    "attack_rate": 0.01
+    "attack_rate": 0.2
   }
 }

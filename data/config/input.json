@@ -1,9 +1,9 @@
 {
-  "click": {
+  "shoot": {
     "trigger": "press",
     "binding": ["mouse", 1]
   },
-  "click_hold": {
+  "long_shoot": {
     "trigger": "hold",
     "binding": ["mouse", 1]
   },
@@ -14,6 +14,10 @@
   "right_click_hold": {
     "trigger": "hold",
     "binding": ["mouse", 3]
+  },
+  "reload": {
+    "trigger": "press",
+    "binding": ["keyboard", 114]
   },
   "up": {
     "trigger": "hold",
@@ -35,7 +39,7 @@
     "trigger": "press",
     "binding": ["keyboard", 32]
   },
-  "esc": {
+  "quit": {
     "trigger": "press",
     "binding": ["keyboard", 27]
   }
