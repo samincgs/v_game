@@ -1,6 +1,7 @@
 import pygame
 import math
 import time
+import random
 
 from .config import config
 from .projectile import Projectile
@@ -10,12 +11,13 @@ class Weapon:
         self.game = game
         self.owner = owner
         self.type = w_type
-        self.config = config['weapons']
-        self.projectile_type = self.config[self.type]['projectile_type']
-        self.capacity = self.config[self.type]['capacity']
+        self.config = config['weapons'][self.type]
+        self.projectile_type = self.config['projectile_type']
+        self.capacity = self.config['capacity']
+        self.reload_method = self.config['reload_method']
         self.ammo = self.capacity
-        self.attack_rate = self.config[self.type]['attack_rate']
-        self.trigger = self.config[self.type]['trigger']
+        self.attack_rate = self.config['attack_rate']
+        self.trigger = self.config['trigger']
         
         self.rotation = 0
         self.flip = False
@@ -30,7 +32,21 @@ class Weapon:
                 self.last_attack = curr_time
     
     def reload(self):
-        self.ammo = self.capacity
+        if self.ammo != self.capacity:
+        
+            self.ammo = self.capacity
+            
+            if self.reload_method == 'shells':
+                for i in range(3):
+                    self.game.world.particle_manager.add_particle(game=self.game, 
+                        p_type='shells', 
+                        pos=self.owner.center, 
+                        movement=[(self.owner.flip[0] - 0.5) * random.randint(60, 90), -random.randint(30, 80)], 
+                        decay_rate=0.4, 
+                        frame=0, 
+                        custom_color=(244, 176, 60), 
+                        physics=self.game.world.tilemap)
+        
        
     def render(self, surf, loc):
         img = self.game.assets.weapons[self.type].copy()

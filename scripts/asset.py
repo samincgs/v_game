@@ -20,6 +20,7 @@ class Asset:
         self.animations = AnimationManager()
         self.misc = self.load_dir('misc')
         self.weapons = self.load_dir('weapons')
+        self.particles = self.load_dir_list('particles')
         self.tiles = self.load_dir_list('tiles')
         
         self.fonts = {font_name: Font(font[0], font[1]) for font_name, font in FONTS.items()}

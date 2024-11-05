@@ -135,12 +135,12 @@ class LevelEditor:
             # SELECT TILES (BOTTOM HALF)
             for ix, val in enumerate(self.assets.tiles[self.tile_list[self.tile_group]]):
                 y_offset = 0
-                tile_rect = pygame.Rect(1, sidebar_surf.get_height() + 1 + (20 * ix), val.get_width(), val.get_height())
+                tile_rect = pygame.Rect(1, sidebar_surf.get_height() + 2 + (val.get_height() * ix * 1.5) , val.get_width(), val.get_height())
                 if tile_rect.collidepoint(mpos):
                     if self.clicking:
                         self.tile_variant = ix
                     y_offset = 2
-                tile_selector_surf.blit(val, (1, 1 + (20 * ix) - y_offset))
+                tile_selector_surf.blit(val, (1, 2 + (val.get_height() * ix * 1.5) - y_offset))
             
             self.tilemap.render_editor(self.current_layer, self.layer_opacity, self.display, offset=render_scroll)
             

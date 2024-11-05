@@ -56,8 +56,7 @@ class CurvedSpark:
             pygame.draw.polygon(surf, self.color, [(self.pos[0] - offset[0], self.pos[1] - offset[1]), end_pos1, end_pos2], 2)
                       
 class SparkManager:
-    def __init__(self, game):
-        self.game = game
+    def __init__(self):
         self.sparks = []
     
     def add_spark(self, s_type, pos, angle, speed, curve=None, color=(255, 255, 255), decay_rate=1):

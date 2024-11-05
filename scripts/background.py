@@ -5,10 +5,10 @@ class Background:
     def __init__(self, game):
         self.game = game
         self.angle = math.radians(-30)
-        self.color = (50, 0, 46)
+        self.color = (30, 29, 46)
         self.pos = 0
         self.thickness = 20
-        self.speed = 40
+        self.speed = 30
         
     def update(self):
         self.pos = (self.pos + self.speed * self.game.window.dt) % (self.thickness * 2)

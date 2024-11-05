@@ -1,8 +1,9 @@
 {
   "golden_gun": {
     "projectile_type": "golden_gun",
+    "reload_method": "shells",
     "trigger": "shoot",
     "capacity": 7,
-    "attack_rate": 0.2
+    "attack_rate": 0.07
   }
 }
