@@ -1,5 +1,3 @@
-import pygame
-
 from .tilemap import Tilemap
 from .camera import Camera
 from .player import Player

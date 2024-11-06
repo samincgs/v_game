@@ -50,7 +50,7 @@ class Projectile:
                 angle = math.pi / 2
             if collisions['left']:
                 angle = math.pi
-            for i in range(random.randint(3,4)):
+            for i in range(random.randint(2,4)):
                 self.game.world.spark_manager.add_spark('spark_curve', pos=self.pos, speed=4 + random.random() * 2, curve=(random.random() * 0.1) - 0.05, angle=math.pi + angle, decay_rate=0.5 + random.random() * 0.2)
             return True
         

@@ -6,7 +6,7 @@ from scripts.renderer import Renderer
 
 class Game:
     def __init__(self):
-        self.window = Window(self) 
+        self.window = Window(self)
         self.input = Input(self)
         self.assets = Asset()
         self.world = World(self)
