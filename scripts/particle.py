@@ -7,6 +7,7 @@ class Particle:
         self.game = game
         self.type = p_type
         self.pos = list(pos)
+        self.ply_pos = self.pos.copy()
         self.movement = list(movement)
         self.decay_rate = decay_rate
         self.frame = frame
@@ -14,34 +15,41 @@ class Particle:
         self.physics = physics
         self.spawn = True
         self.rotation = 0
-        self.bounce_limit = 2
         
     def update(self, dt):
         
-        self.pos[0] += self.movement[0] * dt
-        self.pos[1] += self.movement[1] * dt
+        if self.type in ['shells']:
+            self.movement[1] += 300 * dt
+            abs_motion = abs(self.movement[1]) + abs(self.movement[0])
+            if abs_motion > 12:
+                self.rotation += 20 * dt * abs_motion
+  
+        if not self.physics:
+            self.pos[0] += self.movement[0] * dt
+            self.pos[1] += self.movement[1] * dt
+        else:
+            # horizontal collision
+            hit = False
+            self.pos[0] += self.movement[0] * dt
+            if self.physics.tile_collide(self.pos):
+                self.movement[0] *= -0.7
+                self.movement[1] *= 0.8
+                hit = True
+            # vertical collision
+            self.pos[1] += self.movement[1] * dt
+            if self.physics.tile_collide(self.pos):
+                self.movement[0] *= 0.8
+                self.movement[1] *= -0.7
+                hit = True
+            if hit:
+                self.pos[0] += self.movement[0] * dt * 3
+                self.pos[1] += self.movement[1] * dt * 3
         
         self.frame += self.decay_rate * dt
         self.frame = min(self.frame, len(self.game.assets.particles[self.type]) - 1)
-                    
-        if self.type in ['shells']:
-            self.movement[1] += 300 * dt
-    
-        if self.physics and self.physics.tile_collide(self.pos):
-                if abs(self.movement[1]) > self.bounce_limit:
-                    self.movement[1] *= -0.6
-                else:
-                    self.movement[1] = 0
-                self.movement[0] *= 0.85
-        
-        print(self.movement[1])
-                           
-        if abs(self.movement[1]) > self.bounce_limit:
-            self.rotation += 200 * dt
-                                                                              
         if self.frame >= len(self.game.assets.particles[self.type]) - 1:
             self.spawn = False
-        
+                                                                                                    
         return not self.spawn
     
     def render(self, surf, offset=(0,0)):
@@ -53,7 +61,8 @@ class Particle:
         if self.rotation:
             img = pygame.transform.rotate(img, self.rotation)
         if self.spawn:
-            surf.blit(img, (self.pos[0] - offset[0], self.pos[1] - offset[1] - height_offset))
+            surf.blit(img, (self.pos[0] - img.get_width() // 2 - offset[0], self.pos[1] - img.get_height() // 2 - offset[1] - height_offset))
+        
                     
 class ParticleManager:
     def __init__(self):

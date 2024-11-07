@@ -3,5 +3,10 @@
     "shape": ["line", [255, 255, 255], 5, 2],
     "power": 13,
     "knockback": 0.2
+  },
+  "rifle": {
+    "shape": ["line", [255, 255, 255], 5, 2],
+    "power": 5,
+    "knockback": 0.2
   }
 }

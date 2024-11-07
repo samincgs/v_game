@@ -3,6 +3,7 @@ from .camera import Camera
 from .player import Player
 from .spark import SparkManager
 from .particle import ParticleManager
+import pygame
 
 class World:
     def __init__(self, game):
@@ -30,3 +31,5 @@ class World:
         self.player.render(surf, offset=offset)
         self.spark_manager.render(surf, offset=offset)
         self.particle_manager.render(surf, offset=offset)
+        pygame.draw.rect(surf, 'red', pygame.Rect(self.player.center[0] - offset[0], self.player.center[1] - offset[1], 1, 1))
+        

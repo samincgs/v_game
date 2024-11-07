@@ -5,6 +5,14 @@
     "trigger": "shoot",
     "max_ammo": 90,
     "capacity": 7,
-    "attack_rate": 0.2
+    "attack_rate": 0.09
+  },
+  "rifle": {
+    "projectile_type": "rifle",
+    "reload_method": "mag",
+    "trigger": "long_shoot",
+    "max_ammo": 300,
+    "capacity": 30,
+    "attack_rate": 0.1
   }
 }

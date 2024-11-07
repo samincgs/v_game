@@ -49,7 +49,7 @@ class Player(Entity):
             self.move(-1)
         if self.game.input.states['reload']:
             self.weapon.reload()
-        if self.game.input.mouse_states['shoot']:
+        if self.game.input.mouse_states[self.weapon.trigger]:
             self.weapon.attack()
         
         self.velocity[1] = min(500, self.velocity[1] + dt * 700)

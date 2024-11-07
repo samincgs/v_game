@@ -31,21 +31,24 @@ class Weapon:
                 self.ammo -= 1
                 self.game.world.player.projectiles.append(Projectile(self.game, self.owner.center, math.radians(self.rotation), 300, self.type))
                 self.last_attack = curr_time
+                if self.type in ['rifle']:
+                    self.game.world.particle_manager.add_particle(self.game, 'shells', self.owner.center, movement=[(self.owner.flip[0] - 0.5) * random.randint(60, 90), -random.randint(10, 30)], decay_rate=0.4, frame=0, custom_color=(244, 176, 60), physics=self.game.world.tilemap)
     
     def reload(self):
         if (self.ammo != self.capacity) and (self.max_ammo > 0):
-            self.max_ammo -= self.capacity - self.ammo
+            diff = min(self.max_ammo, self.capacity - self.ammo) # use min so when player has almost no ammunication left, the game doesnt crash 
+            self.max_ammo -= diff
             self.ammo = self.capacity
             
             if self.reload_method == 'shells':
-                for i in range(1):
+                for i in range(diff):
                     self.game.world.particle_manager.add_particle(game=self.game, 
                         p_type='shells', 
                         pos=self.owner.center, 
                         movement=[(self.owner.flip[0] - 0.5) * random.randint(60, 90), -random.randint(40, 80)], 
                         decay_rate=0.1, 
                         frame=0, 
-                        custom_color=(244, 176, 60), 
+                        custom_color=(244, 176, 60),  # (maybe) change the color of the reload bullet drop
                         physics=self.game.world.tilemap)
         
        

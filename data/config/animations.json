@@ -4,7 +4,7 @@
     "loop": true,
     "speed": 1.0,
     "centered": false,
-    "offset": [7, 3],
+    "offset": [6, 3],
     "outline": [217, 221, 232]
   },
   "player_jump": {
@@ -12,7 +12,7 @@
     "loop": false,
     "speed": 1.0,
     "centered": false,
-    "offset": [7, 3],
+    "offset": [6, 3],
     "outline": [217, 221, 232]
   },
   "player_run": {
@@ -20,7 +20,7 @@
     "loop": true,
     "speed": 1.0,
     "centered": false,
-    "offset": [7, 3],
+    "offset": [6, 4],
     "outline": [217, 221, 232]
   }
 }

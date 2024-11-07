@@ -38,7 +38,7 @@ class Entity:
         if self.centered:
             return self.pos.copy()
         else:
-            return [self.pos[0] + self.size[0] // 2, self.pos[1] + self.size[1] // 2]
+            return [self.pos[0] + self.size[0] // 2, self.pos[1] + self.size[1] // 2] 
         
     def set_action(self, action_id, force=False):
         if force:
