@@ -14,7 +14,7 @@ class Player(Entity):
         self.jumps = self.max_jumps
         self.dash = 0
         self.aim_angle = 0
-        self.weapon = Weapon(game, self, 'golden_gun')
+        self.weapon = Weapon(game, self, 'rifle')
         self.projectiles = []
         
         self.last_collisions = {k : False for k in ['top', 'left', 'right', 'bottom']}

@@ -31,8 +31,15 @@ class Weapon:
                 self.ammo -= 1
                 self.game.world.player.projectiles.append(Projectile(self.game, self.owner.center, math.radians(self.rotation), 300, self.type))
                 self.last_attack = curr_time
+                # add bow sparks
+                spark_position = [
+                self.owner.center[0] + math.cos(math.radians(self.rotation)) * 4,
+                self.owner.center[1] + math.sin(math.radians(self.rotation)) * 4
+            ]
+                self.game.world.vfx.spawn_group('bow_sparks', spark_position, math.radians(self.rotation))
                 if self.type in ['rifle']:
-                    self.game.world.particle_manager.add_particle(self.game, 'shells', self.owner.center, movement=[(self.owner.flip[0] - 0.5) * random.randint(60, 90), -random.randint(10, 30)], decay_rate=0.4, frame=0, custom_color=(244, 176, 60), physics=self.game.world.tilemap)
+                    if self.ammo %  3 == 0:
+                        self.game.world.particle_manager.add_particle(self.game, 'shells', self.owner.center, movement=[(self.owner.flip[0] - 0.5) * random.randint(60, 90), -random.randint(30, 50)], decay_rate=0.5, frame=0, custom_color=(244, 176, 60), physics=self.game.world.tilemap)
     
     def reload(self):
         if (self.ammo != self.capacity) and (self.max_ammo > 0):
@@ -49,6 +56,14 @@ class Weapon:
                         decay_rate=0.1, 
                         frame=0, 
                         custom_color=(244, 176, 60),  # (maybe) change the color of the reload bullet drop
+                        physics=self.game.world.tilemap)
+            elif self.reload_method == 'mag':
+                self.game.world.particle_manager.add_particle(game=self.game, 
+                        p_type='mag', 
+                        pos=self.owner.center, 
+                        movement=[(self.owner.flip[0] - 0.5) * random.randint(40, 70), -random.randint(30, 60)], 
+                        decay_rate=0.2, 
+                        frame=0, 
                         physics=self.game.world.tilemap)
         
        

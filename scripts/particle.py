@@ -18,7 +18,7 @@ class Particle:
         
     def update(self, dt):
         
-        if self.type in ['shells']:
+        if self.type in ['shells', 'mag']:
             self.movement[1] += 300 * dt
             abs_motion = abs(self.movement[1]) + abs(self.movement[0])
             if abs_motion > 12:
@@ -53,7 +53,6 @@ class Particle:
         return not self.spawn
     
     def render(self, surf, offset=(0,0)):
-        height_offset = 3 # since tiles are 17 x 16
         img = self.game.assets.particles[self.type][int(self.frame)]
         if self.color:
             img = palette_swap(img, (255, 255, 255), self.color)
@@ -61,7 +60,7 @@ class Particle:
         if self.rotation:
             img = pygame.transform.rotate(img, self.rotation)
         if self.spawn:
-            surf.blit(img, (self.pos[0] - img.get_width() // 2 - offset[0], self.pos[1] - img.get_height() // 2 - offset[1] - height_offset))
+            surf.blit(img, (self.pos[0] - img.get_width() // 2 - offset[0], self.pos[1] - img.get_height() // 2 - offset[1] + 1))
         
                     
 class ParticleManager:

@@ -1,18 +1,14 @@
 # Level Editor
 - Add floodfill
 
-
 # Pixel art
 - Add more guns
-- Add health bar ui
-- create different weapons
 - change player sprite
 - add bridges
 - add decor
 
-
 # Game/Coding
-- Create map
+- Create map (make a structured map)
 - Create minimap
 - Create inventory
 - Create tooltip when player sees items
