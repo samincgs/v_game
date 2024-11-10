@@ -5,7 +5,7 @@
     "speed": 1.0,
     "centered": false,
     "offset": [6, 3],
-    "outline": false
+    "outline": [255, 255, 255]
   },
   "player_jump": {
     "frames": [5],
@@ -13,7 +13,7 @@
     "speed": 1.0,
     "centered": false,
     "offset": [6, 3],
-    "outline": false
+    "outline": [255, 255, 255]
   },
   "player_run": {
     "frames": [3, 4, 2, 4, 2],
@@ -21,6 +21,6 @@
     "speed": 1.0,
     "centered": false,
     "offset": [6, 4],
-    "outline": false
+    "outline": [255, 255, 255]
   }
 }

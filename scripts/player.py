@@ -1,9 +1,7 @@
-import pygame
 import math
 
 from .entity import Entity
 from .weapon import Weapon
-from .utils import outline
 
 class Player(Entity):
     def __init__(self, game, pos, size, e_type):
@@ -14,13 +12,30 @@ class Player(Entity):
         self.jumps = self.max_jumps
         self.dash = 0
         self.aim_angle = 0
-        self.weapon = Weapon(game, self, 'rifle')
-        self.projectiles = []
+        self.inventory = {'weapons': [Weapon(game, 'golden_gun', self)]} # {'weapons' : [], 'skills': [], 'items': []}
+        self.selected_weapon = 0
         
         self.last_collisions = {k : False for k in ['top', 'left', 'right', 'bottom']}
         self.frame_movement = [0, 0]
         
-
+        self.add_weapon(Weapon(game, 'rifle', self)) # add second weapon
+    
+    @property
+    def weapon(self):
+        return self.inventory['weapons'][self.selected_weapon]
+        
+    def add_weapon(self, item): # TODO: Dont allow duplicate weapons
+        for weapon in self.inventory['weapons']:
+            if item.name == weapon.name:
+                return    
+        self.inventory['weapons'].append(item)
+            
+            
+    
+    def slot_weapon(self, direction):
+        self.selected_weapon = (self.selected_weapon + direction) % len(self.inventory['weapons'])
+    
+    
     def jump(self):
         if self.jumps:
             self.velocity[1] = -300
@@ -39,7 +54,7 @@ class Player(Entity):
         
         super().update(dt)
         self.air_timer += dt
-          
+                
         # normalize x axis movement
         if self.game.input.states['jump']:
             self.jump()
@@ -51,6 +66,11 @@ class Player(Entity):
             self.weapon.reload()
         if self.game.input.mouse_states[self.weapon.trigger]:
             self.weapon.attack()
+            
+        if self.game.input.mouse_states['scroll_up']:
+            self.slot_weapon(-1)
+        if self.game.input.mouse_states['scroll_down']:
+            self.slot_weapon(1)
         
         self.velocity[1] = min(500, self.velocity[1] + dt * 700)
                 
@@ -80,15 +100,9 @@ class Player(Entity):
             self.flip[0] = True
         else:
             self.flip[0] = False 
-        
-        
-        for proj in self.projectiles.copy():
-            kill = proj.update(dt)
-            proj.render(self.game.window.display, self.game.world.camera.pos)
-            if kill:
-                self.projectiles.remove(proj)
             
         
+            
     def render(self, surf, offset=(0, 0)):
         super().render(surf, offset=offset)
         self.weapon.render(surf, (self.center[0] - offset[0], self.center[1] - offset[1] + 2))

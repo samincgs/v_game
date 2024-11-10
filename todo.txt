@@ -15,4 +15,6 @@
 - create items
 - create skills
 
-
+# Bugs
+- fix spark system
+- fix rendering of weapons

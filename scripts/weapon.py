@@ -3,15 +3,14 @@ import math
 import time
 import random
 
+from .item import Item
 from .config import config
 from .projectile import Projectile
 
-class Weapon:
-    def __init__(self, game, owner, w_type):
-        self.game = game
-        self.owner = owner
-        self.type = w_type
-        self.config = config['weapons'][self.type]
+class Weapon(Item):
+    def __init__(self, game, name, owner):
+        super().__init__(game, name, owner=owner)
+        self.config = config['weapons'][self.name]
         self.projectile_type = self.config['projectile_type']
         self.max_ammo = self.config['max_ammo']
         self.capacity = self.config['capacity']
@@ -24,12 +23,17 @@ class Weapon:
         self.flip = False
         self.last_attack = 0
     
+    @property
+    def img(self):
+        img = self.game.assets.weapons[self.name].copy()
+        return img
+    
     def attack(self):
         if (self.ammo > 0):
             curr_time = time.time()
             if curr_time - self.last_attack >= self.attack_rate:
                 self.ammo -= 1
-                self.game.world.player.projectiles.append(Projectile(self.game, self.owner.center, math.radians(self.rotation), 300, self.type))
+                self.game.world.projectiles.append(Projectile(self.game, self.owner.center, math.radians(self.rotation), 300, self.name))
                 self.last_attack = curr_time
                 # add bow sparks
                 spark_position = [
@@ -39,7 +43,7 @@ class Weapon:
                 self.game.world.vfx.spawn_group('bow_sparks', spark_position, math.radians(self.rotation))
                 if self.type in ['rifle']:
                     if self.ammo %  3 == 0:
-                        self.game.world.particle_manager.add_particle(self.game, 'shells', self.owner.center, movement=[(self.owner.flip[0] - 0.5) * random.randint(60, 90), -random.randint(30, 50)], decay_rate=0.5, frame=0, custom_color=(244, 176, 60), physics=self.game.world.tilemap)
+                        self.game.world.particle_manager.add_particle(self.game, 'shells', self.owner.center, movement=[(self.owner.flip[0] - 0.5) * random.randint(60, 90), -random.randint(30, 50)], decay_rate=0.05, frame=0, custom_color=(244, 176, 60), physics=self.game.world.tilemap)
     
     def reload(self):
         if (self.ammo != self.capacity) and (self.max_ammo > 0):
@@ -62,13 +66,14 @@ class Weapon:
                         p_type='mag', 
                         pos=self.owner.center, 
                         movement=[(self.owner.flip[0] - 0.5) * random.randint(40, 70), -random.randint(30, 60)], 
-                        decay_rate=0.2, 
+                        decay_rate=0.1, 
                         frame=0, 
+                        custom_color=(92, 36, 27),
                         physics=self.game.world.tilemap)
         
-       
+
     def render(self, surf, loc):
-        img = self.game.assets.weapons[self.type].copy()
+        img = self.img
         if (self.rotation % 360 > 90) and (self.rotation % 360 < 270):
             img = pygame.transform.flip(img, False, True)
             self.flip = True

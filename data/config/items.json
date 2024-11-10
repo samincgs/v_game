@@ -1,0 +1,12 @@
+{
+  "golden_gun": {
+    "name": "Golden Gun",
+    "type": "weapon",
+    "description": "N/A"
+  },
+  "rifle": {
+    "name": "Rifle",
+    "type": "weapon",
+    "description": "N/A"
+  }
+}

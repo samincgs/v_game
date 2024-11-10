@@ -15,6 +15,14 @@
     "trigger": "hold",
     "binding": ["mouse", 3]
   },
+  "scroll_up": {
+    "trigger": "press",
+    "binding": ["mouse", 4]
+  },
+  "scroll_down": {
+    "trigger": "press",
+    "binding": ["mouse", 5]
+  },
   "reload": {
     "trigger": "press",
     "binding": ["keyboard", 114]
@@ -38,6 +46,10 @@
   "jump": {
     "trigger": "press",
     "binding": ["keyboard", 32]
+  },
+  "change_weapon": {
+    "trigger": "press",
+    "binding": ["keyboard", 113]
   },
   "quit": {
     "trigger": "press",

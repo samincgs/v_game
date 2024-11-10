@@ -17,6 +17,8 @@ class World:
         self.spark_manager = SparkManager()
         self.vfx = VFX()
         
+        self.projectiles = []
+        
     def update(self):
         dt = self.game.window.dt
         self.camera.update()
@@ -24,6 +26,13 @@ class World:
         self.particle_manager.update(dt)
         self.spark_manager.update(dt)
         self.vfx.update(dt)
+        
+        for proj in self.projectiles.copy():
+            kill = proj.update(dt)
+            proj.render(self.game.window.display, self.game.world.camera.pos)
+            if kill:
+                self.projectiles.remove(proj)
+    
         
     
     def render(self, surf):

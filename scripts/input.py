@@ -29,13 +29,14 @@ class Input:
                 if self.config[binding]['binding'][0] == 'keyboard':
                     self.states[binding] = False
                 elif self.config[binding]['binding'][0] == 'mouse':
-                    self.mouse_states[binding] = False
+                        self.mouse_states[binding] = False
+                        
       
     def update(self):
-        
+                
         mpos = pygame.mouse.get_pos()
         self.mpos = (int(mpos[0] / self.game.window.render_scale), int(mpos[1] / self.game.window.render_scale))
-        
+            
         self.reset()
         
         for event in pygame.event.get():
@@ -70,3 +71,5 @@ class Input:
             if self.states['quit']:
                 pygame.quit()
                 sys.exit()
+                
+                

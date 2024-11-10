@@ -21,7 +21,11 @@ class Entity:
             
     @property 
     def img(self):
-        img = self.active_animation.img
+        if self.active_animation:
+            img = self.active_animation.img
+        else:
+            img = self.set_image()    
+        
         if any(self.flip):
             img = pygame.transform.flip(img, self.flip[0], self.flip[1])
         return img
@@ -96,7 +100,7 @@ class Entity:
         offset = self.calculate_render_offset(offset=offset)
         if self.active_animation.data.config['outline']:
             outline(surf, self.img, (int(self.pos[0] - offset[0]), int(self.pos[1] - offset[1])), color=self.active_animation.data.config['outline'])
-        surf.blit(self.img, (int(self.pos[0] - offset[0]), int(self.pos[1] - offset[1])))
+        surf.blit(self.img, (int(self.pos[0] - offset[0]), int(self.pos[1] - offset[1]))) # added one to deal with tilemap size (17x16)
           
     def update(self, dt):
         self.active_animation.play(dt)

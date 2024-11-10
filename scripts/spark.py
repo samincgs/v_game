@@ -25,9 +25,9 @@ class CurvedSpark:
     def render(self, surf, offset=(0, 0)):
         if self.speed:
             end_pos1 = (self.pos[0] + math.cos(self.angle) * self.speed * 3 - offset[0],self.pos[1] + math.sin(self.angle) * self.speed * 3 - offset[1])
-            end_pos2 = (self.pos[0] + math.cos(self.angle + math.pi) * self.speed * 1.5 - offset[0], self.pos[1] + math.sin(self.angle + math.pi / 2) * self.speed * 1.5 - offset[1])
+            # end_pos2 = (self.pos[0] + math.cos(self.angle + math.pi) * self.speed * 1.5 - offset[0], self.pos[1] + math.sin(self.angle + math.pi / 2) * self.speed * 1.5 - offset[1])
             
-            pygame.draw.polygon(surf, self.color, [(self.pos[0] - offset[0], self.pos[1] - offset[1]), end_pos1, end_pos2], 2)
+            pygame.draw.line(surf, self.color, (self.pos[0] - offset[0], self.pos[1] - offset[1]), end_pos1, 2)
                       
 class SparkManager:
     def __init__(self):

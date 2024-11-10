@@ -27,6 +27,23 @@ class Renderer:
         # ammo ui
         self.game.assets.fonts['small_white'].render(str(self.game.world.player.weapon.ammo) + ' / ' + str(self.game.world.player.weapon.max_ammo), surf, (3, health_bar_img.get_height() + 5))
         
+        # weapon display
+        base_pos = 25
+        offset = 0
+        for ix, weapon in enumerate(self.game.world.player.inventory['weapons']):
+            color = (255, 255, 255)
+            curr_weapon = weapon.img.copy()
+            weapon_mask = pygame.mask.from_surface(curr_weapon)
+            weapon_rect = weapon_mask.get_bounding_rects()[0]
+            if self.game.world.player.selected_weapon == ix:
+                pygame.draw.line(surf, color, (2, base_pos + ix * offset), (2, base_pos + ix * offset + weapon_rect[3]), 2)
+            else:
+                color = (139, 171, 191)
+            weapon_mask = weapon_mask.to_surface(setcolor=color, unsetcolor=(0,0,0,0))
+            surf.blit(weapon_mask, (2, base_pos + ix * offset))
+            offset += 10
+        
+        
         
         # world_mask = pygame.mask.from_surface(world_surf)
         # world_bg = world_mask.to_surface(unsetcolor=(0, 0, 0, 0), setcolor=(0, 0, 0, 255))
