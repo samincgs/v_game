@@ -30,7 +30,7 @@ class Renderer:
         # weapon display
         base_pos = 25
         offset = 0
-        for ix, weapon in enumerate(self.game.world.player.inventory['weapons']):
+        for ix, weapon in enumerate(self.game.world.player.inventory.get_active_weapons()):
             color = (255, 255, 255)
             curr_weapon = weapon.img.copy()
             weapon_mask = pygame.mask.from_surface(curr_weapon)

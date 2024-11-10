@@ -2,6 +2,7 @@ import math
 
 from .entity import Entity
 from .weapon import Weapon
+from .inventory import Inventory
 
 class Player(Entity):
     def __init__(self, game, pos, size, e_type):
@@ -12,29 +13,24 @@ class Player(Entity):
         self.jumps = self.max_jumps
         self.dash = 0
         self.aim_angle = 0
-        self.inventory = {'weapons': [Weapon(game, 'golden_gun', self)]} # {'weapons' : [], 'skills': [], 'items': []}
+        self.inventory = Inventory()
+        self.inventory.add_item(Weapon(game, 'golden_gun', self, tags=['active']), 'weapons')
         self.selected_weapon = 0
         
         self.last_collisions = {k : False for k in ['top', 'left', 'right', 'bottom']}
         self.frame_movement = [0, 0]
         
-        self.add_weapon(Weapon(game, 'rifle', self)) # add second weapon
     
     @property
     def weapon(self):
-        return self.inventory['weapons'][self.selected_weapon]
-        
-    def add_weapon(self, item): # TODO: Dont allow duplicate weapons
-        for weapon in self.inventory['weapons']:
-            if item.name == weapon.name:
-                return    
-        self.inventory['weapons'].append(item)
-            
-            
-    
+        active_weapons = self.inventory.get_active_weapons()
+        if active_weapons:
+            return active_weapons[self.selected_weapon]
+                    
     def slot_weapon(self, direction):
-        self.selected_weapon = (self.selected_weapon + direction) % len(self.inventory['weapons'])
-    
+        active_weapons = self.inventory.get_active_weapons()
+        if active_weapons:
+            self.selected_weapon = (self.selected_weapon + direction) % len(active_weapons)
     
     def jump(self):
         if self.jumps:

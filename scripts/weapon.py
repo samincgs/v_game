@@ -8,8 +8,12 @@ from .config import config
 from .projectile import Projectile
 
 class Weapon(Item):
-    def __init__(self, game, name, owner):
-        super().__init__(game, name, owner=owner)
+    def __init__(self, game, name, owner, tags=None):
+        weapon_tags = ['weapon']
+        if tags:
+            weapon_tags.extend(tags)
+        
+        super().__init__(game, name, owner=owner, tags=weapon_tags)
         self.config = config['weapons'][self.name]
         self.projectile_type = self.config['projectile_type']
         self.max_ammo = self.config['max_ammo']
