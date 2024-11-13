@@ -5,7 +5,6 @@ import random
 
 from .item import Item
 from .config import config
-from .projectile import Projectile
 
 class Weapon(Item):
     def __init__(self, game, name, owner, tags=None):
@@ -37,7 +36,7 @@ class Weapon(Item):
             curr_time = time.time()
             if curr_time - self.last_attack >= self.attack_rate:
                 self.ammo -= 1
-                self.game.world.projectiles.append(Projectile(self.game, self.owner.center, math.radians(self.rotation), 300, self.name))
+                self.game.world.projectile_manager.add_projectile(self.game, self.owner.center, math.radians(self.rotation), 300, self.name)
                 self.last_attack = curr_time
                 # add bow sparks
                 spark_position = [

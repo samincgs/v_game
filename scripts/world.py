@@ -2,6 +2,7 @@ from .tilemap import Tilemap
 from .camera import Camera
 from .player import Player
 from .spark import SparkManager
+from .projectile import ProjectileManager
 from .particle import ParticleManager
 from .vfx import VFX
 
@@ -16,9 +17,8 @@ class World:
         self.particle_manager = ParticleManager()
         self.spark_manager = SparkManager()
         self.vfx = VFX()
-        
-        self.projectiles = []
-        
+        self.projectile_manager = ProjectileManager()
+  
     def update(self):
         dt = self.game.window.dt
         self.camera.update()
@@ -26,13 +26,7 @@ class World:
         self.particle_manager.update(dt)
         self.spark_manager.update(dt)
         self.vfx.update(dt)
-        
-        for proj in self.projectiles.copy():
-            kill = proj.update(dt)
-            proj.render(self.game.window.display, self.game.world.camera.pos)
-            if kill:
-                self.projectiles.remove(proj)
-    
+        self.projectile_manager.update(dt)
         
     
     def render(self, surf):
@@ -42,5 +36,6 @@ class World:
         self.particle_manager.render(surf, offset=offset)
         self.spark_manager.render(surf, offset=offset)
         self.vfx.render(surf, offset=offset)
+        self.projectile_manager.render(surf, offset=offset)
         # pygame.draw.rect(surf, 'red', pygame.Rect(self.player.center[0] - offset[0], self.player.center[1] - offset[1], 1, 1)) # debug
         

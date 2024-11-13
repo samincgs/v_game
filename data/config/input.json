@@ -47,9 +47,9 @@
     "trigger": "press",
     "binding": ["keyboard", 32]
   },
-  "change_weapon": {
+  "inventory_toggle": {
     "trigger": "press",
-    "binding": ["keyboard", 113]
+    "binding": ["keyboard", 101]
   },
   "quit": {
     "trigger": "press",

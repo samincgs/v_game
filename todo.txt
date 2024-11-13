@@ -17,4 +17,3 @@
 
 # Bugs
 - fix spark system
-- fix rendering of weapons

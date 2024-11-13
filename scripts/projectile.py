@@ -61,3 +61,20 @@ class Projectile:
         p_len = self.config['shape'][2]
         if self.config['shape'][0] == 'line':
             pygame.draw.line(surf, self.config['shape'][1], render_pos, [render_pos[0] + math.cos(self.rot) * p_len, render_pos[1] + math.sin(self.rot) * p_len], self.config['shape'][3])
+
+class ProjectileManager:
+    def __init__(self):
+        self.projectiles = []
+    
+    def add_projectile(self, game, pos, rot, speed, p_type):
+        self.projectiles.append(Projectile(game, pos, rot, speed, p_type))
+    
+    def update(self, dt):
+        for projectile in self.projectiles.copy():
+            kill = projectile.update(dt)
+            if kill:
+                self.projectiles.remove(projectile)
+                
+    def render(self, surf, offset=(0, 0)):
+        for projectile in self.projectiles:
+            projectile.render(surf, offset=offset)
