@@ -10,7 +10,7 @@
 # Game/Coding
 - Create map (make a structured map)
 - Create minimap
-- Create inventory
+- Create inventory gui
 - Create tooltip when player sees items
 - create items
 - create skills
