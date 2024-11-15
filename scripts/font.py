@@ -1,3 +1,5 @@
+# DAFLUFFYPOTATO's FONT SYSTEM
+
 import pygame
 
 from scripts.utils import clip, palette_swap

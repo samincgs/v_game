@@ -12,15 +12,12 @@ class Game:
         self.world = World(self)
         self.renderer = Renderer(self)
         
-    def update(self):
+    def run(self):
         while True:
             self.input.update()
             self.renderer.render()
             self.world.update()
             self.window.create()
-    
-    def run(self):
-        self.update()
             
 if __name__ == '__main__':
     Game().run() 

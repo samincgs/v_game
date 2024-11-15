@@ -2,11 +2,11 @@
   "golden_gun": {
     "name": "Golden Gun",
     "type": "weapon",
-    "description": "N/A"
+    "description": "A flashy sidearm with decent accuracy."
   },
   "rifle": {
-    "name": "Rifle",
+    "name": "KR-47",
     "type": "weapon",
-    "description": "N/A"
+    "description": "A reliable, long-range firearm for precision shooting."
   }
 }

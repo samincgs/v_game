@@ -15,6 +15,7 @@ class Player(Entity):
         self.aim_angle = 0
         self.inventory = Inventory()
         self.inventory.add_item(Weapon(game, 'golden_gun', self, tags=['active']), 'weapons')
+        self.inventory.add_item(Weapon(game, 'rifle', self, tags=['active']), 'weapons')
         self.selected_weapon = 0
         
         self.last_collisions = {k : False for k in ['top', 'left', 'right', 'bottom']}
@@ -52,21 +53,25 @@ class Player(Entity):
         self.air_timer += dt
                 
         # normalize x axis movement
-        if self.game.input.states['jump']:
-            self.jump()
-        if self.game.input.states['right']:
-            self.move(1)
-        if self.game.input.states['left']:
-            self.move(-1)
-        if self.game.input.states['reload']:
-            self.weapon.reload()
-        if self.game.input.mouse_states[self.weapon.trigger]:
-            self.weapon.attack()
-            
-        if self.game.input.mouse_states['scroll_up']:
-            self.slot_weapon(-1)
-        if self.game.input.mouse_states['scroll_down']:
-            self.slot_weapon(1)
+        
+        if not self.game.world.inventory_mode:
+            # player controls
+            if self.game.input.states['jump']:
+                self.jump()
+            if self.game.input.states['right']:
+                self.move(1)
+            if self.game.input.states['left']:
+                self.move(-1)
+            if self.game.input.states['reload']:
+                self.weapon.reload()
+            if self.game.input.mouse_states[self.weapon.trigger]:
+                self.weapon.attack()
+            if self.game.input.mouse_states['scroll_up']:
+                self.slot_weapon(-1)
+            if self.game.input.mouse_states['scroll_down']:
+                self.slot_weapon(1)
+        if self.game.input.states["inventory_toggle"]:
+            self.game.world.inventory_mode = not self.game.world.inventory_mode
         
         self.velocity[1] = min(500, self.velocity[1] + dt * 700)
                 

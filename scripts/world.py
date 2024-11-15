@@ -5,6 +5,7 @@ from .spark import SparkManager
 from .projectile import ProjectileManager
 from .particle import ParticleManager
 from .vfx import VFX
+from .inventory_menu import InventoryMenu
 
 class World:
     def __init__(self, game):
@@ -18,6 +19,9 @@ class World:
         self.spark_manager = SparkManager()
         self.vfx = VFX()
         self.projectile_manager = ProjectileManager()
+        
+        self.inventory_menu = InventoryMenu(game, self.player.inventory)
+        self.inventory_mode = False
   
     def update(self):
         dt = self.game.window.dt
@@ -27,8 +31,7 @@ class World:
         self.spark_manager.update(dt)
         self.vfx.update(dt)
         self.projectile_manager.update(dt)
-        
-    
+                    
     def render(self, surf):
         offset = self.camera.pos
         self.tilemap.render(surf, offset=offset)
@@ -38,4 +41,9 @@ class World:
         self.vfx.render(surf, offset=offset)
         self.projectile_manager.render(surf, offset=offset)
         # pygame.draw.rect(surf, 'red', pygame.Rect(self.player.center[0] - offset[0], self.player.center[1] - offset[1], 1, 1)) # debug
+        
+        # inventory_surf = surf.copy()
+        
+            
+        # surf.blit(surf, (0, 0))
         

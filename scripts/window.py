@@ -12,10 +12,11 @@ class Window:
          
         self.window = pygame.display.set_mode(config['window']['scaled_res'])
         self.display = pygame.Surface(config['window']['base_res'])
+        
         self.render_scale = config['window']['render_scale']
         
         # incorporate delta time
-        self.dt = 0.1
+        self.dt = 0.01
         self.last_time = time.time()
         
     def create(self):

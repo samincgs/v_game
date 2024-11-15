@@ -11,20 +11,16 @@ class Renderer:
         
     def render(self):
         surf = self.game.window.display
-        
-        self.background.update()
-        self.background.render(surf)
-        self.game.world.render(surf)
-        
-        # world_surf = pygame.Surface(surf.get_size())
-        # world_surf.set_colorkey((0, 0, 0))
-        
-        #health bar
+
         health_bar_img = self.game.assets.misc['health_bar']
-        pygame.draw.rect(surf, 'red', pygame.Rect(1, 2, int((self.game.world.player.health / self.game.world.player.max_health * 55)), 9)) # TODO: change to darker red
-        surf.blit(health_bar_img,(1, 2))
+
+        # when not in the inventory
+        if not self.game.world.inventory_mode:
         
-        # ammo ui
+            self.background.update()
+            self.background.render(surf)
+            
+             # ammo ui
         self.game.assets.fonts['small_white'].render(str(self.game.world.player.weapon.ammo) + ' / ' + str(self.game.world.player.weapon.max_ammo), surf, (3, health_bar_img.get_height() + 5))
         
         # weapon display
@@ -42,10 +38,16 @@ class Renderer:
             weapon_mask = weapon_mask.to_surface(setcolor=color, unsetcolor=(0,0,0,0))
             surf.blit(weapon_mask, (2, base_pos + ix * offset))
             offset += 10
+
+        
+        #health bar
+        pygame.draw.rect(surf, 'red', pygame.Rect(1, 2, int((self.game.world.player.health / self.game.world.player.max_health * 55)), 9)) # TODO: change to darker red
+        surf.blit(health_bar_img,(1, 2))   
+        
+        self.game.world.render(surf)
+        
+        if self.game.world.inventory_mode:
+            self.game.world.inventory_menu.update()
+            self.game.world.inventory_menu.render(surf)
         
         
-        
-        # world_mask = pygame.mask.from_surface(world_surf)
-        # world_bg = world_mask.to_surface(unsetcolor=(0, 0, 0, 0), setcolor=(0, 0, 0, 255))
-        # surf.blit(world_bg, (2, 3))
-        # surf.blit(world_surf, (0, 0))
