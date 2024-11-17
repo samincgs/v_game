@@ -17,3 +17,4 @@
 
 # Bugs
 - fix spark system
+- fix inventory item ordering

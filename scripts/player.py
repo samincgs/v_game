@@ -2,6 +2,7 @@ import math
 
 from .entity import Entity
 from .weapon import Weapon
+from .item import Item
 from .inventory import Inventory
 
 class Player(Entity):
@@ -15,7 +16,12 @@ class Player(Entity):
         self.aim_angle = 0
         self.inventory = Inventory()
         self.inventory.add_item(Weapon(game, 'golden_gun', self, tags=['active']), 'weapons')
-        self.inventory.add_item(Weapon(game, 'rifle', self, tags=['active']), 'weapons')
+        self.inventory.add_item(Weapon(game, 'rifle', self), 'weapons')
+        self.inventory.add_item(Item(game, 'wood', self), 'items')
+        self.inventory.add_item(Item(game, 'wood', self), 'items')
+        self.inventory.add_item(Item(game, 'wood', self), 'items')
+        self.inventory.add_item(Item(game, 'wood', self), 'items')
+        self.inventory.add_item(Item(game, 'wood', self), 'items')
         self.selected_weapon = 0
         
         self.last_collisions = {k : False for k in ['top', 'left', 'right', 'bottom']}

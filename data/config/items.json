@@ -8,5 +8,10 @@
     "name": "KR-47",
     "type": "weapon",
     "description": "A reliable, long-range firearm for precision shooting."
+  },
+  "wood": {
+    "name": "Wood",
+    "type": "item",
+    "description": "A versatile piece of lumber."
   }
 }

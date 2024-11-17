@@ -23,9 +23,6 @@ class Entity:
     def img(self):
         if self.active_animation:
             img = self.active_animation.img
-        else:
-            img = self.set_image()    
-        
         if any(self.flip):
             img = pygame.transform.flip(img, self.flip[0], self.flip[1])
         return img
@@ -68,7 +65,6 @@ class Entity:
                 directions['left'] = True
             self.pos[0] = temp_rect.x
             
-            # add centering if needed  
         # vertical
         self.pos[1] += movement[1] 
         tiles = tilemap.get_nearby_rects(self.center)

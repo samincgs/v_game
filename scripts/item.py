@@ -11,9 +11,19 @@ class Item:
         self.type = self.info['type']
         
         self.tags = tags if tags else []
+    
+    @property
+    def img(self):
+        return self.game.assets.items[self.name]
         
     def is_tagged(self, tag): # checks if the item has a specific tag
         return tag in self.tags
+    
+    def add_active(self):
+        self.tags.append('active')
+    
+    def create_item(self, game, name, owner, amount, tags):
+        return Item(game, name, owner, amount, tags)
                     
         
         

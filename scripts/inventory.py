@@ -8,11 +8,11 @@ class InventoryGroup:
     def remove_item(self, item):
         if item in self.items:
             self.items.remove(item)
-                  
+             
 class Inventory:
     def __init__(self):
         self.groups = {}  # dict for different inventoryGroups {'weapons' : InventoryGroup()}     
-
+        
     def add_item(self, item, group_id):
         if group_id not in self.groups:
             self.groups[group_id] = InventoryGroup()
@@ -33,6 +33,14 @@ class Inventory:
         for group in self.groups.values():
             for item in group.items:
                 if tag in item.tags:
+                    items.append(item)
+        return items
+    
+    def get_items(self): # all items that are not active
+        items = []
+        for group in self.groups:
+            for item in self.groups[group].items:
+                if 'active' not in item.tags:
                     items.append(item)
         return items
     

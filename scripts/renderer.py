@@ -15,10 +15,10 @@ class Renderer:
         health_bar_img = self.game.assets.misc['health_bar']
 
         # when not in the inventory
-        if not self.game.world.inventory_mode:
+        # if not self.game.world.inventory_mode:
         
-            self.background.update()
-            self.background.render(surf)
+        self.background.update()
+        self.background.render(surf)
             
              # ammo ui
         self.game.assets.fonts['small_white'].render(str(self.game.world.player.weapon.ammo) + ' / ' + str(self.game.world.player.weapon.max_ammo), surf, (3, health_bar_img.get_height() + 5))
