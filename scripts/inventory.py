@@ -3,12 +3,17 @@ class InventoryGroup:
         self.items = []
         
     def add_item(self, item):
+        for i in self.items: # if the item is stackable
+            if i.is_stackable():
+                i.amount += item.amount
+                return None
+            
         self.items.append(item)
-        
+                    
     def remove_item(self, item):
         if item in self.items:
             self.items.remove(item)
-             
+                 
 class Inventory:
     def __init__(self):
         self.groups = {}  # dict for different inventoryGroups {'weapons' : InventoryGroup()}     
@@ -16,6 +21,9 @@ class Inventory:
     def add_item(self, item, group_id):
         if group_id not in self.groups:
             self.groups[group_id] = InventoryGroup()
+        for weapon in self.groups['weapons'].items: # makes sure duplicate weapons cant be picked up
+            if item.name == weapon.name: 
+                return
         self.groups[group_id].add_item(item)
     
     def remove_item(self, item, group_id):
@@ -44,11 +52,17 @@ class Inventory:
                     items.append(item)
         return items
     
+    def sort_weapons_by_tag(self, tag):
+        self.groups['weapons'].items = sorted(self.groups['weapons'].items, key=lambda x: tag not in x.tags)
+            
     def get_active_weapons(self):
         weapons = []
         for item in self.get_by_tag('active'):
             if 'weapon' in item.tags:
                 weapons.append(item)
+                
+        self.sort_weapons_by_tag('active')
+                
         return weapons
         
             

@@ -7,7 +7,7 @@
   "rifle": {
     "name": "KR-47",
     "type": "weapon",
-    "description": "A reliable, long-range firearm for precision shooting."
+    "description": "A reliable, long-range rifle for precision shooting."
   },
   "wood": {
     "name": "Wood",

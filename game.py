@@ -10,7 +10,7 @@ class Game:
         self.input = Input(self)
         self.assets = Asset()
         self.world = World(self)
-        self.renderer = Renderer(self)
+        self.renderer = Renderer(self) 
         
     def run(self):
         while True:

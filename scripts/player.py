@@ -21,7 +21,7 @@ class Player(Entity):
         self.inventory.add_item(Item(game, 'wood', self), 'items')
         self.inventory.add_item(Item(game, 'wood', self), 'items')
         self.inventory.add_item(Item(game, 'wood', self), 'items')
-        self.inventory.add_item(Item(game, 'wood', self), 'items')
+       
         self.selected_weapon = 0
         
         self.last_collisions = {k : False for k in ['top', 'left', 'right', 'bottom']}

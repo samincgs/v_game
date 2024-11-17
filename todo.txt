@@ -2,7 +2,6 @@
 - Add floodfill
 
 # Pixel art
-- Add more guns
 - change player sprite
 - add bridges
 - add decor
@@ -10,11 +9,12 @@
 # Game/Coding
 - Create map (make a structured map)
 - Create minimap
-- Create inventory gui
 - Create tooltip when player sees items
-- create items
 - create skills
 
-# Bugs
+# Possible Changes
 - fix spark system
-- fix inventory item ordering
+- optimize inventory menu code
+- change tile rendering to be dependant on player camera
+
+# Bugs

@@ -15,12 +15,18 @@ class Item:
     @property
     def img(self):
         return self.game.assets.items[self.name]
-        
-    def is_tagged(self, tag): # checks if the item has a specific tag
-        return tag in self.tags
     
     def add_active(self):
         self.tags.append('active')
+    
+    def remove_active(self):
+        self.tags.remove('active')
+
+    def is_stackable(self):
+        return self.type == 'item'
+    
+    def is_tagged(self, tag): # checks if the item has a specific tag
+        return tag in self.tags
     
     def create_item(self, game, name, owner, amount, tags):
         return Item(game, name, owner, amount, tags)
