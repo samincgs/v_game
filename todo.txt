@@ -13,7 +13,7 @@
 - create skills
 
 # Possible Changes
-- fix spark system
+- fix spark system (replace vfx)
 - optimize inventory menu code
 - change tile rendering to be dependant on player camera
 

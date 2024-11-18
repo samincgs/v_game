@@ -56,6 +56,7 @@ class Input:
                             if event.button == self.config[binding]['binding'][1]:
                                 self.mouse_states[binding] = False    
             if event.type == pygame.KEYDOWN:
+                # print(event.key)
                 for binding in self.config:
                     if self.config[binding]['binding'][0] == 'keyboard':
                         if self.config[binding]['trigger'] in ['hold', 'press']:

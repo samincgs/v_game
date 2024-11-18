@@ -9,7 +9,10 @@ class Entity:
         self.type = e_type
         self.pos = list(pos)
         self.size = list(size)
-        self.max_health = config['entities'][e_type]['base_health']
+        
+        self.max_health = 1
+        if self.type in config['entities']:
+            self.max_health = config['entities'][e_type]['base_health']
         self.health = self.max_health
         self.flip = [False, False]
         self.hurt = 0
@@ -52,7 +55,7 @@ class Entity:
         
         # horizontal
         self.pos[0] += movement[0]
-        tiles = tilemap.get_nearby_rects(self.center)
+        tiles = tilemap.get_nearby_rects(self.pos)
         hit_list = tilemap.collision_test(self.rect, tiles)
         temp_rect = self.rect
         
@@ -67,7 +70,7 @@ class Entity:
             
         # vertical
         self.pos[1] += movement[1] 
-        tiles = tilemap.get_nearby_rects(self.center)
+        tiles = tilemap.get_nearby_rects(self.pos)
         hit_list = tilemap.collision_test(self.rect, tiles)
         temp_rect = self.rect
         

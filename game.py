@@ -11,7 +11,7 @@ class Game:
         self.assets = Asset()
         self.world = World(self)
         self.renderer = Renderer(self) 
-        
+         
     def run(self):
         while True:
             self.input.update()

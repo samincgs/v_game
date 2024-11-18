@@ -22,5 +22,13 @@
     "centered": false,
     "offset": [6, 3],
     "outline": [255, 255, 255]
+  },
+  "item_wood": {
+    "frames": [5],
+    "loop": false,
+    "speed": 1.0,
+    "centered": false,
+    "offset": [0, 0],
+    "outline": null
   }
 }

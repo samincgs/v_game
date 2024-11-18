@@ -4,6 +4,7 @@ from .entity import Entity
 from .weapon import Weapon
 from .item import Item
 from .inventory import Inventory
+from .utils import clip
 
 class Player(Entity):
     def __init__(self, game, pos, size, e_type):
@@ -14,6 +15,7 @@ class Player(Entity):
         self.jumps = self.max_jumps
         self.dash = 0
         self.aim_angle = 0
+        self.alive = True
         self.inventory = Inventory()
         self.inventory.add_item(Weapon(game, 'golden_gun', self, tags=['active']), 'weapons')
         self.inventory.add_item(Weapon(game, 'rifle', self), 'weapons')
@@ -44,6 +46,11 @@ class Player(Entity):
             self.velocity[1] = -300
             self.jumps -= 1
     
+    def damage(self, amount):
+        self.health -= amount
+        if self.health <= 0:
+            self.die()
+    
     # direction is 1 or 0 or -1
     def move(self, direction):
         if direction > 0:
@@ -51,6 +58,15 @@ class Player(Entity):
         if direction < 0:
             self.flip[0] = True
         self.frame_movement[0] += 120 * direction
+    
+    def die(self): # TODO: Finish and add destruction particles
+        SIZE = 3
+        entity_img = self.img.copy()
+        
+        for y in range(entity_img.get_height() // SIZE): # forgot to add 1
+            for x in range(entity_img.get_width() // SIZE):
+                img = clip(entity_img, x * SIZE, y * SIZE, SIZE, SIZE)
+    
         
     def update(self, dt):
         self.frame_movement = self.velocity.copy()
@@ -72,6 +88,8 @@ class Player(Entity):
                 self.weapon.reload()
             if self.game.input.mouse_states[self.weapon.trigger]:
                 self.weapon.attack()
+            if self.game.input.mouse_states['right_click']:
+                self.game.world.drop_item(Item(self.game, 'wood', self), self.center, velocity=[0, -20])
             if self.game.input.mouse_states['scroll_up']:
                 self.slot_weapon(-1)
             if self.game.input.mouse_states['scroll_down']:

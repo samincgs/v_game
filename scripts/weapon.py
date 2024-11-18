@@ -44,7 +44,8 @@ class Weapon(Item):
                 self.owner.center[1] + math.sin(math.radians(self.rotation)) * 4
             ]
                 self.game.world.vfx.spawn_group('bow_sparks', spark_position, math.radians(self.rotation))
-                if self.type in ['rifle']:
+                
+                if self.name in ['rifle']:
                     if self.ammo %  3 == 0:
                         self.game.world.particle_manager.add_particle(self.game, 'shells', self.owner.center, movement=[(self.owner.flip[0] - 0.5) * random.randint(60, 90), -random.randint(30, 50)], decay_rate=0.05, frame=0, custom_color=(244, 176, 60), physics=self.game.world.tilemap)
     
