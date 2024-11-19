@@ -18,3 +18,4 @@
 - change tile rendering to be dependant on player camera
 
 # Bugs
+- fix player and itemdrop offset by 1 because tile size is 17x16

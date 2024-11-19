@@ -9,17 +9,20 @@ class Itemdrop(Entity):
         self.velocity_normalization = [20, 0]
         
         self.set_action(self.item_data.name)
-        self.size = list(self.img.get_size())
+        self.size = (self.img.get_width(), self.img.get_height() - 1)
         
     def update(self, dt):
         super().update(dt)
         
+        self.motion = self.velocity.copy()
+        
         self.velocity[0] = normalize(self.velocity[0], self.velocity_normalization[0] * dt)
         self.velocity[1] = normalize(self.velocity[1], self.velocity_normalization[1] * dt)
         
-        last_collisions = self.collisions(self.game.world.tilemap, movement=self.velocity.copy())
         
-        self.velocity[1] = min(500, self.velocity[1] + dt * 700)
+        last_collisions = self.collisions(self.game.world.tilemap, movement=self.motion)
+        
+        self.velocity[1] = min(20, self.velocity[1] + dt * 20)
         if last_collisions['bottom']:
             self.velocity[1] = 0
         
