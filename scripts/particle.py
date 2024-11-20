@@ -7,7 +7,6 @@ class Particle:
         self.game = game
         self.type = p_type
         self.pos = list(pos)
-        self.ply_pos = self.pos.copy()
         self.movement = list(movement)
         self.decay_rate = decay_rate
         self.frame = frame
@@ -62,10 +61,25 @@ class Particle:
         if self.spawn:
             surf.blit(img, (self.pos[0] - img.get_width() // 2 - offset[0], self.pos[1] - img.get_height() // 2 - offset[1] + 1))
         
-                    
+
+class DestructionParticle:
+    def __init__(self, game, img, pos, movement, decay_rate, physics=None):
+        self.game = game
+        self.img = img
+        self.pos = list(pos)
+        self.movement = movement
+        self.decay_rate = decay_rate
+        self.physics = physics
+        self.rotation = 0
+        
+    def update(self):
+        pass
+
+                   
 class ParticleManager:
     def __init__(self):
         self.particles = []
+        self.destruction_particles = []
     
     def add_particle(self, game, p_type, pos, movement, decay_rate, frame=0, custom_color=None, physics=None):
         self.particles.append(Particle(game, p_type, pos, movement, decay_rate, frame, custom_color, physics))

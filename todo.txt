@@ -3,11 +3,11 @@
 
 # Pixel art
 - change player sprite
+- make a structured map
 - add bridges
 - add decor
 
 # Game/Coding
-- Create map (make a structured map)
 - Create minimap
 - Create tooltip when player sees items
 - create skills

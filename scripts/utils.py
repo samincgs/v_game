@@ -31,7 +31,6 @@ def normalize(value, amount, end=0):
     elif (value + amount) < end:
         value += amount
     else:
-        value = end
-        
+        value = end  
     return value
     
