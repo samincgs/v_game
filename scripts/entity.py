@@ -1,4 +1,5 @@
 import pygame
+import math
 
 from .config import config
 from .utils import outline
@@ -50,6 +51,18 @@ class Entity:
         elif (not self.active_animation) or (self.active_animation.data.id != self.type + '_' + action_id):
             self.active_animation = self.game.assets.animations.new(self.type + '_' + action_id)
 
+    def get_angle(self, target):
+        # if isinstance(target, Entity):
+        return math.atan2(target.center[1] - self.center[1], target.center[0] - self.center[0])
+        # else:
+        #     return math.atan2(target.pos[1] - self.pos[1], target.pos[0] - self.pos[0])
+    
+    def get_distance(self, target): # order of x, y doesnt matter because it calculates a linear distance and is being squared
+        return math.sqrt((target.pos[0] - self.pos[0]) ** 2 + (target.pos[1] - self.pos[1]) ** 2)
+    
+    def in_range(self, target, radius):
+        return self.get_distance(target) <= radius
+    
     def collisions(self, tilemap, movement=(0, 0)):
         directions = {d: False for d in ['top', 'right', 'left', 'bottom']}
         
