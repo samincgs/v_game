@@ -75,7 +75,10 @@ class DestructionParticle:
     def update(self):
         pass
 
-                   
+    
+    def render(self, surf, offset=(0, 0)):
+        pass
+             
 class ParticleManager:
     def __init__(self):
         self.particles = []

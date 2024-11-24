@@ -88,14 +88,10 @@ class Player(Entity):
                 self.weapon.reload()
             if self.game.input.mouse_states[self.weapon.trigger]:
                 self.weapon.attack()
-            if self.game.input.mouse_states['right_click']:
-                self.game.world.drop_item(Item(self.game, 'wood', self), self.center, velocity=[0, -20])
             if self.game.input.mouse_states['scroll_up']:
                 self.slot_weapon(-1)
             if self.game.input.mouse_states['scroll_down']:
                 self.slot_weapon(1)
-            if self.game.input.states['test']:
-                self.game.world.drop_item(Item(self.game, 'wood', self), self.center, (0, 0.05))
             
         if self.game.input.states["inventory_toggle"]:
             self.game.world.inventory_mode = not self.game.world.inventory_mode

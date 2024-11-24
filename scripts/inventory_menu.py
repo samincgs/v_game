@@ -12,7 +12,7 @@ class InventoryMenu:
         self.size = 25 # size of each box
         self.config = config['items']
         
-        self.base_pos = [60, 40]
+        self.base_pos = [80, 40]
         self.color = (187, 196, 204)
         self.item_boxes = [] # [[rect of box, weapon/item name]]
         self.item_info = [] # [[item name (from config), item description, weapon/item name (weapon type), item_type]]
@@ -21,6 +21,9 @@ class InventoryMenu:
     def draw_ui(self, surf):  # TODO: CHANGE COLOR of empty boxes
         
         all_boxes = [] # contains another array with [rect, name of item] -> self.item_boxes
+        # weapon logo
+        surf.blit(self.game.assets.misc['weapons_logo'], (self.base_pos[0] - self.game.assets.misc['weapons_logo'].get_width() + 3, self.base_pos[1]))
+        
         # weapon boxes
         for i in range(self.cols):
             rect = pygame.Rect(self.base_pos[0] + i * self.size, self.base_pos[1], self.size, self.size)
@@ -33,6 +36,11 @@ class InventoryMenu:
                     all_boxes.append([rect, weapon.name])
             
             pygame.draw.rect(surf, color, rect, 1)
+        
+        
+        # item logo
+        
+        surf.blit(self.game.assets.misc['items_logo'], (self.base_pos[0] - self.game.assets.misc['weapons_logo'].get_width() + 3, self.base_pos[1] + 40))
         
         # item boxes
         for i in range(self.rows):
@@ -69,21 +77,22 @@ class InventoryMenu:
             if box[0].collidepoint(self.game.input.mpos): 
                 self.item_info.append([self.config[box[1]]['name'], self.config[box[1]]['description'], box[1], self.config[box[1]]['type']])
                 if self.game.input.mouse_states['shoot']:
-                    if len(self.inventory.get_active_weapons()) <= 4:
+                    if len(self.inventory.get_active_weapons()) <= self.cols:
                         for item in self.inventory.get_items():
                             if item.type == 'weapon' and item.name == self.item_info[0][2]:
                                 item.add_active()
                 elif self.game.input.mouse_states['right_click']:
                     if len(self.inventory.get_active_weapons()) > 1:
-                        for weapon in self.inventory.get_active_weapons():
+                        for ix, weapon in enumerate(self.inventory.get_active_weapons()):
                             if weapon and weapon.name == self.item_info[0][2]:
                                 weapon.remove_active()
-                                self.game.world.player.selected_weapon = 0
+                                if ix < self.game.world.player.selected_weapon:
+                                    self.game.world.player.selected_weapon = 0
                            
     def render(self, surf):
         self.item_boxes = self.draw_ui(surf)
         if self.item_info:
-            self.draw_item_info(self.item_info, surf, (170, self.base_pos[1]))
+            self.draw_item_info(self.item_info, surf, (self.base_pos[0] + 110, self.base_pos[1]))
             
         
         
