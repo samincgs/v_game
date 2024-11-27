@@ -5,10 +5,11 @@ from .config import config
 
 class Window:
     def __init__(self, game):
+        pygame.init()
+        
         self.game = game
         self.config = config['window']
         
-        pygame.init()
         pygame.display.set_caption(self.config['caption'])
         
         self.clock = pygame.time.Clock()

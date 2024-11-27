@@ -7,8 +7,7 @@ class InventoryMenu:
     def __init__(self, game, inventory):
         self.game = game
         self.inventory = inventory
-        self.rows = 4
-        self.cols = 4
+        self.rows, self.cols = 4, 4
         self.size = 25 # size of each box
         self.config = config['items']
         
@@ -39,7 +38,6 @@ class InventoryMenu:
         
         
         # item logo
-        
         surf.blit(self.game.assets.misc['items_logo'], (self.base_pos[0] - self.game.assets.misc['weapons_logo'].get_width() + 3, self.base_pos[1] + 40))
         
         # item boxes

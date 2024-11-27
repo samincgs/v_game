@@ -40,16 +40,18 @@ class Renderer:
         self.background.update()
         self.background.render(surf)
                     
+        
         self.gui(surf)
         self.game.world.render(surf)
         
         if self.game.world.inventory_mode:
             dark_overlay = pygame.Surface(surf.get_size(), flags=pygame.SRCALPHA)
-            dark_overlay.fill((31, 33, 54, 140)) # try different colours
+            dark_overlay.fill((31, 33, 54, 110)) # try different colours
             surf.blit(dark_overlay, (0, 0))
             self.game.world.inventory_menu.update()
             self.game.world.inventory_menu.render(surf)
-            
+        
+          
         if self.game.input.show_fps:
             self.game.assets.fonts['small_white'].render('FPS: ' + str(int(self.game.window.clock.get_fps())), surf, (surf.get_width() - 35, 2))
             

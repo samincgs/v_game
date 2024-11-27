@@ -1,6 +1,6 @@
 from .tilemap import Tilemap
 from .camera import Camera
-from .player import Player
+from .entities import Entities
 from .spark import SparkManager
 from .projectile import ProjectileManager
 from .particle import ParticleManager
@@ -14,13 +14,14 @@ class World:
         self.camera = Camera(game)
         self.tilemap = Tilemap(game, 16, self.game.window.display.get_size())
         self.tilemap.load_map('data/maps/intro.json')
-        self.player = Player(game, (200, 200), (8, 17), 'player')
+        self.entities = Entities(game)
+        self.player = self.entities.entities[0]
         self.camera.set_tracked_entity(self.player)
         self.particle_manager = ParticleManager()
         self.spark_manager = SparkManager()
         self.vfx = VFX()
         self.projectile_manager = ProjectileManager()
-        
+ 
         self.inventory_menu = InventoryMenu(game, self.player.inventory)
         self.inventory_mode = False
         
@@ -29,7 +30,7 @@ class World:
     def update(self):
         dt = self.game.window.dt
         self.camera.update()
-        self.player.update(dt)
+        self.entities.update(dt)
         self.particle_manager.update(dt)
         self.spark_manager.update(dt)
         self.vfx.update(dt)
@@ -45,7 +46,7 @@ class World:
     def render(self, surf):
         offset = self.camera.pos
         self.tilemap.render(surf, offset=offset)
-        self.player.render(surf, offset=offset)
+        self.entities.render(surf, offset=offset)
         self.particle_manager.render(surf, offset=offset)
         self.spark_manager.render(surf, offset=offset)
         self.vfx.render(surf, offset=offset)

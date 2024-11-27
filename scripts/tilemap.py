@@ -102,9 +102,15 @@ class Tilemap:
         for layer in sorted([int(key) for key in self.tilemap.keys()]): # 0
             layer = str(layer)
             tile_layer = self.tilemap[layer]
-            for loc in tile_layer:
-                tile = tile_layer[loc]
-                surf.blit(self.game.assets.tiles[tile['type']][tile['variant']], (tile['pos'][0] * self.tile_size - offset[0], tile['pos'][1] * self.tile_size - offset[1]))
+            # for loc in tile_layer:
+            #     tile = tile_layer[loc]
+            #     surf.blit(self.game.assets.tiles[tile['type']][tile['variant']], (tile['pos'][0] * self.tile_size - offset[0], tile['pos'][1] * self.tile_size - offset[1]))
+            for y in range(self.game.world.camera.pos[1] // self.tile_size, ((self.game.world.camera.pos[1] + surf.get_height()) // self.tile_size) + 1):
+                for x in range(self.game.world.camera.pos[0] // self.tile_size, ((self.game.world.camera.pos[0] + surf.get_width()) // self.tile_size) + 1):
+                    tile_loc = str(x) + ';' + str(y)
+                    if tile_loc in tile_layer:
+                        tile = tile_layer[tile_loc]
+                        surf.blit(self.game.assets.tiles[tile['type']][tile['variant']], (tile['pos'][0] * self.tile_size - offset[0], tile['pos'][1] * self.tile_size - offset[1]))
         
         
     

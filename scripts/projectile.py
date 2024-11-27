@@ -12,6 +12,7 @@ class Projectile:
         self.speed = speed
         self.type = p_type
         self.config = config['projectiles'][p_type]
+        self.timer = 0
         
     def move(self, dt):
         directions = {d: False for d in ['top', 'left', 'bottom', 'right']}
@@ -41,6 +42,7 @@ class Projectile:
                 
     def update(self, dt):
         collisions = self.move(dt)
+        self.timer += dt
         if any(collisions.values()):
             if collisions['top']:
                 angle = math.pi * 3 / 2
@@ -52,6 +54,9 @@ class Projectile:
                 angle = math.pi
             for i in range(random.randint(2,4)):
                 self.game.world.spark_manager.add_spark('spark_curve', pos=self.pos, angle=math.pi + angle, speed= 4 + random.random() * 2, curve=-0.05 + random.random() * 0.1, color=(255, 255, 255), decay_rate=0.5 + random.random() * 0.2)
+            return True
+
+        if self.timer > 3:
             return True
         
         
