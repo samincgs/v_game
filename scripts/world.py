@@ -14,7 +14,7 @@ class World:
         self.camera = Camera(game)
         self.tilemap = Tilemap(game, 16, self.game.window.display.get_size())
         self.tilemap.load_map('data/maps/intro.json')
-        self.player = Player(game, (200, 200), (8, 16), 'player')
+        self.player = Player(game, (200, 200), (8, 17), 'player')
         self.camera.set_tracked_entity(self.player)
         self.particle_manager = ParticleManager()
         self.spark_manager = SparkManager()

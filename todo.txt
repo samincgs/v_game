@@ -9,7 +9,6 @@
 
 # Game/Coding
 - Create minimap
-- Create tooltip when player sees items
 - create skills
 
 # Possible Changes

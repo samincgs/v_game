@@ -86,7 +86,7 @@ class InventoryMenu:
                         for ix, weapon in enumerate(self.inventory.get_active_weapons()):
                             if weapon and weapon.name == self.item_info[0][2]:
                                 weapon.remove_active()
-                                if ix < self.game.world.player.selected_weapon:
+                                if ix <= self.game.world.player.selected_weapon:
                                     self.game.world.player.selected_weapon = 0
                            
     def render(self, surf):

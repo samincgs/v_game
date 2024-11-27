@@ -1,6 +1,6 @@
 from scripts.window import Window
 from scripts.input import Input
-from scripts.asset import Asset
+from scripts.assets import Assets
 from scripts.world import World
 from scripts.renderer import Renderer
 
@@ -8,12 +8,12 @@ class Game:
     def __init__(self):
         self.window = Window(self)
         self.input = Input(self)
-        self.assets = Asset()
+        self.assets = Assets()
         self.world = World(self)
         self.renderer = Renderer(self) 
          
     def run(self):
-        while True:
+        while True: 
             self.input.update()
             self.renderer.render()
             self.world.update()

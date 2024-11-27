@@ -111,11 +111,21 @@ class Tilemap:
                 
     def render_editor(self, curr_layer, layer_opacity, surf, offset=(0,0)):
         
-        for layer in self.offgrid_tiles:
+        for layer in sorted([int(key) for key in self.offgrid_tiles.keys()]):
+            layer = str(layer)
             tile_layer = self.offgrid_tiles[layer]
             for tile in tile_layer:
-                img = self.game.assets.tiles[tile['type']][tile['variant']]
-                surf.blit(img, (tile['pos'][0] - offset[0], tile['pos'][1] - offset[1]))
+                if not layer_opacity:
+                    img = self.game.assets.tiles[tile['type']][tile['variant']]
+                    surf.blit(img, (tile['pos'][0] - offset[0], tile['pos'][1] - offset[1]))
+                else:
+                    if curr_layer == layer:
+                        img = self.game.assets.tiles[tile['type']][tile['variant']]
+                        surf.blit(img, (tile['pos'][0] - offset[0], tile['pos'][1] - offset[1]))
+                    else:
+                        img = self.game.assets.tiles[tile['type']][tile['variant']].copy()
+                        img.set_alpha(100)
+                        surf.blit(img, (tile['pos'][0] - offset[0], tile['pos'][1] - offset[1]))
                                 
         for layer in sorted([int(key) for key in self.tilemap.keys()]): 
             layer = str(layer)

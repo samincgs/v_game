@@ -13,6 +13,14 @@
     "trigger": "long_shoot",
     "max_ammo": 300,
     "capacity": 30,
-    "attack_rate": 0.1
+    "attack_rate": 0.15
+  },
+  "smg": {
+    "projectile_type": "smg",
+    "reload_method": "mag",
+    "trigger": "long_shoot",
+    "max_ammo": 300,
+    "capacity": 60,
+    "attack_rate": 0.09
   }
 }

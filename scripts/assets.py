@@ -15,7 +15,7 @@ FONTS = {
     "large_black": (BASE_PATH_FONT + 'large_font.png', (0, 0, 1)),
 }
 
-class Asset:
+class Assets:
     def __init__(self):
         self.animations = AnimationManager()
         self.misc = self.load_dir('misc')

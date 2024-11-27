@@ -6,18 +6,20 @@ from .config import config
 class Window:
     def __init__(self, game):
         self.game = game
+        self.config = config['window']
         
         pygame.init()
-        pygame.display.set_caption(config['window']['caption'])
-         
-        self.window = pygame.display.set_mode(config['window']['scaled_res'])
-        self.display = pygame.Surface(config['window']['base_res'])
+        pygame.display.set_caption(self.config['caption'])
         
-        self.render_scale = config['window']['render_scale']
+        self.clock = pygame.time.Clock()
+        
+        self.window = pygame.display.set_mode(self.config['scaled_res']) # pygame.RESIZABLE
+        self.display = pygame.Surface(self.config['base_res'])
+        
+        self.render_scale = self.config['render_scale']
         
         # incorporate delta time
         self.dt = 0.01
-        self.last_time = time.time()
         
     def create(self):
         self.display.blit(self.game.assets.misc['cursor'], (self.game.input.mpos[0] - self.game.assets.misc['cursor'].get_width() // 2, self.game.input.mpos[1] - self.game.assets.misc['cursor'].get_height() // 2))
@@ -26,8 +28,8 @@ class Window:
         pygame.display.update()
         self.display.fill(config['window']['bg_color'])
         
-        self.dt = time.time() - self.last_time
-        self.last_time = time.time()
+        self.dt = self.clock.tick() / 1000
+        
         
         
         

@@ -6,7 +6,12 @@
   },
   "rifle": {
     "shape": ["line", [255, 255, 255], 5, 2],
-    "power": 5,
+    "power": 7,
+    "knockback": 0.2
+  },
+  "smg": {
+    "shape": ["line", [255, 255, 255], 5, 2],
+    "power": 4,
     "knockback": 0.2
   }
 }

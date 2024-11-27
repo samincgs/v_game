@@ -9,6 +9,11 @@
     "type": "weapon",
     "description": "A reliable, long-range rifle for precision shooting."
   },
+  "smg": {
+    "name": "L70",
+    "type": "weapon",
+    "description": "A compact smg with unmatched fire rate."
+  },
   "wood": {
     "name": "Wood",
     "type": "item",

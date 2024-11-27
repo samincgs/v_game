@@ -11,6 +11,7 @@ class Input:
         self.config = config['input']
         
         self.mpos = (0, 0)
+        self.show_fps = False
         
         pygame.mouse.set_visible(False)
         
@@ -72,5 +73,7 @@ class Input:
             if self.states['quit']:
                 pygame.quit()
                 sys.exit()
+            if self.states['fps']:
+                self.show_fps = not self.show_fps
                 
                 
