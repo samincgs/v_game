@@ -9,6 +9,7 @@ from scripts.assets import Assets
 from scripts.font import Font
 from scripts.config import config
 
+AUTOTILE_TYPES = ['main_tiles']
 
 class LevelEditor:
     def __init__(self, display_size, display_scale):
@@ -20,10 +21,10 @@ class LevelEditor:
         self.screen = pygame.display.set_mode((display_size[0] * display_scale, display_size[1] * display_scale))
         self.display = pygame.Surface(self.display_size)
         self.clock = pygame.time.Clock()
-        
+                
         self.file_name = None
         
-        self.tilemap = Tilemap(self, 16, self.display_size)
+        self.tilemap = Tilemap(self, tile_size=16)
         self.assets = Assets()
         self.font = Font('data/fonts/small_font.png', (208, 223, 215))
         self.config = config['autotile']
@@ -51,6 +52,10 @@ class LevelEditor:
         self.placement_mode = 'grid'
         self.current_layer = "0"
     
+    def reset_rect(self):
+        self.selection_rect = None # only with rect
+        self.selection_points = [] # only with rect
+    
     def autotile(self, curr_layer): # keybinding: t
         if self.selection_rect: # only with rect
             for layer in self.tilemap.tilemap:
@@ -64,7 +69,7 @@ class LevelEditor:
                                     continue  
                                 str_loc = str(tile_loc[0]) + ';' + str(tile_loc[1])
                                 if str_loc in self.tilemap.tilemap[layer]:
-                                    if tile['type'] == self.tilemap.tilemap[layer][str_loc]['type']:
+                                    if tile['type'] == self.tilemap.tilemap[layer][str_loc]['type'] and tile['type'] in AUTOTILE_TYPES:
                                         neighbours.append(offset)
                             neighbours = sorted(neighbours)
                             for border in self.config['tile_borders']:
@@ -73,8 +78,7 @@ class LevelEditor:
                                 if neighbours == border_list:
                                     tile['variant'] = replacement_tile
                                     
-        self.selection_rect = None # only with rect
-        self.selection_points = [] # only with rect
+        self.reset_rect()
     
     def remove_all_tiles(self, curr_layer): # keybinding: x
         
@@ -86,13 +90,34 @@ class LevelEditor:
                         if self.selection_rect.collidepoint((tile['pos'][0] * self.tilemap.tile_size, tile['pos'][1] * self.tilemap.tile_size)):  # only with rect
                             del self.tilemap.tilemap[layer][str_tile]
         
-        self.selection_rect = None # only with rect
-        self.selection_points = [] # only with rect
+        self.reset_rect()
         
     def floodfill(self, curr_layer):
-        pass
-    
+        floodfill_list = []
+        
+        if self.selection_rect:
+            for y in range(self.selection_rect.y, self.selection_rect.y + self.selection_rect[3]):
+                for x in range(self.selection_rect.x, self.selection_rect.x + self.selection_rect[2]):
+                    tile_loc = str((x // self.tilemap.tile_size)) + ';' + str((y // self.tilemap.tile_size))
+                    if tile_loc in self.tilemap.tilemap[curr_layer]:
+                        tile = self.tilemap.tilemap[curr_layer][tile_loc]
+                        floodfill_list.append(tile)
+                                
+
+            start_x = min([tile['pos'][0] for tile in floodfill_list])
+            end_x = max([tile['pos'][0] for tile in floodfill_list])
+            start_y = min([tile['pos'][1] for tile in floodfill_list])
+            end_y = max([tile['pos'][1] for tile in floodfill_list])
             
+            for y in range(start_y, end_y):
+                for x in range(start_x, end_x):
+                    tile_data = {'type': self.tile_list[self.tile_group], 'variant': self.tile_variant, 'pos': (x, y) }
+                    self.tilemap.add_tile(tile_data, self.current_layer)
+        
+        self.reset_rect()
+        
+            
+                    
     def run(self):
         while True:
             self.display.fill((0, 0, 0))
@@ -192,6 +217,7 @@ class LevelEditor:
                     else:
                         self.selection_points = []
                         self.selection_rect = None
+                        
                     
                 
             self.click = False
@@ -243,6 +269,8 @@ class LevelEditor:
                         self.autotile(self.current_layer)
                     if event.key == pygame.K_x:
                         self.remove_all_tiles(self.current_layer)
+                    if event.key == pygame.K_f:
+                        self.floodfill(self.current_layer)
                 if event.type == pygame.KEYUP:
                     if event.key == pygame.K_a:
                         self.movement[0] = False

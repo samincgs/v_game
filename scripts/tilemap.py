@@ -1,12 +1,10 @@
 import pygame
 import json
-import math
 
 class Tilemap:
-    def __init__(self, game, tile_size, view_size):
+    def __init__(self, game, tile_size):
         self.game = game
         self.tile_size = tile_size 
-        self.view_size = view_size 
         
         self.tilemap = {} # { 0 : {'5;7' : {'type': 'grass', 'variant': 0, 'pos': [x, x]}}}
         self.offgrid_tiles = {} # {0: [{'type': 'grass', 'variant': 0, 'pos': [x, x]}]}

@@ -7,6 +7,7 @@ class Camera:
         self.target_pos = [0, 0]
         self.rate = 0.5
         self.tracked_entity = None
+        self.camera_speed = 250
     
     @property
     def pos(self):
@@ -22,5 +23,6 @@ class Camera:
         if self.tracked_entity:
             self.set_target((self.tracked_entity.pos[0] - self.game.window.display.get_width() // 2, self.tracked_entity.pos[1] - self.game.window.display.get_height() // 2))
         
-        self.true_pos[0] += (self.target_pos[0] - self.true_pos[0]) / (self.rate / self.game.window.dt)
-        self.true_pos[1] += (self.target_pos[1] - self.true_pos[1]) / (self.rate / self.game.window.dt)
+        self.true_pos[0] += (self.target_pos[0] - self.true_pos[0]) / self.camera_speed
+        self.true_pos[1] += (self.target_pos[1] - self.true_pos[1]) / self.camera_speed
+        

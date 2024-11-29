@@ -1,20 +1,14 @@
-# Level Editor
-- Add floodfill
-
 # Pixel art
 - change player sprite
 - make a structured map
-- add bridges
 - add decor
 
 # Game/Coding
 - Create minimap
 - create skills
 
-# Possible Changes
+# Possible Changes/ Bugs
 - fix spark system (replace vfx)
 - optimize inventory menu code
-- change tile rendering to be dependant on player camera
-
-# Bugs
-- fix player and itemdrop offset by 1 because tile size is 17x16
+- fix floodfill algorithm
+- add leaves falling from trees (maybe?)

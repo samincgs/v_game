@@ -4,7 +4,6 @@ from .entities import Entities
 from .spark import SparkManager
 from .projectile import ProjectileManager
 from .particle import ParticleManager
-from .vfx import VFX
 from .inventory_menu import InventoryMenu
 from .itemdrop import Itemdrop
 
@@ -12,14 +11,13 @@ class World:
     def __init__(self, game):
         self.game = game
         self.camera = Camera(game)
-        self.tilemap = Tilemap(game, 16, self.game.window.display.get_size())
+        self.tilemap = Tilemap(game, tile_size=16)
         self.tilemap.load_map('data/maps/intro.json')
         self.entities = Entities(game)
-        self.player = self.entities.entities[0]
+        self.player = self.entities.player
         self.camera.set_tracked_entity(self.player)
         self.particle_manager = ParticleManager()
         self.spark_manager = SparkManager()
-        self.vfx = VFX()
         self.projectile_manager = ProjectileManager()
  
         self.inventory_menu = InventoryMenu(game, self.player.inventory)
@@ -33,7 +31,6 @@ class World:
         self.entities.update(dt)
         self.particle_manager.update(dt)
         self.spark_manager.update(dt)
-        self.vfx.update(dt)
         self.projectile_manager.update(dt)
         
         for item in self.item_drops:
@@ -49,7 +46,6 @@ class World:
         self.entities.render(surf, offset=offset)
         self.particle_manager.render(surf, offset=offset)
         self.spark_manager.render(surf, offset=offset)
-        self.vfx.render(surf, offset=offset)
         self.projectile_manager.render(surf, offset=offset)
         # pygame.draw.rect(surf, 'red', pygame.Rect(self.player.center[0] - offset[0], self.player.center[1] - offset[1], 1, 1)) # debug
         

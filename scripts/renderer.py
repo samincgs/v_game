@@ -15,7 +15,7 @@ class Renderer:
     
         #health bar
         health_bar_img = self.game.assets.misc['health_bar']
-        pygame.draw.rect(surf, 'red', pygame.Rect(1, 2, int((self.game.world.player.health / self.game.world.player.max_health * 55)), 9)) # TODO: change to darker red
+        pygame.draw.rect(surf, (215, 0, 40), pygame.Rect(1, 2, int((self.game.world.player.health / self.game.world.player.max_health * 55)), 9)) 
         surf.blit(health_bar_img,(1, 2))
         
          # weapon display

@@ -8,9 +8,12 @@ class Entities:
         
         # default player items
         self.entities.append(Player(game, (200, 200), (8, 17), 'player'))
-        self.entities[-1].inventory.add_item(Weapon(game, 'golden_gun', self.entities[0], tags=['active']), 'weapons')
+        self.entities[-1].inventory.add_item(Weapon(game, 'smg', self.entities[0], tags=['active']), 'weapons')
         
-        
+    @property
+    def player(self):
+        return self.entities[0]
+       
     def update(self, dt):
         for entity in self.entities:
             kill = entity.update(dt)

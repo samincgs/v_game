@@ -25,12 +25,3 @@ def outline(surf, img, loc, color=(255, 255, 255)):
     for offset in [(-1, 0), (0, -1), (1, 0), (0, 1)]:
         surf.blit(mask_img, (loc[0] + offset[0], loc[1] + offset[1]))
         
-def normalize(value, amount, end=0):
-    if (value - amount) > end:
-        value -= amount
-    elif (value + amount) < end:
-        value += amount
-    else:
-        value = end  
-    return value
-    

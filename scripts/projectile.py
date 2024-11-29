@@ -3,6 +3,7 @@ import math
 import random
  
 from .config import config
+from .spark import CurvedSpark
 
 class Projectile:
     def __init__(self, game, pos, rot, speed, p_type):
@@ -52,14 +53,12 @@ class Projectile:
                 angle = math.pi / 2
             if collisions['left']:
                 angle = math.pi
-            for i in range(random.randint(2,4)):
-                self.game.world.spark_manager.add_spark('spark_curve', pos=self.pos, angle=math.pi + angle, speed= 4 + random.random() * 2, curve=-0.05 + random.random() * 0.1, color=(255, 255, 255), decay_rate=0.5 + random.random() * 0.2)
+                
+            # add sparks
             return True
 
         if self.timer > 3:
             return True
-        
-        
         
     def render(self, surf, offset=(0, 0)):
         render_pos = [self.pos[0] - offset[0], self.pos[1] - offset[1]]

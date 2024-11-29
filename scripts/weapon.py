@@ -38,13 +38,10 @@ class Weapon(Item):
                 self.ammo -= 1
                 self.game.world.projectile_manager.add_projectile(self.game, self.owner.center, math.radians(self.rotation), 300, self.name)
                 self.last_attack = curr_time
-                # add bow sparks
-                spark_position = [
-                self.owner.center[0] + math.cos(math.radians(self.rotation)) * 4,
-                self.owner.center[1] + math.sin(math.radians(self.rotation)) * 4
-            ]
-                self.game.world.vfx.spawn_group('bow_sparks', spark_position, math.radians(self.rotation))
                 
+                
+                # TODO add sparks for gun shot
+                                
                 if self.name in ['rifle', 'smg']:
                     if self.ammo %  2 == 0:
                         self.game.world.particle_manager.add_particle(self.game, 'shells', self.owner.center, movement=[(self.owner.flip[0] - 0.5) * random.randint(60, 90), -random.randint(30, 50)], decay_rate=0.05, frame=0, custom_color=(244, 176, 60), physics=self.game.world.tilemap)
