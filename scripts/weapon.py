@@ -5,6 +5,7 @@ import random
 
 from .item import Item
 from .config import config
+from .spark import CurvedSpark
 
 class Weapon(Item):
     def __init__(self, game, name, owner, tags=None):
@@ -41,6 +42,8 @@ class Weapon(Item):
                 
                 
                 # TODO add sparks for gun shot
+                for i in [random.uniform(-math.pi / 8, -math.pi / 4), 0, random.uniform(+math.pi / 8, +math.pi / 4)]:
+                    self.game.world.spark_manager.sparks.append(CurvedSpark(pos=self.owner.center, angle=math.radians(self.rotation) + i, speed=4 + random.random() * 2, curve=-0.05 + random.random() * 0.1, color=(255, 255, 255), decay_rate=1.2))
                                 
                 if self.name in ['rifle', 'smg']:
                     if self.ammo %  2 == 0:

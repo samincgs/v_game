@@ -1,25 +1,43 @@
 {
   "player_idle": {
-    "frames": [12, 5, 5, 5, 5, 5, 5, 5],
+    "frames": [20, 5, 5, 5, 20],
     "loop": true,
     "speed": 1.0,
-    "centered": false,
-    "offset": [6, 2],
-    "outline": [255, 255, 255]
+    "offset": [5, 1],
+    "outline": null
   },
   "player_jump": {
     "frames": [5],
     "loop": false,
     "speed": 1.0,
-    "centered": false,
+    "offset": [4, 1],
+    "outline": null
+  },
+  "player_run": {
+    "frames": [5, 5, 5, 5],
+    "loop": true,
+    "speed": 1.0,
+    "offset": [5, 1],
+    "outline": null
+  },
+  "old_player_idle": {
+    "frames": [12, 5, 5, 5, 5, 5, 5, 5],
+    "loop": true,
+    "speed": 1.0,
     "offset": [6, 2],
     "outline": [255, 255, 255]
   },
-  "player_run": {
+  "old_player_jump": {
+    "frames": [5],
+    "loop": false,
+    "speed": 1.0,
+    "offset": [6, 2],
+    "outline": [255, 255, 255]
+  },
+  "old_player_run": {
     "frames": [3, 4, 2, 4, 2],
     "loop": true,
     "speed": 1.0,
-    "centered": false,
     "offset": [6, 3],
     "outline": [255, 255, 255]
   },
@@ -27,7 +45,6 @@
     "frames": [5],
     "loop": false,
     "speed": 1.0,
-    "centered": false,
     "offset": [0, 0],
     "outline": null
   }

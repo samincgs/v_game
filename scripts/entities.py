@@ -7,7 +7,7 @@ class Entities:
         self.entities = []
         
         # default player items
-        self.entities.append(Player(game, (200, 200), (8, 17), 'player'))
+        self.entities.append(Player(game, (200, 200), (10, 21), 'player'))
         self.entities[-1].inventory.add_item(Weapon(game, 'smg', self.entities[0], tags=['active']), 'weapons')
         
     @property
@@ -19,9 +19,9 @@ class Entities:
             kill = entity.update(dt)
             if kill:
                 self.entities.remove(entity)
-            
-    
-    
+
     def render(self, surf, offset=(0, 0)):
         for entity in self.entities:
             entity.render(surf, offset=offset)
+        
+        

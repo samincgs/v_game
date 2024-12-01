@@ -20,7 +20,7 @@ class Tilemap:
     def get_nearby_rects(self, pos):
         rects = []
         tile_pos = (int(pos[0] // self.tile_size), int(pos[1] // self.tile_size))
-        check_locs = [(-1, -1), (0, -1), (1, -1), (-1, 0), (0, 0), (1, 0), (-1, 1), (0, 1), (1, 1)]
+        check_locs = [(-1, -1), (0, -1), (1, -1), (-1, 0), (0, 0), (1, 0), (-1, 1), (0, 1), (1, 1), (-1, 2), (0, 2), (1, 2)]
         for loc in check_locs:
             tile_loc = (tile_pos[0] + loc[0], tile_pos[1] + loc[1])
             str_loc = str(tile_loc[0]) + ';' + str(tile_loc[1])

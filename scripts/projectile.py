@@ -54,7 +54,8 @@ class Projectile:
             if collisions['left']:
                 angle = math.pi
                 
-            # add sparks
+            # # add sparks
+            
             return True
 
         if self.timer > 3:

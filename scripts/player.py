@@ -1,3 +1,4 @@
+import pygame
 import math
 
 from .entity import Entity
@@ -122,7 +123,7 @@ class Player(Entity):
     def render(self, surf, offset=(0, 0)):
         super().render(surf, offset=offset)
         self.weapon.render(surf, (self.center[0] - offset[0], self.center[1] - offset[1] + 2))
-        
+        # pygame.draw.rect(surf, (255, 0, 0), pygame.Rect(self.rect.x - offset[0], self.rect.y - offset[1], *self.size)) # debug
         
             
     

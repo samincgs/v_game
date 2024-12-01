@@ -25,7 +25,7 @@ class Animation:
         self.data = animation_data
         self.frame = 0
         self.img = animation_data.images[0]
-        
+    
     def play(self, dt):
         self.frame += dt * 60 * self.data.config['speed']
         
@@ -43,7 +43,6 @@ class AnimationManager:
         self.animations = {}
         for anim in os.listdir(ANIMATION_PATH):
             self.animations[anim] = AnimationData(ANIMATION_PATH + '/' + anim, COLORKEY)
-            
-            
+                    
     def new(self, anim_id):
         return Animation(self.animations[anim_id])

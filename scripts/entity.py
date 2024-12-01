@@ -17,7 +17,6 @@ class Entity:
         self.health = self.max_health
         self.flip = [False, False]
         self.hurt = 0
-        self.centered = False
         self.active_animation = None
         
         if self.type + '_idle' in self.game.assets.animations.animations:
@@ -33,17 +32,11 @@ class Entity:
     
     @property
     def rect(self):
-        if not self.centered:
-            return pygame.Rect(int(self.pos[0]), int(self.pos[1]), self.size[0], self.size[1])
-        else:
-            return pygame.Rect(int(self.pos[0] - self.size[0] // 2), int(self.pos[1] - self.size[1] // 2), self.size[0], self.size[1])
-    
+        return pygame.Rect(self.pos[0], self.pos[1], self.size[0], self.size[1])
+        
     @property
     def center(self):
-        if self.centered:
-            return self.pos.copy()
-        else:
-            return [self.pos[0] + self.size[0] // 2, self.pos[1] + self.size[1] // 2] 
+        return [self.pos[0] + self.size[0] // 2, self.pos[1] + self.size[1] // 2] 
         
     def set_action(self, action_id, force=False):
         if force:
@@ -80,7 +73,7 @@ class Entity:
                 temp_rect.left = tile.right
                 directions['left'] = True
             self.pos[0] = temp_rect.x
-            
+
         # vertical
         self.pos[1] += movement[1] 
         tiles = tilemap.get_nearby_rects(self.pos)
@@ -95,7 +88,7 @@ class Entity:
                 temp_rect.top = tile.bottom
                 directions['top'] = True 
             self.pos[1] = temp_rect.y
-            
+
         return directions
         
     def calculate_render_offset(self, offset=(0, 0)):
@@ -103,16 +96,13 @@ class Entity:
         if self.active_animation:
             offset[0] += self.active_animation.data.config['offset'][0]
             offset[1] += self.active_animation.data.config['offset'][1]
-        if self.centered:
-            offset[0] += self.img.get_width() // 2
-            offset[1] += self.img.get_height() // 2
         return offset
     
     def render(self, surf, offset=(0, 0)):
         offset = self.calculate_render_offset(offset=offset)
         if self.active_animation.data.config['outline']:
-            outline(surf, self.img, (int(self.pos[0] - offset[0]), int(self.pos[1] - offset[1])), color=self.active_animation.data.config['outline'])
-        surf.blit(self.img, (int(self.pos[0] - offset[0]), int(self.pos[1] - offset[1]))) # added one to deal with tilemap size (17x16)
+            outline(surf, self.img, loc=(self.pos[0] - offset[0], self.pos[1] - offset[1]), color=self.active_animation.data.config['outline'])
+        surf.blit(self.img, (self.pos[0] - offset[0], self.pos[1] - offset[1])) # added one to deal with tilemap size (17x16)
           
     def update(self, dt):
         self.active_animation.play(dt)

@@ -1,5 +1,4 @@
 # Pixel art
-- change player sprite
 - make a structured map
 - add decor
 

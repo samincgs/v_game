@@ -13,8 +13,10 @@ class InventoryMenu:
         
         self.base_pos = [80, 40]
         self.color = (187, 196, 204)
+        self.border_radius = 3
         self.item_boxes = [] # [[rect of box, weapon/item name]]
         self.item_info = [] # [[item name (from config), item description, weapon/item name (weapon type), item_type]]
+        
         
 
     def draw_ui(self, surf):  # TODO: CHANGE COLOR of empty boxes
@@ -26,7 +28,7 @@ class InventoryMenu:
         # weapon boxes
         for i in range(self.cols):
             rect = pygame.Rect(self.base_pos[0] + i * self.size, self.base_pos[1], self.size, self.size)
-            color = (124, 140, 156)
+            color = (154, 170, 186)
             for ix, weapon in enumerate(self.inventory.get_active_weapons()):
                 if ix == i:
                     weapon_img = self.game.assets.weapons[weapon.name]
@@ -34,7 +36,7 @@ class InventoryMenu:
                     surf.blit(weapon_img, (rect.centerx - weapon_img.get_width() // 2 - 2, rect.centery - weapon_img.get_height() // 2 ))
                     all_boxes.append([rect, weapon.name])
             
-            pygame.draw.rect(surf, color, rect, 1)
+            pygame.draw.rect(surf, color, rect, 1, self.border_radius)
         
         
         # item logo
@@ -44,7 +46,7 @@ class InventoryMenu:
         for i in range(self.rows):
             item_pos = [self.base_pos[0], self.base_pos[1] + 40]
             for j in range(self.cols):
-                color = (124, 140, 156)
+                color = (154, 170, 186)
                 rect = pygame.Rect(item_pos[0] + j * self.size, item_pos[1] + i * self.size, self.size, self.size)
                 for ix, item in enumerate(self.inventory.get_items()):
                     if ix == j + i * self.cols:
@@ -56,7 +58,7 @@ class InventoryMenu:
                             
                         all_boxes.append([rect, item.name])
                     
-                pygame.draw.rect(surf, color, rect, 1)
+                pygame.draw.rect(surf, color, rect, 1, self.border_radius)
                 
             item_pos[1] += self.size
             
