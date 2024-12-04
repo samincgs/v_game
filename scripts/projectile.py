@@ -55,6 +55,8 @@ class Projectile:
                 angle = math.pi
                 
             # # add sparks
+            for i in range(3, 5): #TODO: fix angle
+                self.game.world.spark_manager.sparks.append(CurvedSpark(pos=self.pos.copy(), angle=math.pi + random.random() * angle, speed=4 + random.random() * 2, curve=-0.05 + random.random() * 0.1, color=(255, 255, 255), decay_rate=0.8 + random.random() * 0.5))
             
             return True
 

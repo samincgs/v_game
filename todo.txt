@@ -4,6 +4,7 @@
 
 # Game/Coding
 - Create minimap
+- add dash
 - create skills
 
 # Possible Changes/ Bugs
@@ -11,3 +12,4 @@
 - optimize inventory menu code
 - fix floodfill algorithm
 - add leaves falling from trees (maybe?)
+- add alpha to guns in ui to indicate reload delay (maybe?)

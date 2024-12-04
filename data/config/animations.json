@@ -3,21 +3,21 @@
     "frames": [20, 5, 5, 5, 20],
     "loop": true,
     "speed": 1.0,
-    "offset": [5, 1],
+    "offset": [5, 2],
     "outline": null
   },
   "player_jump": {
     "frames": [5],
     "loop": false,
     "speed": 1.0,
-    "offset": [4, 1],
+    "offset": [4, 2],
     "outline": null
   },
   "player_run": {
     "frames": [5, 5, 5, 5],
     "loop": true,
     "speed": 1.0,
-    "offset": [5, 1],
+    "offset": [5, 2],
     "outline": null
   },
   "old_player_idle": {

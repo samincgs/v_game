@@ -1,4 +1,3 @@
-import pygame
 import math
 
 from .entity import Entity
@@ -65,9 +64,7 @@ class Player(Entity):
         
         super().update(dt)
         self.air_timer += dt
-                
-        # normalize x axis movement
-        
+
         if not self.game.world.inventory_mode:
             # player controls
             if self.game.input.states['jump']:
@@ -84,6 +81,7 @@ class Player(Entity):
                 self.slot_weapon(-1)
             if self.game.input.mouse_states['scroll_down']:
                 self.slot_weapon(1)
+                
             
         if self.game.input.states["inventory_toggle"]:
             self.game.world.inventory_mode = not self.game.world.inventory_mode
@@ -117,9 +115,7 @@ class Player(Entity):
             self.flip[0] = True
         else:
             self.flip[0] = False 
-            
-        
-            
+   
     def render(self, surf, offset=(0, 0)):
         super().render(surf, offset=offset)
         self.weapon.render(surf, (self.center[0] - offset[0], self.center[1] - offset[1] + 2))

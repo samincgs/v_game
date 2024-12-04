@@ -7,7 +7,7 @@ class Camera:
         self.target_pos = [0, 0]
         self.rate = 0.5
         self.tracked_entity = None
-        self.camera_speed = 250
+        self.camera_speed = 300
     
     @property
     def pos(self):

@@ -37,8 +37,8 @@ class Renderer:
     def render(self):
         surf = self.game.window.display
                   
-        self.background.update()
-        self.background.render(surf)
+        # self.background.update()
+        # self.background.render(surf)
                     
         
         self.gui(surf)

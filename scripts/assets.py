@@ -1,7 +1,6 @@
 import os
 
 from .font import Font
-from .config import config
 from .utils import load_image
 from .animation import AnimationManager
 
@@ -14,6 +13,7 @@ FONTS = {
     "large_white": (BASE_PATH_FONT + 'large_font.png', (255, 255, 255)),
     "large_black": (BASE_PATH_FONT + 'large_font.png', (0, 0, 1)),
 }
+
 
 class Assets:
     def __init__(self):
@@ -34,15 +34,10 @@ class Assets:
     
     def load_dir_list(self, path):
         image_dir = {}
-        for root, dirs, files in os.walk(BASE_PATH + path):
-            if files:
-                key = root.split('\\')[1]
-                image_dir[key] = []
-                for file in files:
-                    img_path = root.replace('\\', '/') + '/' + str(file)
-                    img = load_image(img_path)
-                    image_dir[key].append(img)
-                                        
+        for folder in os.listdir(BASE_PATH + path):
+            image_dir[folder] = []
+            for img in os.listdir(BASE_PATH + path + '/' + folder):
+                image_dir[folder].append(load_image(os.path.join(BASE_PATH, path, folder, img)))                                       
         return image_dir
         
         

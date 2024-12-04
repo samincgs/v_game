@@ -20,12 +20,14 @@ class Weapon(Item):
         self.capacity = self.config['capacity']
         self.ammo = self.capacity
         self.reload_method = self.config['reload_method']
+        self.reload_delay = self.config['reload_delay']
         self.attack_rate = self.config['attack_rate']
         self.trigger = self.config['trigger']
         
         self.rotation = 0
         self.flip = False
         self.last_attack = 0
+        self.last_reload = 0
     
     @property
     def img(self):
@@ -39,8 +41,7 @@ class Weapon(Item):
                 self.ammo -= 1
                 self.game.world.projectile_manager.add_projectile(self.game, self.owner.center, math.radians(self.rotation), 300, self.name)
                 self.last_attack = curr_time
-                
-                
+                                
                 # TODO add sparks for gun shot
                 for i in [random.uniform(-math.pi / 8, -math.pi / 4), 0, random.uniform(+math.pi / 8, +math.pi / 4)]:
                     self.game.world.spark_manager.sparks.append(CurvedSpark(pos=self.owner.center, angle=math.radians(self.rotation) + i, speed=4 + random.random() * 2, curve=-0.05 + random.random() * 0.1, color=(255, 255, 255), decay_rate=1.2))
@@ -50,35 +51,39 @@ class Weapon(Item):
                         self.game.world.particle_manager.add_particle(self.game, 'shells', self.owner.center, movement=[(self.owner.flip[0] - 0.5) * random.randint(60, 90), -random.randint(30, 50)], decay_rate=0.05, frame=0, custom_color=(244, 176, 60), physics=self.game.world.tilemap)
     
     def reload(self):
+        
         if (self.ammo != self.capacity) and (self.max_ammo > 0):
-            diff = min(self.max_ammo, self.capacity - self.ammo) # use min so when player has almost no ammunication left, the game doesnt crash 
-            self.max_ammo -= diff
-            self.ammo = self.capacity
-            
-            if self.reload_method == 'shells':
-                for i in range(diff):
+            curr_time = time.time()
+            if curr_time - self.last_reload >= self.reload_delay:
+                diff = min(self.max_ammo, self.capacity - self.ammo) # use min so when player has almost no ammunication left, the game doesnt crash 
+                self.max_ammo -= diff
+                self.ammo = self.capacity
+                self.last_reload = curr_time
+                
+                if self.reload_method == 'shells':
+                    for i in range(diff):
+                        self.game.world.particle_manager.add_particle(game=self.game, 
+                            p_type='shells', 
+                            pos=self.owner.center, 
+                            movement=[(self.owner.flip[0] - 0.5) * random.randint(60, 90), -random.randint(40, 80)], 
+                            decay_rate=0.1, 
+                            frame=0, 
+                            custom_color=(244, 176, 60),  # (maybe) change the color of the reload bullet drop
+                            physics=self.game.world.tilemap)
+                elif self.reload_method == 'mag':
                     self.game.world.particle_manager.add_particle(game=self.game, 
-                        p_type='shells', 
-                        pos=self.owner.center, 
-                        movement=[(self.owner.flip[0] - 0.5) * random.randint(60, 90), -random.randint(40, 80)], 
-                        decay_rate=0.1, 
-                        frame=0, 
-                        custom_color=(244, 176, 60),  # (maybe) change the color of the reload bullet drop
-                        physics=self.game.world.tilemap)
-            elif self.reload_method == 'mag':
-                self.game.world.particle_manager.add_particle(game=self.game, 
-                        p_type='mag', 
-                        pos=self.owner.center, 
-                        movement=[(self.owner.flip[0] - 0.5) * random.randint(40, 70), -random.randint(30, 60)], 
-                        decay_rate=0.1, 
-                        frame=0, 
-                        custom_color=(92, 36, 27),
-                        physics=self.game.world.tilemap)
+                            p_type='mag', 
+                            pos=self.owner.center, 
+                            movement=[(self.owner.flip[0] - 0.5) * random.randint(40, 70), -random.randint(30, 60)], 
+                            decay_rate=0.1, 
+                            frame=0, 
+                            custom_color=(92, 36, 27),
+                            physics=self.game.world.tilemap)
         
 
     def render(self, surf, loc):
         img = self.img
-        if (self.rotation % 360 > 90) and (self.rotation % 360 < 270):
+        if abs(self.rotation) > 90 and abs(self.rotation) < 270:
             img = pygame.transform.flip(img, False, True)
             self.flip = True
         else:
