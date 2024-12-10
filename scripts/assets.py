@@ -1,8 +1,9 @@
 import os
 
+from . import animation
 from .font import Font
 from .utils import load_image
-from .animation import AnimationManager
+
 
 BASE_PATH = 'data/images/' 
 BASE_PATH_FONT = 'data/fonts/' 
@@ -17,7 +18,7 @@ FONTS = {
 
 class Assets:
     def __init__(self):
-        self.animations = AnimationManager()
+        self.animations = animation.AnimationManager()
         self.misc = self.load_dir('misc')
         self.weapons = self.load_dir('weapons')
         self.particles = self.load_dir_list('particles')

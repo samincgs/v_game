@@ -8,7 +8,6 @@
 - create skills
 
 # Possible Changes/ Bugs
-- fix spark system (replace vfx)
 - optimize inventory menu code
 - fix floodfill algorithm
 - add leaves falling from trees (maybe?)

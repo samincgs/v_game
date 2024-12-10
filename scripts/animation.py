@@ -9,11 +9,11 @@ COLORKEY = (0, 0, 0)
 class AnimationData:
     def __init__(self, path, colorkey=None):
         self.id = path.split('/')[-1]
+        self.config = config['animations'][self.id]
         self.images = []
         for img in sorted(os.listdir(path)):
             self.images.append(load_image(path + '/' + img, colorkey))
         
-        self.config = config['animations'][self.id]
         
     @property
     def duration(self):

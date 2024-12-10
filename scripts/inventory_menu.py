@@ -83,11 +83,10 @@ class InventoryMenu:
                                 item.add_active()
                 elif self.game.input.mouse_states['right_click']:
                     if len(self.inventory.get_active_weapons()) > 1:
-                        for ix, weapon in enumerate(self.inventory.get_active_weapons()):
+                        for weapon in self.inventory.get_active_weapons():
                             if weapon and weapon.name == self.item_info[0][2]:
                                 weapon.remove_active()
-                                if ix <= self.game.world.player.selected_weapon:
-                                    self.game.world.player.selected_weapon = 0
+                                self.game.world.player.slot_weapon(-1)
                            
     def render(self, surf):
         self.item_boxes = self.draw_ui(surf)

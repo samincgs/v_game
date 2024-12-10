@@ -1,9 +1,10 @@
 import pygame
 import math
 import random
+
+from scripts.spark import CurvedSpark
  
 from .config import config
-from .spark import CurvedSpark
 
 class Projectile:
     def __init__(self, game, pos, rot, speed, p_type):
@@ -55,9 +56,8 @@ class Projectile:
                 angle = math.pi
                 
             # # add sparks
-            for i in range(3, 5): #TODO: fix angle
-                self.game.world.spark_manager.sparks.append(CurvedSpark(pos=self.pos.copy(), angle=math.pi + random.random() * angle, speed=4 + random.random() * 2, curve=-0.05 + random.random() * 0.1, color=(255, 255, 255), decay_rate=0.8 + random.random() * 0.5))
-            
+            for i in range(random.randint(2,4)):
+                self.game.world.spark_manager.sparks.append(CurvedSpark(pos=self.pos, speed=random.randint(30, 50) / 100 * 10 , curve=(random.random() * 0.1) - 0.05, angle=math.pi + angle + random.randint(-70, 70) / 100, decay_rate=random.randint(45, 75) / 100))
             return True
 
         if self.timer > 3:

@@ -7,7 +7,7 @@ class Entities:
         self.entities = []
         
         # default player items
-        self.entities.append(Player(game, (200, 200), (10, 21), 'player'))
+        self.entities.append(Player(game, (200, 100), (10, 21), 'player'))
         self.entities[-1].inventory.add_item(Weapon(game, 'rifle', self.entities[0], tags=['active']), 'weapons')
         self.entities[-1].inventory.add_item(Weapon(game, 'smg', self.entities[0], tags=['active']), 'weapons')
         

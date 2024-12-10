@@ -6,7 +6,7 @@ class InventoryGroup:
         for i in self.items: # if the item is stackable
             if i.is_stackable():
                 i.amount += item.amount
-                return None
+                return 
             
         self.items.append(item)
                     

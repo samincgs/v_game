@@ -10,10 +10,7 @@ class Entity:
         self.type = e_type
         self.pos = list(pos)
         self.size = list(size)
-        
-        self.max_health = 1
-        if self.type in config['entities']:
-            self.max_health = config['entities'][e_type]['base_health']
+        self.max_health = config['entities'][e_type]['base_health'] if self.type in config['entities'] else 0
         self.health = self.max_health
         self.flip = [False, False]
         self.hurt = 0
