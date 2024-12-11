@@ -41,6 +41,13 @@
     "offset": [6, 3],
     "outline": [255, 255, 255]
   },
+  "bat_idle": {
+    "frames": [50, 5],
+    "loop": true,
+    "speed": 1.0,
+    "offset": [1, 1],
+    "outline": null
+  },
   "item_wood": {
     "frames": [5],
     "loop": false,

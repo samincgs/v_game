@@ -45,6 +45,17 @@ class Projectile:
     def update(self, dt):
         collisions = self.move(dt)
         self.timer += dt
+        
+        for entity in self.game.world.entities.entities:
+            if entity.type != 'player':
+                if entity.rect.collidepoint(self.pos):
+                    angle = math.atan2(entity.pos[1] - self.game.world.entities.player.pos[1], entity.pos[0] - self.game.world.entities.player.pos[0])
+                    entity.velocity[0] += math.cos(angle) * 10 * self.config['knockback'] 
+                    entity.velocity[1] += math.sin(angle) * 10 * self.config['knockback'] 
+                    for i in range(random.randint(8,12)):
+                        self.game.world.spark_manager.sparks.append(CurvedSpark(pos=self.pos, speed=random.randint(30, 50) / 100 * 10 , curve=(random.random() * 0.5) - 0.1, angle=math.pi + angle + random.randint(-120, 120) / 100, decay_rate=random.randint(40, 70) / 100))
+                    return True
+        
         if any(collisions.values()):
             if collisions['top']:
                 angle = math.pi * 3 / 2

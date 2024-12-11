@@ -33,6 +33,7 @@ class World:
         self.spark_manager.update(dt)
         self.projectile_manager.update(dt)
         
+        
         for item in self.item_drops:
             item.update(dt)
         

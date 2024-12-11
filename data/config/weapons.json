@@ -1,6 +1,6 @@
 {
-  "golden_gun": {
-    "projectile_type": "golden_gun",
+  "revolver": {
+    "projectile_type": "revolver",
     "reload_method": "shells",
     "reload_delay": 0.9,
     "trigger": "shoot",

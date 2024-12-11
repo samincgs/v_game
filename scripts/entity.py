@@ -42,13 +42,16 @@ class Entity:
             self.active_animation = self.game.assets.animations.new(self.type + '_' + action_id)
 
     def get_angle(self, target):
-        # if isinstance(target, Entity):
-        return math.atan2(target.center[1] - self.center[1], target.center[0] - self.center[0])
-        # else:
-        #     return math.atan2(target.pos[1] - self.pos[1], target.pos[0] - self.pos[0])
+        if isinstance(target, Entity):
+            return math.atan2(target.center[1] - self.center[1], target.center[0] - self.center[0])
+        else:
+            return math.atan2(target[1] - self.pos[1], target[0] - self.pos[0])
     
     def get_distance(self, target): # order of x, y doesnt matter because it calculates a linear distance and is being squared
-        return math.sqrt((target.pos[0] - self.pos[0]) ** 2 + (target.pos[1] - self.pos[1]) ** 2)
+        if isinstance(target, Entity):
+            return math.sqrt((target.pos[0] - self.pos[0]) ** 2 + (target.pos[1] - self.pos[1]) ** 2)
+        else:
+            return math.sqrt((target[0] - self.pos[0]) ** 2 + (target[1] - self.pos[1]) ** 2)
     
     def in_range(self, target, radius):
         return self.get_distance(target) <= radius
@@ -100,6 +103,7 @@ class Entity:
         if self.active_animation.data.config['outline']:
             outline(surf, self.img, loc=(self.pos[0] - offset[0], self.pos[1] - offset[1]), color=self.active_animation.data.config['outline'])
         surf.blit(self.img, (self.pos[0] - offset[0], self.pos[1] - offset[1])) # added one to deal with tilemap size (17x16)
+        
           
     def update(self, dt):
         self.active_animation.play(dt)

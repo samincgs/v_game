@@ -1,8 +1,8 @@
 {
-  "golden_gun": {
-    "name": "Golden Gun",
+  "revolver": {
+    "name": "Revolver",
     "type": "weapon",
-    "description": "A flashy sidearm with decent accuracy."
+    "description": "A decent sidearm with decent accuracy."
   },
   "rifle": {
     "name": "KR-47",

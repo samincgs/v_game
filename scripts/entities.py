@@ -1,4 +1,5 @@
 from .player import Player
+from .enemy import Bat
 from .weapon import Weapon
 
 class Entities:
@@ -7,9 +8,10 @@ class Entities:
         self.entities = []
         
         # default player items
-        self.entities.append(Player(game, (200, 100), (10, 21), 'player'))
-        self.entities[-1].inventory.add_item(Weapon(game, 'rifle', self.entities[0], tags=['active']), 'weapons')
-        self.entities[-1].inventory.add_item(Weapon(game, 'smg', self.entities[0], tags=['active']), 'weapons')
+        self.entities.append(Player(game, (200, 200), (9, 21), 'player'))
+        self.entities[-1].inventory.add_item(Weapon(game, 'revolver', self.player, tags=['active']), 'weapons')
+        
+        self.entities.append(Bat(game, (100, 30), (15, 7)))
         
     @property
     def player(self):
