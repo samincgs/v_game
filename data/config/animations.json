@@ -42,7 +42,7 @@
     "outline": [255, 255, 255]
   },
   "bat_idle": {
-    "frames": [50, 5],
+    "frames": [25, 7],
     "loop": true,
     "speed": 1.0,
     "offset": [1, 1],

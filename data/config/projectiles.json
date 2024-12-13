@@ -2,16 +2,21 @@
   "revolver": {
     "shape": ["line", [255, 255, 255], 5, 2],
     "power": 13,
-    "knockback": 0.2
+    "knockback": 300
   },
   "rifle": {
     "shape": ["line", [255, 255, 255], 5, 2],
     "power": 7,
-    "knockback": 0.2
+    "knockback": 300
   },
   "smg": {
     "shape": ["line", [255, 255, 255], 5, 2],
     "power": 4,
-    "knockback": 0.2
+    "knockback": 300
+  },
+  "bat_goo": {
+    "shape": ["line", [168, 27, 209], 1, 2],
+    "power": 6,
+    "knockback": 0
   }
 }

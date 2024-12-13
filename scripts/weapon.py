@@ -86,9 +86,6 @@ class Weapon(Item):
         img = self.img
         if abs(self.rotation) > 90 and abs(self.rotation) < 270:
             img = pygame.transform.flip(img, False, True)
-            self.flip = True
-        else:
-            self.flip = False
         img = pygame.transform.rotate(img, -self.rotation)
         surf.blit(img, (loc[0] - img.get_width() // 2, loc[1] - img.get_height() // 2))
             

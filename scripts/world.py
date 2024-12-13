@@ -32,11 +32,7 @@ class World:
         self.particle_manager.update(dt)
         self.spark_manager.update(dt)
         self.projectile_manager.update(dt)
-        
-        
-        for item in self.item_drops:
-            item.update(dt)
-        
+            
     
     def drop_item(self, item, pos, velocity):
         self.item_drops.append(Itemdrop(self.game, pos, (1, 1), 'item', item, velocity))
@@ -49,9 +45,7 @@ class World:
         self.spark_manager.render(surf, offset=offset)
         self.projectile_manager.render(surf, offset=offset)
         # pygame.draw.rect(surf, 'red', pygame.Rect(self.player.center[0] - offset[0], self.player.center[1] - offset[1], 1, 1)) # debug
-        
-        for item in self.item_drops:
-            item.render(surf, offset=offset)
+    
         
         # inventory_surf = surf.copy()
         

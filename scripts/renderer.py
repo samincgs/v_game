@@ -53,7 +53,7 @@ class Renderer:
         
           
         if self.game.input.show_fps:
-            self.game.assets.fonts['small_white'].render('FPS: ' + str(int(self.game.window.clock.get_fps())), surf, (surf.get_width() - 35, 2))
+            self.game.assets.fonts['small_white'].render('FPS: ' + str(int(self.game.window.fps)), surf, (surf.get_width() - 35, 2))
             
         
         

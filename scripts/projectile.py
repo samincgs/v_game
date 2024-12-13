@@ -3,6 +3,7 @@ import math
 import random
 
 from scripts.spark import CurvedSpark
+from scripts.effects import Goo
  
 from .config import config
 
@@ -15,6 +16,7 @@ class Projectile:
         self.type = p_type
         self.config = config['projectiles'][p_type]
         self.timer = 0
+        
         
     def move(self, dt):
         directions = {d: False for d in ['top', 'left', 'bottom', 'right']}
@@ -48,15 +50,17 @@ class Projectile:
         
         for entity in self.game.world.entities.entities:
             if entity.type != 'player':
-                if entity.rect.collidepoint(self.pos):
+                if (entity.rect.collidepoint(self.pos)) and (self.type not in  {'bat_goo'}):
+                    entity.damage(self.config['power'])
                     angle = math.atan2(entity.pos[1] - self.game.world.entities.player.pos[1], entity.pos[0] - self.game.world.entities.player.pos[0])
-                    entity.velocity[0] += math.cos(angle) * 10 * self.config['knockback'] 
-                    entity.velocity[1] += math.sin(angle) * 10 * self.config['knockback'] 
+                    entity.velocity[0] += math.cos(angle) * self.config['knockback'] * dt
+                    entity.velocity[1] += math.sin(angle) * self.config['knockback'] * dt
                     for i in range(random.randint(8,12)):
                         self.game.world.spark_manager.sparks.append(CurvedSpark(pos=self.pos, speed=random.randint(30, 50) / 100 * 10 , curve=(random.random() * 0.5) - 0.1, angle=math.pi + angle + random.randint(-120, 120) / 100, decay_rate=random.randint(40, 70) / 100))
                     return True
         
         if any(collisions.values()):
+            self.last_pos = self.pos.copy()
             if collisions['top']:
                 angle = math.pi * 3 / 2
             if collisions['right']:
@@ -67,10 +71,12 @@ class Projectile:
                 angle = math.pi
                 
             # # add sparks
-            for i in range(random.randint(2,4)):
-                self.game.world.spark_manager.sparks.append(CurvedSpark(pos=self.pos, speed=random.randint(30, 50) / 100 * 10 , curve=(random.random() * 0.1) - 0.05, angle=math.pi + angle + random.randint(-70, 70) / 100, decay_rate=random.randint(45, 75) / 100))
+            if self.type in {'rifle', 'revolver', 'smg'}:
+                for i in range(random.randint(2,4)):
+                    self.game.world.spark_manager.sparks.append(CurvedSpark(pos=self.pos.copy(), speed=random.randint(30, 50) / 100 * 10 , curve=(random.random() * 0.1) - 0.05, angle=math.pi + angle + random.randint(-70, 70) / 100, decay_rate=random.randint(45, 75) / 100))
+            elif self.type == 'bat_goo':
+                self.game.world.projectile_manager.goo.append(Goo(self.game, self.game.assets.misc['goo'], self.last_pos, math.degrees(angle - math.pi / 2)))
             return True
-
         if self.timer > 3:
             return True
         
@@ -83,6 +89,7 @@ class Projectile:
 class ProjectileManager:
     def __init__(self):
         self.projectiles = []
+        self.goo = []
     
     def add_projectile(self, game, pos, rot, speed, p_type):
         self.projectiles.append(Projectile(game, pos, rot, speed, p_type))
@@ -92,7 +99,15 @@ class ProjectileManager:
             kill = projectile.update(dt)
             if kill:
                 self.projectiles.remove(projectile)
+
+        for goo in self.goo.copy():
+            kill = goo.update(dt)
+            if kill:
+                self.goo.remove(goo)
                 
     def render(self, surf, offset=(0, 0)):
         for projectile in self.projectiles:
             projectile.render(surf, offset=offset)
+            
+        for goo in self.goo:
+            goo.render(surf, offset=offset)

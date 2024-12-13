@@ -5,10 +5,9 @@ class Itemdrop(Entity):
         super().__init__(game, pos, size, e_type)
         self.item_data = item_data
         self.velocity = list(velocity)
-        self.velocity_normalization = [20, 0]
+        self.size = (self.img.get_width(), self.img.get_height() - 1)
         
         self.set_action(self.item_data.name)
-        self.size = (self.img.get_width(), self.img.get_height() - 1)
         
     def update(self, dt):
         super().update(dt)

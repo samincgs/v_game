@@ -14,7 +14,6 @@ class Player(Entity):
         self.jumps = self.max_jumps
         self.dash = 0
         self.aim_angle = 0
-        self.alive = True
         self.inventory = Inventory()       
         self.selected_weapon = 0
         
@@ -37,12 +36,7 @@ class Player(Entity):
         if self.jumps:
             self.velocity[1] = -300
             self.jumps -= 1
-    
-    def damage(self, amount):
-        self.health -= amount
-        if self.health <= 0:
-            self.die()
-    
+        
     # direction is 1 or 0 or -1
     def move(self, direction):
         if direction > 0:
@@ -51,19 +45,11 @@ class Player(Entity):
             self.flip[0] = True
         self.frame_movement[0] += 120 * direction
     
-    def die(self): # TODO: Finish and add destruction particles
-        SIZE = 3
-        entity_img = self.img.copy()
-        
-        for y in range(entity_img.get_height() // SIZE): # forgot to add 1
-            for x in range(entity_img.get_width() // SIZE):
-                img = clip(entity_img, x * SIZE, y * SIZE, SIZE, SIZE)
-    
         
     def update(self, dt):
         self.frame_movement = self.velocity.copy()
         
-        super().update(dt)
+        kill = super().update(dt)
         self.air_timer += dt
 
         if not self.game.world.inventory_mode:
@@ -116,11 +102,13 @@ class Player(Entity):
             self.flip[0] = True
         else:
             self.flip[0] = False 
+            
+        return kill
    
     def render(self, surf, offset=(0, 0)):
         super().render(surf, offset=offset)
         self.weapon.render(surf, (self.center[0] - offset[0], self.center[1] - offset[1] + 2))
-        # pygame.draw.rect(surf, (255, 0, 0), pygame.Rect(self.pos[0] - offset[0], self.pos[1] - offset[1], *self.size), 1) # debug
+        pygame.draw.rect(surf, (0, 255, 0), pygame.Rect(self.pos[0] - offset[0], self.pos[1] - offset[1], *self.size), 1) # debug
         
             
     

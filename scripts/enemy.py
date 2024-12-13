@@ -9,16 +9,57 @@ class Bat(Entity):
         super().__init__(game, pos, size, 'bat')
         self.velocity = [0, 0]
         self.attack_timer = 0
+        self.hover_timer = 0
+        self.hover_distance = random.randint(50, 90)
+        self.speed = random.randint(40, 70)
+        self.vertical_amplitude = 8
+        self.hover_frequency = random.randint(10, 30) / 10
+        self.target_offset_angle = random.uniform(0, 2 * math.pi)  
+        
+        self.spawn_goo = False
         
     def update(self, dt):
-        super().update(dt)
+        kill = super().update(dt)
+        
         self.attack_timer += dt
-        
-        self.velocity[0] = normalize(self.velocity[0], 350 * dt)
-        self.velocity[1] = normalize(self.velocity[1], 350 * dt)
-        
+        self.hover_timer += dt
+
+        player = self.game.world.player
+
+        self.velocity[0] = normalize(self.velocity[0], 50 * dt)
+        self.velocity[1] = normalize(self.velocity[1], 50 * dt)
+
         self.pos[0] += self.velocity[0]
         self.pos[1] += self.velocity[1]
+
+        self.target_offset_angle += 0.5 * dt 
+        if self.target_offset_angle > 2 *  math.pi:  
+            self.target_offset_angle = random.uniform(math.pi, 2 * math.pi) 
+            
+        target_pos = [player.pos[0] + math.cos(self.target_offset_angle) * self.hover_distance, player.pos[1] + math.sin(self.target_offset_angle) * self.hover_distance]
+
+        target_pos[1] += math.sin(self.hover_timer * self.hover_frequency) * self.vertical_amplitude
+
+        target_angle = self.get_angle(target_pos)
+        distance_to_target = self.get_distance(target_pos)
+                
+        if distance_to_target > self.speed * dt:
+            self.pos[0] += math.cos(target_angle) * self.speed * dt
+            self.pos[1] += math.sin(target_angle) * self.speed * dt
+        else:
+            self.velocity[0] = 0
+            self.velocity[1] = 0
+        
+        attack_angle = self.get_angle(player)
+                
+        if distance_to_target <= 150:
+            if self.attack_timer > 6:
+                self.attack_timer = 0
+                self.game.world.projectile_manager.add_projectile(self.game, self.center, attack_angle, 200, 'bat_goo')
+            
+        return kill
+       
+
         
         
         

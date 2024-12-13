@@ -1,5 +1,12 @@
 {
   "player": {
-    "base_health": 50
+    "base_health": 50,
+    "size": [9, 21],
+    "spawn_rate": null
+  },
+  "bat": {
+    "base_health": 20,
+    "size": [15, 7],
+    "spawn_rate": 15000
   }
 }

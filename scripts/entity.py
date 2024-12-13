@@ -15,6 +15,7 @@ class Entity:
         self.flip = [False, False]
         self.hurt = 0
         self.active_animation = None
+        self.dead = False
         
         if self.type + '_idle' in self.game.assets.animations.animations:
             self.set_action('idle')
@@ -40,6 +41,14 @@ class Entity:
             self.active_animation = self.game.assets.animations.new(self.type + '_' + action_id)
         elif (not self.active_animation) or (self.active_animation.data.id != self.type + '_' + action_id):
             self.active_animation = self.game.assets.animations.new(self.type + '_' + action_id)
+
+    def damage(self, amt):
+        self.health -= amt
+        if self.health <= 0:
+            self.dead = True
+
+    # def die(self): # TODO: Finish and add death particles
+    #     self.dead = True
 
     def get_angle(self, target):
         if isinstance(target, Entity):
@@ -107,3 +116,7 @@ class Entity:
           
     def update(self, dt):
         self.active_animation.play(dt)
+        
+        return self.dead
+
+        
