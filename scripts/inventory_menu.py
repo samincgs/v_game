@@ -54,7 +54,7 @@ class InventoryMenu:
                         item_img = self.game.assets.weapons[item.name] if item.type == 'weapon' else self.game.assets.items[item.name]
                         surf.blit(item_img, (rect.centerx - item_img.get_width() // 2, rect.centery - item_img.get_height() // 2))
                         if item.amount > 1:
-                            self.game.assets.fonts['small_white'].render(str(item.amount), surf, (rect.centerx + 5, rect.centery + 5)) # name
+                            self.game.assets.fonts['small_white'].render(str(item.amount), surf, (rect.centerx + 3.5, rect.centery + 5)) # name
                             
                         all_boxes.append([rect, item.name])
                     

@@ -23,7 +23,6 @@ class World:
         self.inventory_menu = InventoryMenu(game, self.player.inventory)
         self.inventory_mode = False
         
-        self.item_drops = []
   
     def update(self):
         dt = self.game.window.dt

@@ -16,7 +16,8 @@ class Bat(Entity):
         self.hover_frequency = random.randint(10, 30) / 10
         self.target_offset_angle = random.uniform(0, 2 * math.pi)  
         
-        self.spawn_goo = False
+        
+        
         
     def update(self, dt):
         kill = super().update(dt)
@@ -55,7 +56,7 @@ class Bat(Entity):
         if distance_to_target <= 150:
             if self.attack_timer > 6:
                 self.attack_timer = 0
-                self.game.world.projectile_manager.add_projectile(self.game, self.center, attack_angle, 200, 'bat_goo')
+                self.game.world.projectile_manager.add_projectile(self.game, self.center, attack_angle, 140, 'bat_goo')
             
         return kill
        

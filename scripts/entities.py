@@ -4,6 +4,7 @@ from .config import config
 from .player import Player
 from .enemy import Bat
 from .weapon import Weapon
+from .item import Item
 
 class Entities:
     def __init__(self, game):
@@ -15,6 +16,7 @@ class Entities:
         # default player items
         self.entities.append(Player(game, (200, 120), self.config['player']['size'], 'player'))
         self.entities[-1].inventory.add_item(Weapon(game, 'revolver', self.player, tags=['active']), 'weapons')
+        self.entities[-1].inventory.add_item(Item(game, 'bat_wing', self.player, amount=2), 'items')
         
         
         

@@ -18,5 +18,10 @@
     "name": "Wood",
     "type": "item",
     "description": "A versatile piece of lumber."
+  },
+  "bat_wing": {
+    "name": "Bat Wing",
+    "type": "item",
+    "description": "The wing of a poisonous creature."
   }
 }

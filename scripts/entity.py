@@ -16,6 +16,7 @@ class Entity:
         self.hurt = 0
         self.active_animation = None
         self.dead = False
+        self.drops = []
         
         if self.type + '_idle' in self.game.assets.animations.animations:
             self.set_action('idle')

@@ -108,7 +108,7 @@ class Player(Entity):
     def render(self, surf, offset=(0, 0)):
         super().render(surf, offset=offset)
         self.weapon.render(surf, (self.center[0] - offset[0], self.center[1] - offset[1] + 2))
-        pygame.draw.rect(surf, (0, 255, 0), pygame.Rect(self.pos[0] - offset[0], self.pos[1] - offset[1], *self.size), 1) # debug
+        # pygame.draw.rect(surf, (0, 255, 0), pygame.Rect(self.pos[0] - offset[0], self.pos[1] - offset[1], *self.size), 1) # debug
         
             
     
