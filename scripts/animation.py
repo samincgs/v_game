@@ -14,11 +14,9 @@ class AnimationData:
         for img in sorted(os.listdir(path)):
             self.images.append(load_image(path + '/' + img, colorkey))
         
-        
     @property
     def duration(self):
         return sum(self.config['frames'])
-    
     
 class Animation:
     def __init__(self, animation_data):

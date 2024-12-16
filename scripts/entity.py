@@ -44,6 +44,7 @@ class Entity:
             self.active_animation = self.game.assets.animations.new(self.type + '_' + action_id)
 
     def damage(self, amt):
+        self.hurt = 1
         self.health -= amt
         if self.health <= 0:
             self.dead = True
@@ -113,10 +114,17 @@ class Entity:
         if self.active_animation.data.config['outline']:
             outline(surf, self.img, loc=(self.pos[0] - offset[0], self.pos[1] - offset[1]), color=self.active_animation.data.config['outline'])
         surf.blit(self.img, (self.pos[0] - offset[0], self.pos[1] - offset[1])) # added one to deal with tilemap size (17x16)
+        if self.hurt:
+            temp_mask = pygame.mask.from_surface(self.img)
+            mask_img = temp_mask.to_surface(setcolor=(255, 255, 255, int(self.hurt * 255)), unsetcolor=(0, 0, 0, 0))
+            surf.blit(mask_img, (self.pos[0] - offset[0], self.pos[1] - offset[1]))
         
           
     def update(self, dt):
-        self.active_animation.play(dt)
+        if self.active_animation:
+            self.active_animation.play(dt)
+        if self.hurt:
+            self.hurt = max(0, self.hurt - dt * 2)
         
         return self.dead
 

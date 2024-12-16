@@ -15,10 +15,10 @@ class Entities:
         
         # default player items
         self.entities.append(Player(game, (200, 120), self.config['player']['size'], 'player'))
-        self.entities[-1].inventory.add_item(Weapon(game, 'revolver', self.player, tags=['active']), 'weapons')
-        self.entities[-1].inventory.add_item(Item(game, 'bat_wing', self.player, amount=2), 'items')
-        
-        
+        self.player.inventory.add_item(Weapon(game, 'revolver', self.player, tags=['active']), 'weapons')
+        self.player.inventory.add_item(Weapon(game, 'rifle', self.player, tags=['active']), 'weapons')
+        self.player.inventory.add_item(Weapon(game, 'smg', self.player, tags=['active']), 'weapons')
+        self.player.inventory.add_item(Item(game, 'bat_wing', self.player, amount=2), 'items')
         
     @property
     def player(self):
