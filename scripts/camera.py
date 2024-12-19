@@ -18,9 +18,9 @@ class Camera:
     def set_target(self, pos):
         self.target_pos = list(pos)
     
-    # def focus(self):
-    #     if self.tracked_entity:
-    #         self.true_pos = [self.tracked_entity.pos[0] - self.game.window.display.get_width() // 2, self.tracked_entity.pos[1] - self.game.window.display.get_height() // 2]   
+    def focus(self):
+        if self.tracked_entity:
+            self.true_pos = self.target_pos.copy()   
             
     def update(self):
         if self.tracked_entity:

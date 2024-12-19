@@ -23,7 +23,7 @@ class World:
         self.inventory_menu = InventoryMenu(game, self.player.inventory)
         self.inventory_mode = False
         
-  
+        
     def update(self):
         dt = self.game.window.dt
         self.camera.update()
@@ -32,10 +32,7 @@ class World:
         self.spark_manager.update(dt)
         self.projectile_manager.update(dt)
             
-    
-    def drop_item(self, item, pos, velocity):
-        self.item_drops.append(Itemdrop(self.game, pos, (1, 1), 'item', item, velocity))
-                    
+                        
     def render(self, surf):
         offset = self.camera.pos
         self.tilemap.render(surf, offset=offset)

@@ -51,6 +51,10 @@
     "trigger": "press",
     "binding": ["keyboard", 101]
   },
+  "shift": {
+    "trigger": "hold",
+    "binding": ["keyboard", 1073742049]
+  },
   "quit": {
     "trigger": "press",
     "binding": ["keyboard", 27]

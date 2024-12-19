@@ -27,12 +27,14 @@ class Renderer:
             weapon_mask = pygame.mask.from_surface(curr_weapon)
             weapon_rect = weapon_mask.get_bounding_rects()[0]
             if self.game.world.player.selected_weapon == ix:
-                pygame.draw.line(surf, color, (2, base_pos + ix * offset), (2, base_pos + ix * offset + weapon_rect[3]), 2)
+                pass
+                pygame.draw.line(surf, color, (2, base_pos + offset), (2, base_pos + offset + weapon_rect[3]), 2)
             else:
                 color = (139, 171, 191)
             weapon_mask = weapon_mask.to_surface(setcolor=color, unsetcolor=(0,0,0,0))
             surf.blit(weapon_mask, (2, base_pos + offset))
-            offset += 10
+            offset += 15
+            
     
     def render(self):
         surf = self.game.window.display

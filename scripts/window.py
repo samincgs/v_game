@@ -14,7 +14,7 @@ class Window:
         
         self.clock = pygame.time.Clock()
         
-        self.window = pygame.display.set_mode(self.config['scaled_res'], pygame.SCALED) # pygame.RESIZABLE
+        self.window = pygame.display.set_mode(self.config['scaled_res']) # pygame.RESIZABLE
         self.display = pygame.Surface(self.config['base_res'])
         
         self.render_scale = self.config['render_scale']

@@ -14,16 +14,17 @@ class InventoryMenu:
         self.config = config['items']
         
         self.base_pos = [80, 40]
-        self.color = (187, 196, 204)
         self.border_radius = 3
         self.item_boxes = [] # [[rect of box, weapon/item name]]
         self.weapon_boxes = [] # 
         self.info = [] # [[item name (from config), item description, weapon/item name (weapon type), item_type]]
         
         
+        
     def draw_weapon_boxes(self, surf):
         surf.blit(self.game.assets.misc['weapons_logo'], (self.base_pos[0] - self.game.assets.misc['weapons_logo'].get_width() + 3, self.base_pos[1]))
 
+        self.weapon_boxes = []
         # weapon boxes
         for i in range(self.cols):
             rect = pygame.Rect(self.base_pos[0] + i * self.size, self.base_pos[1], self.size, self.size)
@@ -43,6 +44,7 @@ class InventoryMenu:
         # item logo
         surf.blit(self.game.assets.misc['items_logo'], (self.base_pos[0] - self.game.assets.misc['weapons_logo'].get_width() + 3, self.base_pos[1] + 40))
         
+        self.item_boxes = []
          # item boxes
         for i in range(self.rows):
             item_pos = [self.base_pos[0], self.base_pos[1] + 40]
@@ -63,9 +65,7 @@ class InventoryMenu:
                 
             item_pos[1] += self.size
     
-    def draw_ui(self, surf):  # TODO: CHANGE COLOR of empty boxes
-        
-        # weapon logo
+    def draw_ui(self, surf):  
         self.draw_weapon_boxes(surf)
         self.draw_item_boxes(surf)
                     
@@ -81,13 +81,33 @@ class InventoryMenu:
     
     def update(self):
         self.info = []
-        
-        # fix so it only fps doesnt get too low
-        for box in self.weapon_boxes + self.item_boxes:
+        clicked = False
+          
+        for box in self.weapon_boxes:
             if box[0].collidepoint(self.game.input.mpos):
                 self.info = box[1] 
-                if self.game.input.mouse_states['shoot']:
-                    print(self.info)
+                if not clicked and self.game.input.mouse_states['shoot']:
+                    clicked = True
+                    if len(self.inventory.get_active_weapons()) > 1:
+                        for weapon in self.inventory.get_active_weapons():
+                            if weapon.name == self.info.name:
+                                weapon.remove_active()
+                                self.game.world.player.slot_weapon(-1)
+                                return
+                            
+        for box in self.item_boxes:
+            if box[0].collidepoint(self.game.input.mpos):
+                self.info = box[1] 
+                if not clicked and self.game.input.mouse_states['shoot']:
+                    clicked = True
+                    if len(self.inventory.get_active_weapons()) <= self.cols:
+                        for weapon in self.inventory.get_group('weapons').items:
+                            if weapon.name == self.info.name:
+                                weapon.add_active()
+                                return
+                        
+ 
+                                
                     
                             
         

@@ -7,6 +7,6 @@
   "bat": {
     "base_health": 20,
     "size": [15, 7],
-    "spawn_rate": 25000
+    "spawn_rate": 200000
   }
 }

@@ -5,6 +5,7 @@ from .player import Player
 from .enemy import Bat
 from .weapon import Weapon
 from .item import Item
+from .itemdrop import Itemdrop
 
 class Entities:
     def __init__(self, game):
@@ -23,8 +24,7 @@ class Entities:
     @property
     def player(self):
         return self.entities[0]
-    
-    
+
     def spawner(self):
         if random.randint(1, self.config['bat']['spawn_rate']) == 1:
             print('pog')

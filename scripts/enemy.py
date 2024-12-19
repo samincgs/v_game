@@ -3,6 +3,7 @@ import random
 
 from .entity import Entity
 from .utils import normalize
+from .item import create_item
 
 class Bat(Entity):
     def __init__(self, game, pos, size):
@@ -16,6 +17,8 @@ class Bat(Entity):
         self.hover_frequency = random.randint(10, 30) / 10
         self.target_offset_angle = random.uniform(0, 2 * math.pi)  
         
+        self.drops = [create_item(game, 'bat_wing', self) for i in range(random.randint(0, 2))]
+                
         
         
         

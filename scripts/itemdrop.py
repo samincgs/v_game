@@ -1,4 +1,5 @@
 from .entity import Entity
+from .utils import normalize
 
 class Itemdrop(Entity):
     def __init__(self, game, pos, size, e_type, item_data, velocity):
@@ -12,10 +13,12 @@ class Itemdrop(Entity):
     def update(self, dt):
         super().update(dt)
         
+        self.velocity[1] = normalize(self.velocity[1], 250 * dt)
+        
         self.motion = self.velocity.copy()
+        
         last_collisions = self.collisions(self.game.world.tilemap, movement=self.motion)
         
-        self.velocity[1] = min(20, self.velocity[1] + dt * 20)
         if last_collisions['bottom']:
             self.velocity[1] = 0
         

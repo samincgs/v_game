@@ -28,8 +28,8 @@ class Item:
     def is_tagged(self, tag): # checks if the item has a specific tag
         return tag in self.tags
     
-    def create_item(self, game, name, owner, amount, tags):
-        return Item(game, name, owner, amount, tags)
+def create_item(game, name, owner, amount=1, tags=[]):
+    return Item(game, name, owner, amount, tags)
                     
         
         

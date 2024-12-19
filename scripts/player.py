@@ -31,7 +31,7 @@ class Player(Entity):
         active_weapons = self.inventory.get_active_weapons()
         if active_weapons:
             self.selected_weapon = (self.selected_weapon + direction) % len(active_weapons)
-    
+            
     def jump(self):
         if self.jumps:
             self.velocity[1] = -300
@@ -48,6 +48,7 @@ class Player(Entity):
         
     def update(self, dt):
         self.frame_movement = self.velocity.copy()
+        
         
         kill = super().update(dt)
         self.air_timer += dt
@@ -68,7 +69,7 @@ class Player(Entity):
                 self.slot_weapon(-1)
             if self.game.input.mouse_states['scroll_down']:
                 self.slot_weapon(1)
-                
+        
             
         if self.game.input.states["inventory_toggle"]:
             self.game.world.inventory_mode = not self.game.world.inventory_mode

@@ -1,5 +1,6 @@
 import pygame
 import math
+import random
 
 from .config import config
 from .utils import outline
@@ -20,6 +21,7 @@ class Entity:
         
         if self.type + '_idle' in self.game.assets.animations.animations:
             self.set_action('idle')
+        
             
     @property 
     def img(self):
@@ -32,11 +34,12 @@ class Entity:
     @property
     def rect(self):
         return pygame.Rect(self.pos[0], self.pos[1], self.size[0], self.size[1])
-        
+    
+      
     @property
     def center(self):
         return [self.pos[0] + self.size[0] // 2, self.pos[1] + self.size[1] // 2] 
-        
+            
     def set_action(self, action_id, force=False):
         if force:
             self.active_animation = self.game.assets.animations.new(self.type + '_' + action_id)
@@ -48,6 +51,9 @@ class Entity:
         self.health -= amt
         if self.health <= 0:
             self.dead = True
+        
+        
+            
 
     # def die(self): # TODO: Finish and add death particles
     #     self.dead = True
