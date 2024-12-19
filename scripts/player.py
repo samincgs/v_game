@@ -1,9 +1,9 @@
-import pygame
 import math
+import random
 
 from .entity import Entity
 from .inventory import Inventory
-from .utils import clip
+from .utils import clip, normalize
 
 class Player(Entity):
     def __init__(self, game, pos, size, e_type):
@@ -12,7 +12,8 @@ class Player(Entity):
         self.air_timer = 0
         self.max_jumps = 2
         self.jumps = self.max_jumps
-        self.dash = 0
+        self.dash_timer = 0
+        self.dash_info = []
         self.aim_angle = 0
         self.inventory = Inventory()       
         self.selected_weapon = 0
@@ -20,7 +21,6 @@ class Player(Entity):
         self.last_collisions = {k : False for k in ['top', 'left', 'right', 'bottom']}
         self.frame_movement = [0, 0]
         
-    
     @property
     def weapon(self):
         active_weapons = self.inventory.get_active_weapons()
@@ -36,7 +36,14 @@ class Player(Entity):
         if self.jumps:
             self.velocity[1] = -300
             self.jumps -= 1
-        
+    
+    def dash(self):
+        if not self.dash_timer:
+            self.dash_timer = 0.2
+            self.velocity[0] = math.cos(self.aim_angle) * 450
+            self.velocity[1] = math.sin(self.aim_angle) * 450
+            
+  
     # direction is 1 or 0 or -1
     def move(self, direction):
         if direction > 0:
@@ -49,12 +56,20 @@ class Player(Entity):
     def update(self, dt):
         self.frame_movement = self.velocity.copy()
         
-        
         kill = super().update(dt)
         self.air_timer += dt
+        self.dash_timer = max(0, self.dash_timer - dt)
+        
+        if self.dash_timer:
+            if random.randint(1, 3) == 1:
+                self.dash_info.append({'pos': self.pos.copy(), 'img': self.img.copy()})
+        else:
+            self.dash_info = []
 
         if not self.game.world.inventory_mode:
             # player controls
+            if self.game.input.mouse_states['right_click']:
+                self.dash()
             if self.game.input.states['jump']:
                 self.jump()
             if self.game.input.states['right']:
@@ -75,6 +90,7 @@ class Player(Entity):
             self.game.world.inventory_mode = not self.game.world.inventory_mode
         
         
+        self.velocity[0] = normalize(self.velocity[0], 550 * dt)
         self.velocity[1] = min(500, self.velocity[1] + dt * 700)
                 
         self.frame_movement[0] *= dt
@@ -109,6 +125,10 @@ class Player(Entity):
     def render(self, surf, offset=(0, 0)):
         super().render(surf, offset=offset)
         self.weapon.render(surf, (self.center[0] - offset[0], self.center[1] - offset[1] + 2))
+        for dash in self.dash_info:
+            img = dash['img']
+            img.set_alpha(45)
+            surf.blit(img, (dash['pos'][0] - offset[0], dash['pos'][1] - offset[1]))
         # pygame.draw.rect(surf, (0, 255, 0), pygame.Rect(self.pos[0] - offset[0], self.pos[1] - offset[1], *self.size), 1) # debug
         
             
