@@ -12,6 +12,10 @@ class Player(Entity):
         self.air_timer = 0
         self.max_jumps = 2
         self.jumps = self.max_jumps
+        self.max_dashes = 3
+        self.dashes = self.max_dashes
+        self.dash_charge = 0
+        self.dash_charge_rate = 2
         self.dash_timer = 0
         self.dash_info = []
         self.aim_angle = 0
@@ -38,7 +42,8 @@ class Player(Entity):
             self.jumps -= 1
     
     def dash(self):
-        if not self.dash_timer:
+        if not self.dash_timer and self.dashes > 0:
+            self.dashes -= 1
             self.dash_timer = 0.2
             self.velocity[0] = math.cos(self.aim_angle) * 450
             self.velocity[1] = math.sin(self.aim_angle) * 450
@@ -60,8 +65,14 @@ class Player(Entity):
         self.air_timer += dt
         self.dash_timer = max(0, self.dash_timer - dt)
         
+        if self.dashes < self.max_dashes:
+            self.dash_charge += dt
+            if self.dash_charge >= self.dash_charge_rate:
+                self.dashes += 1
+                self.dash_charge = 0
+                
         if self.dash_timer:
-            if random.randint(1, 3) == 1:
+            if random.randint(1, 4) == 1:
                 self.dash_info.append({'pos': self.pos.copy(), 'img': self.img.copy()})
         else:
             self.dash_info = []
@@ -76,14 +87,15 @@ class Player(Entity):
                 self.move(1)
             if self.game.input.states['left']:
                 self.move(-1)
-            if self.game.input.states['reload']:
-                self.weapon.reload()
-            if self.game.input.mouse_states[self.weapon.trigger]:
-                self.weapon.attack()
-            if self.game.input.mouse_states['scroll_up']:
-                self.slot_weapon(-1)
-            if self.game.input.mouse_states['scroll_down']:
-                self.slot_weapon(1)
+            if self.weapon:
+                if self.game.input.states['reload']:
+                    self.weapon.reload()
+                if self.game.input.mouse_states['shoot']:
+                    self.weapon.attack()
+                if self.game.input.mouse_states['scroll_up']:
+                    self.slot_weapon(-1)
+                if self.game.input.mouse_states['scroll_down']:
+                    self.slot_weapon(1)
         
             
         if self.game.input.states["inventory_toggle"]:
@@ -113,18 +125,20 @@ class Player(Entity):
         # weapon
         angle = math.atan2(self.game.input.mpos[1] - self.center[1] + self.game.world.camera.pos[1], self.game.input.mpos[0] - self.center[0] + self.game.world.camera.pos[0])
         self.aim_angle = angle
-        self.weapon.rotation = math.degrees(angle)
+        if self.weapon:
+            self.weapon.rotation = math.degrees(angle)
         
-        if (self.weapon.rotation % 360 > 90) and (self.weapon.rotation % 360 < 270):
-            self.flip[0] = True
-        else:
-            self.flip[0] = False 
+            if (self.weapon.rotation % 360 > 90) and (self.weapon.rotation % 360 < 270):
+                self.flip[0] = True
+            else:
+                self.flip[0] = False 
             
         return kill
    
     def render(self, surf, offset=(0, 0)):
         super().render(surf, offset=offset)
-        self.weapon.render(surf, (self.center[0] - offset[0], self.center[1] - offset[1] + 2))
+        if self.weapon:
+            self.weapon.render(surf, (self.center[0] - offset[0], self.center[1] - offset[1] + 2))
         for dash in self.dash_info:
             img = dash['img']
             img.set_alpha(45)

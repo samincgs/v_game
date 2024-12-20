@@ -11,7 +11,8 @@ class Renderer:
 
     def gui(self, surf):
         # ammo ui
-        self.game.assets.fonts['small_white'].render(str(self.game.world.player.weapon.ammo) + ' / ' + str(self.game.world.player.weapon.max_ammo), surf, (3, 14))
+        if self.game.world.player.weapon:
+            self.game.assets.fonts['small_white'].render(str(self.game.world.player.weapon.ammo) + ' / ' + str(self.game.world.player.weapon.max_ammo), surf, (3, 14))
     
         #health bar
         health_bar_img = self.game.assets.misc['health_bar']

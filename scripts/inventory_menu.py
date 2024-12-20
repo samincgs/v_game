@@ -10,6 +10,7 @@ class InventoryMenu:
         self.game = game
         self.inventory = inventory
         self.rows, self.cols = 4, 4
+        self.weapon_rows,  self.weapon_cols = 2, 2
         self.size = 25 # size of each box
         self.config = config['items']
         
@@ -26,7 +27,7 @@ class InventoryMenu:
 
         self.weapon_boxes = []
         # weapon boxes
-        for i in range(self.cols):
+        for i in range(self.weapon_cols):
             rect = pygame.Rect(self.base_pos[0] + i * self.size, self.base_pos[1], self.size, self.size)
             color = (154, 170, 186)
             for ix, weapon in enumerate(self.inventory.get_active_weapons()):
@@ -88,19 +89,18 @@ class InventoryMenu:
                 self.info = box[1] 
                 if not clicked and self.game.input.mouse_states['shoot']:
                     clicked = True
-                    if len(self.inventory.get_active_weapons()) > 1:
-                        for weapon in self.inventory.get_active_weapons():
-                            if weapon.name == self.info.name:
-                                weapon.remove_active()
-                                self.game.world.player.slot_weapon(-1)
-                                return
+                    for weapon in self.inventory.get_active_weapons():
+                        if weapon.name == self.info.name:
+                            weapon.remove_active()
+                            self.game.world.player.slot_weapon(-1)
+                            return
                             
         for box in self.item_boxes:
             if box[0].collidepoint(self.game.input.mpos):
                 self.info = box[1] 
                 if not clicked and self.game.input.mouse_states['shoot']:
                     clicked = True
-                    if len(self.inventory.get_active_weapons()) <= self.cols:
+                    if len(self.inventory.get_active_weapons()) <= self.weapon_cols:
                         for weapon in self.inventory.get_group('weapons').items:
                             if weapon.name == self.info.name:
                                 weapon.add_active()

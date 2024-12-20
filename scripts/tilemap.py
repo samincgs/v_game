@@ -28,8 +28,18 @@ class Tilemap:
                 if str_loc in self.tilemap[layer]:
                     rects.append(pygame.Rect(tile_loc[0] * self.tile_size, tile_loc[1] * self.tile_size, self.tile_size, self.tile_size))
         return rects
-                
+
+    # gets position in pixels
+    def get_tile(self, pos):
+        tile_pos = (int(pos[0] // self.tile_size), int(pos[1] // self.tile_size))
+        str_pos = str(tile_pos[0]) + ';' + str(tile_pos[1])
+        for layer in sorted([int(key) for key in self.tilemap.keys()]):
+            layer = str(layer)
+            if str_pos in self.tilemap[layer]:
+                return self.tilemap[layer][str_pos]['type']
+        
     
+     
     def tile_collide(self, pos):
         tile_pos = (int(pos[0] // self.tile_size), int(pos[1] // self.tile_size))
         tile_loc = str(tile_pos[0]) + ';' + str(tile_pos[1])

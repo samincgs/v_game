@@ -5,7 +5,6 @@ from .spark import SparkManager
 from .projectile import ProjectileManager
 from .particle import ParticleManager
 from .inventory_menu import InventoryMenu
-from .itemdrop import Itemdrop
 
 class World:
     def __init__(self, game):
