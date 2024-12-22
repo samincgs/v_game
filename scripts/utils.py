@@ -13,9 +13,9 @@ def clip(surf, x, y, x_size, y_size):
     return img.copy()
 
 def palette_swap(img, old_color, new_color):
-    img.set_colorkey(old_color)
     handle_img = img.copy()
     handle_img.fill(new_color)
+    img.set_colorkey(old_color)
     handle_img.blit(img, (0, 0))
     return handle_img 
 

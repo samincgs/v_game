@@ -9,13 +9,12 @@ BASE_PATH = 'data/images/'
 BASE_PATH_FONT = 'data/fonts/' 
 
 FONTS = {
-    "small_white": (BASE_PATH_FONT + 'small_font.png', (255, 255, 255)),
-    "small_black": (BASE_PATH_FONT + 'small_font.png', (0, 0, 1)),
-    "large_white": (BASE_PATH_FONT + 'large_font.png', (255, 255, 255)),
-    "large_black": (BASE_PATH_FONT + 'large_font.png', (0, 0, 1)),
+    "small_white": [BASE_PATH_FONT + 'small_font.png', (255, 255, 255)],
+    "small_black": [BASE_PATH_FONT + 'small_font.png', (0, 0, 1)],
+    "small_red": [BASE_PATH_FONT + 'small_font.png', (203, 10, 7)],
+    # "large_white": (BASE_PATH_FONT + 'large_font.png', (255, 255, 255)),
+    # "large_black": (BASE_PATH_FONT + 'large_font.png', (0, 0, 1)),
 }
-
-
 class Assets:
     def __init__(self):
         self.animations = animation.AnimationManager()

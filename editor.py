@@ -168,7 +168,7 @@ class LevelEditor:
                         self.selected_group = val
                         self.tile_group = self.tile_list.index(self.selected_group)
                     offset_x = 2
-                self.font.render(str(val), sidebar_surf, (1 + offset_x, 2 + ix * 11))
+                self.font.render(sidebar_surf, str(val), (1 + offset_x, 2 + ix * 11))
             
             # draw bottom left sidebar
             tile_selector_surf = pygame.Surface((sidebar_surf.get_width(), self.display_size[1] - sidebar_surf.get_height()))
@@ -195,10 +195,10 @@ class LevelEditor:
             
             self.display.blit(current_tile, (self.sidebar_size + 20, 20))
             
-            self.font.render('file: ' + (str(self.file_name.split('/')[-1]) if self.file_name else 'None'), self.display, ((self.display.get_width() - 70 if self.file_name else self.display.get_width() - 53), 5))
-            self.font.render('placement_mode: ' + str(self.placement_mode), self.display, (self.display.get_width() - 98, 20))
-            self.font.render('layer: ' + str(self.current_layer), self.display, (self.display.get_width() - 46, 35))
-            self.font.render('pos: ' + str(list(tile_pos) if self.placement_mode == 'grid' else list(scaled_mpos)), self.display, (self.display.get_width() - 60, 50))
+            self.font.render(self.display, 'file: ' + (str(self.file_name.split('/')[-1]) if self.file_name else 'None'), ((self.display.get_width() - 70 if self.file_name else self.display.get_width() - 53), 5))
+            self.font.render(self.display, 'placement_mode: ' + str(self.placement_mode), (self.display.get_width() - 98, 20))
+            self.font.render(self.display, 'layer: ' + str(self.current_layer), (self.display.get_width() - 46, 35))
+            self.font.render(self.display, 'pos: ' + str(list(tile_pos) if self.placement_mode == 'grid' else list(scaled_mpos)), (self.display.get_width() - 60, 50))
             
             if len(self.selection_points):
                 start_point = self.selection_points[0]

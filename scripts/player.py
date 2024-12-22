@@ -4,6 +4,7 @@ import random
 from .entity import Entity
 from .inventory import Inventory
 from .utils import clip, normalize
+from .spark import CurvedSpark
 
 class Player(Entity):
     def __init__(self, game, pos, size, e_type):
@@ -47,6 +48,8 @@ class Player(Entity):
             self.dash_timer = 0.2
             self.velocity[0] = math.cos(self.aim_angle) * 450
             self.velocity[1] = math.sin(self.aim_angle) * 450
+            for i in range(12):
+                self.game.world.spark_manager.sparks.append(CurvedSpark(self.center.copy(), math.pi + self.aim_angle + random.uniform(-math.pi / 6, math.pi / 6), random.randint(30,80) / 10, random.randint(-10, 10) / 100, scale=2, decay_rate=random.randint(40, 70) / 100))
             
   
     # direction is 1 or 0 or -1
@@ -72,6 +75,7 @@ class Player(Entity):
                 self.dash_charge = 0
                 
         if self.dash_timer:
+            self.game.world.spark_manager.sparks.append(CurvedSpark([self.center[0], self.center[1] + 9], math.pi + self.aim_angle, random.randint(1,10) / 10, random.randint(-40, 40) / 100, scale=1, decay_rate=random.randint(10, 20) / 100))
             if random.randint(1, 4) == 1:
                 self.dash_info.append({'pos': self.pos.copy(), 'img': self.img.copy()})
         else:
@@ -90,7 +94,7 @@ class Player(Entity):
             if self.weapon:
                 if self.game.input.states['reload']:
                     self.weapon.reload()
-                if self.game.input.mouse_states['shoot']:
+                if self.game.input.mouse_states[self.weapon.trigger]:
                     self.weapon.attack()
                 if self.game.input.mouse_states['scroll_up']:
                     self.slot_weapon(-1)

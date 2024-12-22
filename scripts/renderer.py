@@ -12,13 +12,14 @@ class Renderer:
     def gui(self, surf):
         # ammo ui
         if self.game.world.player.weapon:
-            self.game.assets.fonts['small_white'].render(str(self.game.world.player.weapon.ammo) + ' / ' + str(self.game.world.player.weapon.max_ammo), surf, (3, 14))
+            self.game.assets.fonts['small_white'].render(surf, str(self.game.world.player.weapon.ammo) + ' / ' + str(self.game.world.player.weapon.max_ammo), (3, 14))
     
         #health bar
         health_bar_img = self.game.assets.misc['health_bar']
         pygame.draw.rect(surf, (215, 0, 40), pygame.Rect(1, 2, int((self.game.world.player.health / self.game.world.player.max_health * 55)), 9)) 
         surf.blit(health_bar_img,(1, 2))
         
+         
          # weapon display
         base_pos = 25
         offset = 0
@@ -56,7 +57,7 @@ class Renderer:
         
           
         if self.game.input.show_fps:
-            self.game.assets.fonts['small_white'].render('FPS: ' + str(int(self.game.window.fps)), surf, (surf.get_width() - 35, 2))
+            self.game.assets.fonts['small_white'].render(surf, 'FPS: ' + str(int(self.game.window.fps)), (surf.get_width() - 35, 2))
             
         
         

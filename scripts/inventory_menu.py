@@ -58,7 +58,7 @@ class InventoryMenu:
                         item_img = self.game.assets.weapons[item.name] if item.type == 'weapon' else self.game.assets.items[item.name]
                         surf.blit(item_img, (rect.centerx - item_img.get_width() // 2, rect.centery - item_img.get_height() // 2))
                         if item.amount > 1:
-                            self.game.assets.fonts['small_white'].render(str(item.amount), surf, (rect.centerx + 3.5, rect.centery + 5)) # name
+                            self.game.assets.fonts['small_white'].render(surf, str(item.amount), (rect.centerx + 3.5, rect.centery + 5)) # name
                             
                         self.item_boxes.append([rect, item])
                     
@@ -76,8 +76,8 @@ class InventoryMenu:
         desc = self.config[info.name]['description']
         
         surf.blit(img, loc)
-        self.game.assets.fonts['small_white'].render(name, surf, (loc[0] + img.get_width() + 5, loc[1])) # name
-        self.game.assets.fonts['small_white'].render(desc, surf, (loc[0], loc[1] + 20), line_width=3) # description
+        self.game.assets.fonts['small_white'].render(surf, name, (loc[0] + img.get_width() + 5, loc[1])) # name
+        self.game.assets.fonts['small_white'].render(surf, desc, (loc[0], loc[1] + 20)) # description
     
     
     def update(self):
