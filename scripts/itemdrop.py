@@ -1,5 +1,7 @@
+import math
+
 from .entity import Entity
-from .utils import normalize
+from .utils import normalize, outline
 
 class Itemdrop(Entity):
     def __init__(self, game, pos, size, e_type, item_data, velocity):
@@ -31,5 +33,10 @@ class Itemdrop(Entity):
         
     
     def render(self, surf, offset=(0, 0)):
-        super().render(surf, offset=offset)
+        if math.sin(self.game.world.master_clock * 4) > 0.5:
+            color = (255, 255, 255)
+        else:
+            color = (0, 0, 1)
+        outline(surf, self.img, (self.pos[0] - offset[0], self.pos[1] - offset[1]), color=color)
+        surf.blit(self.img, (self.pos[0] - offset[0], self.pos[1] - offset[1])) 
     

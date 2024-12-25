@@ -122,7 +122,7 @@ class Entity:
         offset = self.calculate_render_offset(offset=offset)
         if self.active_animation.data.config['outline']:
             outline(surf, self.img, loc=(self.pos[0] - offset[0], self.pos[1] - offset[1]), color=self.active_animation.data.config['outline'])
-        surf.blit(self.img, (self.pos[0] - offset[0], self.pos[1] - offset[1])) # added one to deal with tilemap size (17x16)
+        surf.blit(self.img, (self.pos[0] - offset[0], self.pos[1] - offset[1])) 
         if self.hurt:
             temp_mask = pygame.mask.from_surface(self.img)
             mask_img = temp_mask.to_surface(setcolor=(255, 255, 255, int(self.hurt * 255)), unsetcolor=(0, 0, 0, 0))

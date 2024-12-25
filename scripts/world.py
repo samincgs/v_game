@@ -6,6 +6,8 @@ from .projectile import ProjectileManager
 from .particles import ParticleManager
 from .inventory_menu import InventoryMenu
 
+import math
+
 class World:
     def __init__(self, game):
         self.game = game
@@ -22,6 +24,7 @@ class World:
         self.inventory_menu = InventoryMenu(game, self.player.inventory)
         self.inventory_mode = False
         
+        self.master_clock = 0
         
     def update(self):
         dt = self.game.window.dt
@@ -30,6 +33,9 @@ class World:
         self.particle_manager.update(dt)
         self.spark_manager.update(dt)
         self.projectile_manager.update(dt)
+        
+        self.master_clock += dt
+        
             
                         
     def render(self, surf):

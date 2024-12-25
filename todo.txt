@@ -4,14 +4,13 @@
 
 # Game/Coding
 - Create minimap
-- add dash
-- create skills
+- create skills (maybe?)
 - add rings
 - add death particles
 - add mask to indicate dmg
-- add bat goo on floor & player dmg if stepped on
-- add poison effect when player steps on goo
-- add poison indicator in gui
+- add bat goo on floor & player dmg if stepped on (maybe?)
+- add poison effect when player steps on goo  (maybe?) 
+- add poison indicator in gui (maybe?)
 
 # Possible Changes/ Bugs
 - fix rotation issue with goo

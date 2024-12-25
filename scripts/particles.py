@@ -1,4 +1,5 @@
 import pygame
+import math
 
 from .utils import palette_swap
 
@@ -63,21 +64,38 @@ class Particle:
         
 
 class DestructionParticle:
-    def __init__(self, game, img, pos, movement, decay_rate, physics=None):
+    def __init__(self, game, img, pos, velocity, physics=None):
         self.game = game
         self.img = img
         self.pos = list(pos)
-        self.movement = movement
-        self.decay_rate = decay_rate
+        self.velocity = list(velocity)
         self.physics = physics
         self.rotation = 0
+        self.timer = 0
         
-    def update(self):
-        pass
+    def update(self, dt):
+        
+        self.timer += dt
+        
+        if not self.physics:
+            pass
+        else:
+            self.pos[0] += self.velocity[0] * dt
+            self.pos[0] += math.sin(self.timer * 5) * 10
+            self.pos[1] += self.velocity[0] * dt
+            self.pos[1] += math.sin(self.timer * 5) * 10
+            if self.physics.tile_collide(self.pos):
+                self.velocity[0] = 0
+                self.velocity[1] = 0
+        
+        if self.timer > 60: 
+            return True
 
     
     def render(self, surf, offset=(0, 0)):
-        pass
+        if self.rotation:
+            self.img = pygame.transform.rotate(self.img, self.rotation)
+        surf.blit(self.img, (self.pos[0] - self.img.get_width() // 2 - offset[0], self.pos[1] - self.img.get_height() // 2 - offset[1]))
              
 class ParticleManager:
     def __init__(self):
@@ -93,8 +111,16 @@ class ParticleManager:
             if kill:
                 self.particles.remove(particle)
                 
+        for particle in self.destruction_particles.copy():
+            kill = particle.update(dt)
+            if kill:
+                self.destruction_particles.remove(particle)
+                
     def render(self, surf, offset=(0, 0)):
         for particle in self.particles:
+            particle.render(surf, offset=offset)
+            
+        for particle in self.destruction_particles:
             particle.render(surf, offset=offset)
     
                        

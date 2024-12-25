@@ -9,7 +9,7 @@ class Game:
         self.window = Window(self)
         self.input = Input(self)
         self.assets = Assets()
-        self.renderer = Renderer(self) 
+        self.renderer = Renderer(self)
         self.world = World(self)
 
     def run(self):
@@ -18,6 +18,6 @@ class Game:
             self.world.update()
             self.renderer.render()
             self.window.create()
-            
+             
 if __name__ == '__main__':
     Game().run() 
