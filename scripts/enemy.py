@@ -19,9 +19,6 @@ class Bat(Entity):
         
         self.drops = [create_item(game, 'bat_wing', self) for i in range(random.randint(0, 2))]
                 
-        
-        
-        
     def update(self, dt):
         kill = super().update(dt)
         
@@ -35,7 +32,7 @@ class Bat(Entity):
 
         self.pos[0] += self.velocity[0]
         self.pos[1] += self.velocity[1]
-
+        
         self.target_offset_angle += 0.5 * dt 
         if self.target_offset_angle > 2 *  math.pi:  
             self.target_offset_angle = random.uniform(math.pi, 2 * math.pi) 

@@ -62,5 +62,9 @@
   "fps": {
     "trigger": "press",
     "binding": ["keyboard", 9]
+  },
+  "screen_toggle": {
+    "trigger": "press",
+    "binding": ["keyboard", 96]
   }
 }

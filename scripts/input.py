@@ -70,10 +70,12 @@ class Input:
                             if event.key == self.config[binding]['binding'][1]:
                                 self.states[binding] = False 
                         
-            if self.states['quit']:
-                pygame.quit()
-                sys.exit()
-            if self.states['fps']:
-                self.show_fps = not self.show_fps
+        if self.states['quit']:
+            pygame.quit()
+            sys.exit()
+        if self.states['fps']:
+            self.show_fps = not self.show_fps
+        if self.states['screen_toggle']:
+            self.game.window.toggle_window()
                 
                 

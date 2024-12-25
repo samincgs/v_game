@@ -3,7 +3,7 @@ import pygame
 from .utils import palette_swap
 
 class Particle:
-    def __init__(self, game, p_type, pos, movement, decay_rate=1, frame=0, custom_color=None, physics=None):
+    def __init__(self, game, p_type, pos, movement, decay_rate=0.1, frame=0, custom_color=None, physics=None):
         self.game = game
         self.type = p_type
         self.pos = list(pos)
@@ -84,7 +84,7 @@ class ParticleManager:
         self.particles = []
         self.destruction_particles = []
     
-    def add_particle(self, game, p_type, pos, movement, decay_rate, frame=0, custom_color=None, physics=None):
+    def add_particle(self, game, p_type, pos, movement, decay_rate=0.1, frame=0, custom_color=None, physics=None):
         self.particles.append(Particle(game, p_type, pos, movement, decay_rate, frame, custom_color, physics))
     
     def update(self, dt):

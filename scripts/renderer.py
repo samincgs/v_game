@@ -34,8 +34,8 @@ class Renderer:
             else:
                 color = (139, 171, 191)
             weapon_mask = weapon_mask.to_surface(setcolor=color, unsetcolor=(0,0,0,0))
-            surf.blit(weapon_mask, (2, base_pos + offset))
-            offset += 15
+            surf.blit(weapon_mask, (weapon_rect.left, base_pos + offset))
+            offset += weapon_mask.get_height() + 3
             
     
     def render(self):

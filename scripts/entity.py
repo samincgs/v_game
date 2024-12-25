@@ -18,7 +18,7 @@ class Entity:
         self.active_animation = None
         self.dead = False
         self.drops = []
-        
+                
         if self.type + '_idle' in self.game.assets.animations.animations:
             self.set_action('idle')
         
@@ -47,16 +47,19 @@ class Entity:
             self.active_animation = self.game.assets.animations.new(self.type + '_' + action_id)
 
     def damage(self, amt):
-        self.hurt = 1
+        if self.type in self.type in config['entities']:
+            self.hurt = 1
         self.health -= amt
         if self.health <= 0:
-            self.dead = True
+            self.die()
         
         
-            
-
-    # def die(self): # TODO: Finish and add death particles
-    #     self.dead = True
+    def die(self): # TODO: Finish and add death particles
+        
+        self.dead = True
+        
+        for item_drop in self.drops:
+            self.game.world.entities.drop_item(self.center.copy(), (1, 1), item_drop, velocity=(random.randint(0, 100) - 50, random.randint(0, 20) - 200))
 
     def get_angle(self, target):
         if isinstance(target, Entity):

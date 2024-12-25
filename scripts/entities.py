@@ -24,6 +24,9 @@ class Entities:
     def player(self):
         return self.entities[0]
 
+    def drop_item(self, pos, size,item_data ,velocity):
+        self.entities.append(Itemdrop(self.game, pos, size, 'item', item_data, velocity))
+    
     def spawner(self):
         if random.randint(1, self.config['bat']['spawn_rate']) == 1:
             print('pog')

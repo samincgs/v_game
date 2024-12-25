@@ -23,8 +23,7 @@ class Font:
                 self.current_width += 1
             x += 1 
             
-        self.base_width = self.characters['a'].get_width()
-        self.base_height = self.characters['a'].get_height()
+        self.base_size = self.characters['a'].get_size()
             
     def render(self, surf, text, loc):
         x_offset = 0
@@ -34,8 +33,8 @@ class Font:
                 surf.blit(self.characters[char], (loc[0] + x_offset, loc[1]))
                 x_offset += self.characters[char].get_width() + self.spacing
             elif char == ' ':
-                x_offset += self.base_width
+                x_offset += self.base_size[0]
             elif char == '\n':
                 x_offset = 0
-                loc[1] += self.base_height * 2
+                loc[1] += self.base_size[1] * 2
                 

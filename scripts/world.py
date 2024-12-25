@@ -3,7 +3,7 @@ from .camera import Camera
 from .entities import Entities
 from .spark import SparkManager
 from .projectile import ProjectileManager
-from .particle import ParticleManager
+from .particles import ParticleManager
 from .inventory_menu import InventoryMenu
 
 class World:

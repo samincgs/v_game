@@ -15,8 +15,8 @@ class Game:
     def run(self):
         while True: 
             self.input.update()
-            self.renderer.render()
             self.world.update()
+            self.renderer.render()
             self.window.create()
             
 if __name__ == '__main__':

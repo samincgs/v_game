@@ -48,11 +48,9 @@ class Weapon(Item):
                     self.game.world.spark_manager.sparks.append(CurvedSpark(pos=self.owner.center, angle=math.radians(self.rotation) + amt, speed=4 + random.random() * 2, curve=-0.05 + random.random() * 0.1))
                                 
                 if self.name in ['rifle', 'smg']:
-                    if self.ammo %  2 == 0:
-                        self.game.world.particle_manager.add_particle(self.game, 'shells', self.owner.center, movement=[(self.owner.flip[0] - 0.5) * random.randint(60, 90), -random.randint(30, 50)], decay_rate=0.05, frame=0, custom_color=(244, 176, 60), physics=self.game.world.tilemap)
+                    self.game.world.particle_manager.add_particle(self.game, 'shells', self.owner.center, movement=[(self.owner.flip[0] - 0.5) * random.randint(60, 90), -random.randint(30, 50)], decay_rate=0.05, frame=0, custom_color=(244, 176, 60), physics=self.game.world.tilemap)
     
     def reload(self):
-        
         if (self.ammo != self.capacity) and (self.max_ammo > 0):
             curr_time = time.time()
             if curr_time - self.last_reload >= self.reload_delay:
@@ -67,18 +65,14 @@ class Weapon(Item):
                             p_type='shells', 
                             pos=self.owner.center, 
                             movement=[(self.owner.flip[0] - 0.5) * random.randint(60, 90), -random.randint(40, 80)], 
-                            decay_rate=0.1, 
-                            frame=0, 
-                            custom_color=(244, 176, 60),  # (maybe) change the color of the reload bullet drop
+                            custom_color=(244, 176, 60),  
                             physics=self.game.world.tilemap)
                 elif self.reload_method == 'mag':
                     self.game.world.particle_manager.add_particle(game=self.game, 
                             p_type='mag', 
                             pos=self.owner.center, 
                             movement=[(self.owner.flip[0] - 0.5) * random.randint(40, 70), -random.randint(30, 60)], 
-                            decay_rate=0.1, 
-                            frame=0, 
-                            custom_color=(92, 36, 27),
+                            custom_color=(98, 38, 28),
                             physics=self.game.world.tilemap)
         
 
