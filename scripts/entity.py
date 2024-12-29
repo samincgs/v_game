@@ -133,8 +133,7 @@ class Entity:
         if self.active_animation:
             self.active_animation.play(dt)
         if self.hurt:
-            self.hurt = max(0, self.hurt - dt * 2)
-        
+            self.hurt = max(0, self.hurt - dt * 1.5)
         return self.dead
 
         

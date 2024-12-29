@@ -17,8 +17,6 @@ class Entities:
         # default player items
         self.entities.append(Player(game, (200, 120), self.config['player']['size'], 'player'))
         self.player.inventory.add_item(Weapon(game, 'revolver', self.player, tags=['active']), 'weapons')
-        self.player.inventory.add_item(Weapon(game, 'rifle', self.player, tags=['active']), 'weapons')
-        self.player.inventory.add_item(Item(game, 'bat_wing', self.player, amount=2), 'items')
         
     @property
     def player(self):
@@ -29,7 +27,6 @@ class Entities:
     
     def spawner(self):
         if random.randint(1, self.config['bat']['spawn_rate']) == 1:
-            print('pog')
             spawn_point = (random.randint(-500, -200), random.randint(-100, 100))
             for i in range(3):
                 self.entities.append(Bat(self.game, spawn_point, self.config['bat']['size']))

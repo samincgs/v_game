@@ -34,9 +34,9 @@ class Itemdrop(Entity):
     
     def render(self, surf, offset=(0, 0)):
         if math.sin(self.game.world.master_clock * 4) > 0.5:
-            color = (255, 255, 255)
+            color = (255, 255, 255, 255)
         else:
-            color = (0, 0, 1)
+            color = (0, 0, 1, 100)
         outline(surf, self.img, (self.pos[0] - offset[0], self.pos[1] - offset[1]), color=color)
         surf.blit(self.img, (self.pos[0] - offset[0], self.pos[1] - offset[1])) 
     

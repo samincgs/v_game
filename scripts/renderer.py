@@ -1,6 +1,7 @@
 import pygame
 
 from scripts.background import Background
+from .utils import clip
 
 
 class Renderer:
@@ -37,6 +38,27 @@ class Renderer:
             surf.blit(weapon_mask, (weapon_rect.left, base_pos + offset))
             offset += weapon_mask.get_height() + 3
             
+        # skills
+        skill_offset = 20
+        for i in range(3):
+            surf.blit(self.game.assets.misc['skill_holder'], (skill_offset, surf.get_height() - self.game.assets.misc['skill_holder'].get_height()))
+            skill_offset += self.game.assets.misc['skill_holder'].get_width()
+        
+        
+        dash_img = self.game.assets.misc['dash'].copy()
+        
+        if self.game.world.player.dashes >= 1:
+            self.game.assets.fonts['small_white'].render(surf, str(self.game.world.player.dashes), (30, surf.get_height() - self.game.assets.misc['skill_holder'].get_height() - 6))
+        else:
+            dash_cooldown = self.game.world.player.dash_charge / self.game.world.player.dash_charge_rate
+            dash_cooldown_surf = pygame.Surface((dash_img.get_width(), dash_img.get_height() * (1 - dash_cooldown)))
+            dash_cooldown_surf.fill((120, 120, 120))
+            dash_img.blit(dash_cooldown_surf, (0, dash_img.get_height() - dash_cooldown_surf.get_height()), special_flags=pygame.BLEND_RGB_MULT)
+            
+        surf.blit(dash_img, (24, surf.get_height() - self.game.assets.misc['skill_holder'].get_height() + 5))
+            
+        
+            
     
     def render(self):
         surf = self.game.window.display
@@ -45,8 +67,8 @@ class Renderer:
         # self.background.render(surf)
                     
         
-        self.gui(surf)
         self.game.world.render(surf)
+        self.gui(surf)
         
         if self.game.world.inventory_mode:
             dark_overlay = pygame.Surface(surf.get_size(), flags=pygame.SRCALPHA)

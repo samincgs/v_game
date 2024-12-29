@@ -70,7 +70,7 @@ class Player(Entity):
         
         if self.dashes < self.max_dashes:
             self.dash_charge += dt
-            if self.dash_charge >= self.dash_charge_rate:
+            if self.dash_charge > self.dash_charge_rate:
                 self.dashes += 1
                 self.dash_charge = 0
                 
