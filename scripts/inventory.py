@@ -4,7 +4,7 @@ class InventoryGroup:
         
     def add_item(self, item):
         for i in self.items: # if the item is stackable
-            if i.is_stackable():
+            if i.is_stackable() and i.name == item.name:
                 i.amount += item.amount
                 return 
             
