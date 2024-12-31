@@ -59,7 +59,7 @@ class Entity:
         self.dead = True
         
         for item_drop in self.drops:
-            self.game.world.entities.drop_item(self.center.copy(), (1, 1), item_drop, velocity=(random.randint(0, 100) - 50, random.randint(0, 20) - 200))
+            self.game.world.entities.drop_item(self.center.copy(), (1, 1), item_drop, velocity=(random.randint(0, 200) - 100, random.randint(0, 20) - 200))
 
     def get_angle(self, target):
         if isinstance(target, Entity):

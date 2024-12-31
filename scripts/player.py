@@ -136,6 +136,9 @@ class Player(Entity):
                 self.flip[0] = True
             else:
                 self.flip[0] = False 
+                
+                
+        
             
         return kill
    

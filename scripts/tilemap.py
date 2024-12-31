@@ -49,7 +49,8 @@ class Tilemap:
         for layer in sorted([int(key) for key in self.tilemap.keys()]):
             layer = str(layer)
             if tile_loc in self.tilemap[layer]:
-                return True
+                if self.tilemap[layer][tile_loc]['type'] not in self.non_collideables:
+                    return True
             
         
     def load_map(self, path):

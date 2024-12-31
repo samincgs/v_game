@@ -12,7 +12,6 @@ class Font:
         self.current_width = 0
         self.spacing = 1
 
-        
         for x in range(self.font_sheet.get_width()):
             if self.font_sheet.get_at((x, 0))[0] == 127:
                 char_img = clip(self.font_sheet, x - self.current_width, 0, self.current_width, self.font_sheet.get_height())

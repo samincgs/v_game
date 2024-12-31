@@ -11,6 +11,7 @@
 - add bat goo on floor & player dmg if stepped on (maybe?)
 - add poison effect when player steps on goo  (maybe?) 
 - add poison indicator in gui (maybe?)
+- add a shopkeeper that sells weapons/items (maybe?)
 
 # Possible Changes/ Bugs
 - fix rotation issue with goo

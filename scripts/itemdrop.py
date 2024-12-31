@@ -1,5 +1,7 @@
 import math
 
+from scripts.item import Item
+
 from .entity import Entity
 from .utils import normalize, outline
 
@@ -12,6 +14,7 @@ class Itemdrop(Entity):
         
         self.set_action(self.item_data.name)
         self.size = (self.img.get_width(), self.img.get_height() - 1)
+        
         
     def update(self, dt):
         super().update(dt)
@@ -31,12 +34,24 @@ class Itemdrop(Entity):
           
         self.velocity[1] = min(500, self.velocity[1] + dt * 700)
         
+        # pick up on collision
+        player = self.game.world.player
+            
+        if self.type == 'item' and player.rect.colliderect(self.rect):
+            player.inventory.add_item(Item(self.game, self.item_data.name, player), str(self.type + 's'))
+            return True
+        
     
     def render(self, surf, offset=(0, 0)):
         if math.sin(self.game.world.master_clock * 4) > 0.5:
             color = (255, 255, 255, 255)
         else:
             color = (0, 0, 1, 100)
+        
+        # item_render_offset = (-10, -30)
+        # if self.get_distance(self.game.world.player) < 10:
+        #     self.game.assets.fonts['small_white'].render(surf, str(self.item_data.name), (self.pos[0] - offset[0] + item_render_offset[0], self.pos[1] - offset[1] + item_render_offset[1]))
+        
         outline(surf, self.img, (self.pos[0] - offset[0], self.pos[1] - offset[1]), color=color)
         surf.blit(self.img, (self.pos[0] - offset[0], self.pos[1] - offset[1])) 
     
