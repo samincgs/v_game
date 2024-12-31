@@ -92,29 +92,28 @@ class LevelEditor:
         
         self.reset_rect()
         
-    def floodfill(self, curr_layer):
-        floodfill_list = []
+    def floodfill(self, curr_pos, curr_layer):
+        floodfill_list = [curr_pos]
+        visited = set()
         
-        if self.selection_rect:
-            for y in range(self.selection_rect.y, self.selection_rect.y + self.selection_rect[3]):
-                for x in range(self.selection_rect.x, self.selection_rect.x + self.selection_rect[2]):
-                    tile_loc = str((x // self.tilemap.tile_size)) + ';' + str((y // self.tilemap.tile_size))
-                    if tile_loc in self.tilemap.tilemap[curr_layer]:
-                        tile = self.tilemap.tilemap[curr_layer][tile_loc]
-                        floodfill_list.append(tile)
-                                
-
-            start_x = min([tile['pos'][0] for tile in floodfill_list])
-            end_x = max([tile['pos'][0] for tile in floodfill_list])
-            start_y = min([tile['pos'][1] for tile in floodfill_list])
-            end_y = max([tile['pos'][1] for tile in floodfill_list])
+        while floodfill_list != []:
+            remaining_tiles = floodfill_list.copy()
+            floodfill_list = []
             
-            for y in range(start_y, end_y):
-                for x in range(start_x, end_x):
-                    tile_data = {'type': self.tile_list[self.tile_group], 'variant': self.tile_variant, 'pos': (x, y) }
-                    self.tilemap.add_tile(tile_data, self.current_layer)
-        
-        self.reset_rect()
+            for tile in remaining_tiles:
+                if tuple(tile) in visited:
+                    continue
+                visited.add(tuple(tile))
+                
+                tile_data = {'type': self.tile_list[self.tile_group], 'variant': self.tile_variant, 'pos': tile }
+                self.tilemap.add_tile(tile_data, curr_layer)
+                
+                bordering_tiles = [[tile[0] + 1, tile[1]], [tile[0] - 1, tile[1]], [tile[0], tile[1] + 1], [tile[0], tile[1] - 1]]
+                for b in bordering_tiles:
+                    if not self.tilemap.get_tile(b, curr_layer) and tuple(b) not in visited:
+                        floodfill_list.append(b)
+            
+
         
             
                     
@@ -270,7 +269,7 @@ class LevelEditor:
                     if event.key == pygame.K_x:
                         self.remove_all_tiles(self.current_layer)
                     if event.key == pygame.K_f:
-                        self.floodfill(self.current_layer)
+                        self.floodfill(tile_pos, self.current_layer)
                 if event.type == pygame.KEYUP:
                     if event.key == pygame.K_a:
                         self.movement[0] = False

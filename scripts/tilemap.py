@@ -33,19 +33,16 @@ class Tilemap:
         return rects
 
     # gets position in pixels
-    def get_tile(self, pos):
-        tile_pos = (int(pos[0] // self.tile_size), int(pos[1] // self.tile_size))
-        str_pos = str(tile_pos[0]) + ';' + str(tile_pos[1])
-        for layer in sorted([int(key) for key in self.tilemap.keys()]):
-            layer = str(layer)
-            if str_pos in self.tilemap[layer]:
-                return self.tilemap[layer][str_pos]['type']
+    def get_tile(self, pos, curr_layer):
+        # tile_pos = (int(pos[0] // self.tile_size), int(pos[1] // self.tile_size))
+        str_pos = str(pos[0]) + ';' + str(pos[1])
+        if str_pos in self.tilemap[curr_layer]:
+            return True
         
     
      
     def tile_collide(self, pos):
-        tile_pos = (int(pos[0] // self.tile_size), int(pos[1] // self.tile_size))
-        tile_loc = str(tile_pos[0]) + ';' + str(tile_pos[1])
+        tile_loc = str(pos[0]) + ';' + str(pos[1])
         for layer in sorted([int(key) for key in self.tilemap.keys()]):
             layer = str(layer)
             if tile_loc in self.tilemap[layer]:

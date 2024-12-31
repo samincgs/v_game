@@ -1,6 +1,8 @@
 # Pixel art
-- make a structured map
-- add decor
+- add decor/background tiles
+- add shopkeeper
+- add knife/swords
+- add 
 
 # Game/Coding
 - Create minimap
@@ -12,10 +14,7 @@
 - add poison effect when player steps on goo  (maybe?) 
 - add poison indicator in gui (maybe?)
 - add a shopkeeper that sells weapons/items (maybe?)
-
-# Possible Changes/ Bugs
-- fix rotation issue with goo
-- optimize inventory menu code
-- fix floodfill algorithm
 - add leaves falling from trees (maybe?)
 - add alpha to guns in ui to indicate reload delay (maybe?)
+
+# Bugs
