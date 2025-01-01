@@ -17,7 +17,7 @@ class Itemdrop(Entity):
         
         
     def update(self, dt):
-        super().update(dt)
+        r = super().update(dt)
         
         self.velocity[0] = normalize(self.velocity[0], 350 * dt)
         self.velocity[1] = normalize(self.velocity[1], 350 * dt)
@@ -35,13 +35,11 @@ class Itemdrop(Entity):
         self.velocity[1] = min(500, self.velocity[1] + dt * 700)
         
         # pick up on collision
-        player = self.game.world.player
-            
-        if self.type == 'item' and player.rect.colliderect(self.rect):
-            player.inventory.add_item(Item(self.game, self.item_data.name, player), str(self.type + 's'))
-            return True
+        # player = self.game.world.player
         
-    
+        return r
+            
+        
     def render(self, surf, offset=(0, 0)):
         if math.sin(self.game.world.master_clock * 4) > 0.5:
             color = (255, 255, 255, 255)

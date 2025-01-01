@@ -30,7 +30,6 @@ class Renderer:
             weapon_mask = pygame.mask.from_surface(curr_weapon)
             weapon_rect = weapon_mask.get_bounding_rects()[0]
             if self.game.world.player.selected_weapon == ix:
-                pass
                 pygame.draw.line(surf, color, (2, base_pos + offset), (2, base_pos + offset + weapon_rect[3]), 2)
             else:
                 color = (139, 171, 191)
@@ -40,7 +39,7 @@ class Renderer:
             
         # skills
         skill_offset = 20
-        for i in range(3):
+        for i in range(1):
             surf.blit(self.game.assets.misc['skill_holder'], (skill_offset, surf.get_height() - self.game.assets.misc['skill_holder'].get_height()))
             skill_offset += self.game.assets.misc['skill_holder'].get_width()
         
@@ -80,6 +79,7 @@ class Renderer:
           
         if self.game.input.show_fps:
             self.game.assets.fonts['small_white'].render(surf, 'FPS: ' + str(int(self.game.window.fps)), (surf.get_width() - 35, 2))
+            print(str(int(self.game.window.fps)))
             
         
         

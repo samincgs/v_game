@@ -3,7 +3,7 @@ import random
 
 from .entity import Entity
 from .inventory import Inventory
-from .utils import clip, normalize
+from .utils import normalize
 from .spark import CurvedSpark
 
 class Player(Entity):
@@ -31,7 +31,11 @@ class Player(Entity):
         active_weapons = self.inventory.get_active_weapons()
         if active_weapons:
             return active_weapons[self.selected_weapon]
-                    
+    
+    def pickup_item(self, item):
+        item.owner = self
+        self.inventory.add_item(item, 'items')
+                   
     def slot_weapon(self, direction):
         active_weapons = self.inventory.get_active_weapons()
         if active_weapons:
@@ -126,6 +130,15 @@ class Player(Entity):
         else:
             self.set_action('idle')
             
+            
+        # item pickup
+        for entity in self.game.world.entities.entities:
+            if entity.type == 'item' and self.rect.colliderect(entity.rect):
+                print('collided')
+                entity.dead = True
+                self.pickup_item(entity.item_data)
+                
+                
         # weapon
         angle = math.atan2(self.game.input.mpos[1] - self.center[1] + self.game.world.camera.pos[1], self.game.input.mpos[0] - self.center[0] + self.game.world.camera.pos[0])
         self.aim_angle = angle
@@ -137,9 +150,6 @@ class Player(Entity):
             else:
                 self.flip[0] = False 
                 
-                
-        
-            
         return kill
    
     def render(self, surf, offset=(0, 0)):

@@ -21,7 +21,6 @@ class InventoryMenu:
         self.info = [] # [[item name (from config), item description, weapon/item name (weapon type), item_type]]
         
         
-        
     def draw_weapon_boxes(self, surf):
         surf.blit(self.game.assets.misc['weapons_logo'], (self.base_pos[0] - self.game.assets.misc['weapons_logo'].get_width() + 3, self.base_pos[1]))
 
@@ -38,9 +37,7 @@ class InventoryMenu:
                     self.weapon_boxes.append([rect, weapon])
             
             pygame.draw.rect(surf, color, rect, 1, self.border_radius)
-        
-    
-    
+
     def draw_item_boxes(self, surf):
         # item logo
         surf.blit(self.game.assets.misc['items_logo'], (self.base_pos[0] - self.game.assets.misc['weapons_logo'].get_width() + 3, self.base_pos[1] + 40))
@@ -72,8 +69,7 @@ class InventoryMenu:
                     
     def draw_info(self, info, surf, loc):
         img = self.game.assets.weapons[info.name] if isinstance(info, Weapon) else self.game.assets.items[info.name]
-        name = self.config[info.name]['name']
-        desc = self.config[info.name]['description']
+        name, desc = self.config[info.name]['name'], self.config[info.name]['description']
         
         surf.blit(img, loc)
         self.game.assets.fonts['small_white'].render(surf, name, (loc[0] + img.get_width() + 5, loc[1])) # name
@@ -100,7 +96,7 @@ class InventoryMenu:
                 self.info = box[1] 
                 if not clicked and self.game.input.mouse_states['shoot']:
                     clicked = True
-                    if len(self.inventory.get_active_weapons()) <= self.weapon_cols:
+                    if len(self.inventory.get_active_weapons()) < self.weapon_cols:
                         for weapon in self.inventory.get_group('weapons').items:
                             if weapon.name == self.info.name:
                                 weapon.add_active()

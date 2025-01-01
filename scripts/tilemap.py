@@ -42,7 +42,8 @@ class Tilemap:
     
      
     def tile_collide(self, pos):
-        tile_loc = str(pos[0]) + ';' + str(pos[1])
+        tile_pos = (int(pos[0] // self.tile_size), int(pos[1] // self.tile_size))
+        tile_loc = str(tile_pos[0]) + ';' + str(tile_pos[1])
         for layer in sorted([int(key) for key in self.tilemap.keys()]):
             layer = str(layer)
             if tile_loc in self.tilemap[layer]:

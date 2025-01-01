@@ -34,7 +34,6 @@ def normalize(value, amt, target=0):
         value = target
     return value
 
-
 def blit_center(surf, img, pos):
     surf.blit(img, (pos[0] - img.get_width() // 2, pos[1] - img.get_height() // 2))
     

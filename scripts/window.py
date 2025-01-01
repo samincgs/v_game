@@ -30,9 +30,6 @@ class Window:
     def fps(self):
         return 1 / self.dt if self.dt > 0 else 0
     
-    def toggle_freeze(self, rate, duration): # rate, duration
-        self.freeze_frames[rate] = duration
-    
     def toggle_window(self):
         self.scaled = not self.scaled
         if self.scaled:
@@ -44,7 +41,6 @@ class Window:
         # self.clock.tick(120)
         
         self.dt = time.time() - self.start_frame
-        # print(self.dt)        
         self.start_frame = time.time()
         
         self.display.blit(self.game.assets.misc['cursor'], (self.game.input.mpos[0] - self.game.assets.misc['cursor'].get_width() // 2, self.game.input.mpos[1] - self.game.assets.misc['cursor'].get_height() // 2))

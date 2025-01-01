@@ -49,7 +49,7 @@ class Projectile:
         self.timer += dt
         
         for entity in self.game.world.entities.entities:
-            if entity.type != 'player':
+            if entity.type not in {'player', 'item'}:
                 if (entity.rect.collidepoint(self.pos)) and (self.type not in  {'bat_goo'}):
                     entity.damage(self.config['power'])
                     angle = math.atan2(entity.pos[1] - self.game.world.entities.player.pos[1], entity.pos[0] - self.game.world.entities.player.pos[0])

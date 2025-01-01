@@ -2,14 +2,12 @@
 - add decor/background tiles
 - add shopkeeper
 - add knife/swords
-- add 
 
 # Game/Coding
 - Create minimap
 - create skills (maybe?)
-- add rings
+- add rings (maybe?)
 - add death particles
-- add mask to indicate dmg
 - add bat goo on floor & player dmg if stepped on (maybe?)
 - add poison effect when player steps on goo  (maybe?) 
 - add poison indicator in gui (maybe?)
