@@ -5,22 +5,24 @@ from .spark import SparkManager
 from .projectile import ProjectileManager
 from .particles import ParticleManager
 from .inventory_menu import InventoryMenu
+from .minimap import Minimap
+from .config import config
 
-import math
 
 class World:
     def __init__(self, game):
         self.game = game
         self.camera = Camera(game)
-        self.tilemap = Tilemap(game, tile_size=16)
+        self.tilemap = Tilemap(game, tile_size=config['window']['tile_size']) # tile_size is 16
         self.tilemap.load_map('data/maps/intro.json')
         self.entities = Entities(game)
         self.player = self.entities.player
         self.camera.set_tracked_entity(self.player)
+        self.minimap = Minimap(game, tile_size=config['window']['tile_size'])
         self.particle_manager = ParticleManager()
         self.spark_manager = SparkManager()
         self.projectile_manager = ProjectileManager()
- 
+        
         self.inventory_menu = InventoryMenu(game, self.player.inventory)
         self.inventory_mode = False
         
@@ -28,13 +30,16 @@ class World:
         
     def update(self):
         dt = self.game.window.dt
+        self.master_clock += dt
+        
         self.camera.update()
         self.entities.update(dt)
+        self.minimap.update()
         self.particle_manager.update(dt)
         self.spark_manager.update(dt)
         self.projectile_manager.update(dt)
         
-        self.master_clock += dt
+        
         
             
                         

@@ -9,7 +9,7 @@ class Tilemap:
         self.tilemap = {} # { 0 : {'5;7' : {'type': 'grass', 'variant': 0, 'pos': [x, x]}}}
         self.offgrid_tiles = {} # {0: [{'type': 'grass', 'variant': 0, 'pos': [x, x]}]}
         
-        self.non_collideables = {'grass'}
+        # self.non_collideables = {'grass'}
     
     def collision_test(self, obj, obj_list):
         collision_list = []
@@ -28,16 +28,23 @@ class Tilemap:
             str_loc = str(tile_loc[0]) + ';' + str(tile_loc[1])
             for layer in sorted(self.tilemap):
                 if str_loc in self.tilemap[layer]:
-                    if self.tilemap[layer][str_loc]['type'] not in self.non_collideables:
-                        rects.append(pygame.Rect(tile_loc[0] * self.tile_size, tile_loc[1] * self.tile_size, self.tile_size, self.tile_size))
+                    # if self.tilemap[layer][str_loc]['type'] not in self.non_collideables:
+                    rects.append(pygame.Rect(tile_loc[0] * self.tile_size, tile_loc[1] * self.tile_size, self.tile_size, self.tile_size))
         return rects
 
-    # gets position in pixels
-    def get_tile(self, pos, curr_layer):
+    # gets position in tiles
+    def get_tile(self, pos, curr_layer=None):
         # tile_pos = (int(pos[0] // self.tile_size), int(pos[1] // self.tile_size))
         str_pos = str(pos[0]) + ';' + str(pos[1])
-        if str_pos in self.tilemap[curr_layer]:
-            return True
+        if curr_layer:
+            if str_pos in self.tilemap[curr_layer]:
+                return True
+        else:
+            for layer in sorted([int(key) for key in self.tilemap.keys()]):
+                layer = str(layer)
+                if str_pos in self.tilemap[layer]:
+                    return True
+        
         
     
      
@@ -47,8 +54,8 @@ class Tilemap:
         for layer in sorted([int(key) for key in self.tilemap.keys()]):
             layer = str(layer)
             if tile_loc in self.tilemap[layer]:
-                if self.tilemap[layer][tile_loc]['type'] not in self.non_collideables:
-                    return True
+                # if self.tilemap[layer][tile_loc]['type'] not in self.non_collideables: # for 
+                return True
             
         
     def load_map(self, path):

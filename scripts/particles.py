@@ -64,32 +64,28 @@ class Particle:
         
 
 class DestructionParticle:
-    def __init__(self, game, img, pos, velocity, physics=None):
+    def __init__(self, game, img, pos, rot, rot_speed, velocity, duration=3, physics=None):
         self.game = game
         self.img = img
         self.pos = list(pos)
+        self.rotation = rot
+        self.rotation_speed = rot_speed
         self.velocity = list(velocity)
         self.physics = physics
         self.rotation = 0
-        self.timer = 0
+        self.duration = duration
         
     def update(self, dt):
         
-        self.timer += dt
+        self.duration -= dt
         
-        if not self.physics:
-            pass
-        else:
-            self.pos[0] += self.velocity[0] * dt
-            self.pos[0] += math.sin(self.timer * 5) * 10
-            self.pos[1] += self.velocity[0] * dt
-            self.pos[1] += math.sin(self.timer * 5) * 10
-            if self.physics.tile_collide(self.pos):
-                self.velocity[0] = 0
-                self.velocity[1] = 0
-        
-        if self.timer > 60: 
-            return True
+        self.pos[0] += self.velocity[0] * dt
+        self.pos[1] += self.velocity[1] * dt
+        self.velocity[1] += 200 * dt
+        self.rotation += self.rotation_speed * dt
+    
+        if self.duration <= 0:
+            return not self.duration
 
     
     def render(self, surf, offset=(0, 0)):
@@ -105,22 +101,26 @@ class ParticleManager:
     def add_particle(self, game, p_type, pos, movement, decay_rate=0.1, frame=0, custom_color=None, physics=None):
         self.particles.append(Particle(game, p_type, pos, movement, decay_rate, frame, custom_color, physics))
     
+    def add_death_particle(self, game, img, pos, rot, rot_speed, velocity, duration=3, physics=None):
+        self.particles.append(DestructionParticle(game, img, pos, rot, rot_speed, velocity, duration, physics))
+    
     def update(self, dt):
-        for particle in self.particles.copy():
-            kill = particle.update(dt)
-            if kill:
-                self.particles.remove(particle)
-                
         for particle in self.destruction_particles.copy():
             kill = particle.update(dt)
             if kill:
                 self.destruction_particles.remove(particle)
                 
+        for particle in self.particles.copy():
+            kill = particle.update(dt)
+            if kill:
+                self.particles.remove(particle)
+
     def render(self, surf, offset=(0, 0)):
-        for particle in self.particles:
-            particle.render(surf, offset=offset)
-            
         for particle in self.destruction_particles:
             particle.render(surf, offset=offset)
     
+        for particle in self.particles:
+            particle.render(surf, offset=offset)
+            
+     
                        

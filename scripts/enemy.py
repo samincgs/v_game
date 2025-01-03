@@ -12,7 +12,7 @@ class Bat(Entity):
         self.attack_timer = 0
         self.hover_timer = 0
         self.hover_distance = random.randint(50, 90)
-        self.speed = random.randint(40, 70)
+        self.speed = random.randint(30, 70)
         self.vertical_amplitude = 6
         self.hover_frequency = random.randint(10, 30) / 10
         self.target_offset_angle = random.uniform(0, 2 * math.pi)  

@@ -29,3 +29,4 @@ class Camera:
         self.true_pos[0] += (self.target_pos[0] - self.true_pos[0]) / 300
         self.true_pos[1] += (self.target_pos[1] - self.true_pos[1]) / 300
         
+        

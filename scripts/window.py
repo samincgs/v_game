@@ -10,12 +10,12 @@ class Window:
         self.game = game
         self.config = config['window']
         
-        pygame.display.set_caption(self.config['caption'])
-        
-        self.clock = pygame.time.Clock()
+        # self.monitor_x, self.monitor_y = pygame.display.Info().current_w, pygame.display.Info().current_h
         
         self.window = pygame.display.set_mode(self.config['scaled_res']) # pygame.RESIZABLE
+        pygame.display.set_caption(self.config['caption'])
         self.display = pygame.Surface(self.config['base_res'])
+        self.clock = pygame.time.Clock()
         
         self.render_scale = self.config['render_scale']
         
@@ -25,6 +25,7 @@ class Window:
         self.dt = 0.01
         
         self.scaled = False
+    
     
     @property
     def fps(self):

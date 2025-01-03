@@ -1,7 +1,5 @@
-import pygame
-
 from scripts.background import Background
-from .utils import clip
+from scripts.gui import GUI
 
 
 class Renderer:
@@ -9,77 +7,18 @@ class Renderer:
         self.game = game
         
         self.background = Background(game)
+        self.gui = GUI(game)
 
-    def gui(self, surf):
-        # ammo ui
-        if self.game.world.player.weapon:
-            self.game.assets.fonts['small_white'].render(surf, str(self.game.world.player.weapon.ammo) + ' / ' + str(self.game.world.player.weapon.max_ammo), (3, 14))
-    
-        #health bar
-        health_bar_img = self.game.assets.misc['health_bar']
-        pygame.draw.rect(surf, (215, 0, 40), pygame.Rect(1, 2, int((self.game.world.player.health / self.game.world.player.max_health * 55)), 9)) 
-        surf.blit(health_bar_img,(1, 2))
-        
-         
-         # weapon display
-        base_pos = 25
-        offset = 0
-        for ix, weapon in enumerate(self.game.world.player.inventory.get_active_weapons()):
-            color = (255, 255, 255)
-            curr_weapon = weapon.img.copy()
-            weapon_mask = pygame.mask.from_surface(curr_weapon)
-            weapon_rect = weapon_mask.get_bounding_rects()[0]
-            if self.game.world.player.selected_weapon == ix:
-                pygame.draw.line(surf, color, (2, base_pos + offset), (2, base_pos + offset + weapon_rect[3]), 2)
-            else:
-                color = (139, 171, 191)
-            weapon_mask = weapon_mask.to_surface(setcolor=color, unsetcolor=(0,0,0,0))
-            surf.blit(weapon_mask, (weapon_rect.left, base_pos + offset))
-            offset += weapon_mask.get_height() + 3
-            
-        # skills
-        skill_offset = 20
-        for i in range(1):
-            surf.blit(self.game.assets.misc['skill_holder'], (skill_offset, surf.get_height() - self.game.assets.misc['skill_holder'].get_height()))
-            skill_offset += self.game.assets.misc['skill_holder'].get_width()
-        
-        
-        dash_img = self.game.assets.misc['dash'].copy()
-        
-        if self.game.world.player.dashes >= 1:
-            self.game.assets.fonts['small_white'].render(surf, str(self.game.world.player.dashes), (30, surf.get_height() - self.game.assets.misc['skill_holder'].get_height() - 6))
-        else:
-            dash_cooldown = self.game.world.player.dash_charge / self.game.world.player.dash_charge_rate
-            dash_cooldown_surf = pygame.Surface((dash_img.get_width(), dash_img.get_height() * (1 - dash_cooldown)))
-            dash_cooldown_surf.fill((120, 120, 120))
-            dash_img.blit(dash_cooldown_surf, (0, dash_img.get_height() - dash_cooldown_surf.get_height()), special_flags=pygame.BLEND_RGB_MULT)
-            
-        surf.blit(dash_img, (24, surf.get_height() - self.game.assets.misc['skill_holder'].get_height() + 5))
-            
-        
-            
-    
     def render(self):
         surf = self.game.window.display
                   
         # self.background.update()
         # self.background.render(surf)
-                    
-        
+    
         self.game.world.render(surf)
-        self.gui(surf)
+        self.gui.render(surf)
         
-        if self.game.world.inventory_mode:
-            dark_overlay = pygame.Surface(surf.get_size(), flags=pygame.SRCALPHA)
-            dark_overlay.fill((31, 33, 54, 110)) # try different colours
-            surf.blit(dark_overlay, (0, 0))
-            self.game.world.inventory_menu.update()
-            self.game.world.inventory_menu.render(surf)
         
-          
-        if self.game.input.show_fps:
-            self.game.assets.fonts['small_white'].render(surf, 'FPS: ' + str(int(self.game.window.fps)), (surf.get_width() - 35, 2))
-            print(str(int(self.game.window.fps)))
             
         
         

@@ -58,17 +58,17 @@ class Player(Entity):
   
     # direction is 1 or 0 or -1
     def move(self, direction):
-        if direction > 0:
-            self.flip[0] = False
         if direction < 0:
             self.flip[0] = True
+        if direction > 0:
+            self.flip[0] = False
         self.frame_movement[0] += 120 * direction
     
         
     def update(self, dt):
         self.frame_movement = self.velocity.copy()
         
-        kill = super().update(dt)
+        r = super().update(dt)
         self.air_timer += dt
         self.dash_timer = max(0, self.dash_timer - dt)
         
@@ -150,7 +150,7 @@ class Player(Entity):
             else:
                 self.flip[0] = False 
                 
-        return kill
+        return r
    
     def render(self, surf, offset=(0, 0)):
         super().render(surf, offset=offset)
