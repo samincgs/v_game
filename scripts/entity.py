@@ -56,9 +56,9 @@ class Entity:
         
     def die(self): # TODO: Finish and add death particles
         
+        self.dead = True
         size = 4
         
-        self.dead = True
             
         for item_drop in self.drops:
             self.game.world.entities.drop_item(self.center.copy(), (1, 1), item_drop, velocity=(random.randint(0, 300) - 150, random.randint(0, 20) - 200))

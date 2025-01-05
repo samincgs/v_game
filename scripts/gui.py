@@ -3,13 +3,9 @@ import pygame
 class GUI:
     def __init__(self, game):
         self.game = game
-
+        
     
-    def render(self, surf):
-        
-        assets = self.game.assets
-        player = self.game.world.player
-        
+    def render_stats(self, surf, assets, player):
         # ammo ui
         if player.weapon:
             assets.fonts['small_white'].render(surf, str(player.weapon.ammo) + ' / ' + str(player.weapon.max_ammo), (3, 14))
@@ -54,19 +50,26 @@ class GUI:
             dash_img.blit(dash_cooldown_surf, (0, dash_img.get_height() - dash_cooldown_surf.get_height()), special_flags=pygame.BLEND_RGB_MULT)
             
         surf.blit(dash_img, (24, surf.get_height() - assets.misc['skill_holder'].get_height() + 5))
+    
+    
+    def render_minimap(self, surf, assets):
+         
+        dark_surf = pygame.Surface(self.game.world.minimap.map_surf.get_size())
+        dark_surf.fill((10, 255, 180)) 
         
         # minimap
+        surf.blit(dark_surf, (323, 2), special_flags=pygame.BLEND_RGBA_SUB) # fix the blending and make it transparent
         surf.blit(self.game.world.minimap.map_surf, (323, 2))
         surf.blit(assets.misc['minimap'], (317, 0))
+    
+    def render(self, surf):
         
-        # inventory
-        if self.game.world.inventory_mode:
-            dark_overlay = pygame.Surface(surf.get_size(), flags=pygame.SRCALPHA)
-            dark_overlay.fill((31, 33, 54, 110)) # try different colours
-            surf.blit(dark_overlay, (0, 0))
-            self.game.world.inventory_menu.update()
-            self.game.world.inventory_menu.render(surf)
-        
+        assets = self.game.assets
+        player = self.game.world.player
+
+        self.render_stats(surf, assets, player)
+        self.render_minimap(surf, assets)
+             
         # show fps
         if self.game.input.show_fps:
             assets.fonts['small_white'].render(surf, 'FPS: ' + str(int(self.game.window.fps)), (surf.get_width() - 35, 2))

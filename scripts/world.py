@@ -12,9 +12,11 @@ from .config import config
 class World:
     def __init__(self, game):
         self.game = game
+        self.map_area = 'intro'
+        
         self.camera = Camera(game)
         self.tilemap = Tilemap(game, tile_size=config['window']['tile_size']) # tile_size is 16
-        self.tilemap.load_map('data/maps/intro.json')
+        self.tilemap.load_map('data/maps/' + self.map_area + '.json')
         self.entities = Entities(game)
         self.player = self.entities.player
         self.camera.set_tracked_entity(self.player)
@@ -27,7 +29,16 @@ class World:
         self.inventory_mode = False
         
         self.master_clock = 0
-        
+        self.transition = 0
+    
+    def reset_level(self):
+        self.master_clock = 0
+        self.tilemap.load_map('data/maps/' + self.map_area + '.json')
+        self.player.pos = [200, 120]
+        self.player.air_timer = 0
+        self.camera.focus()
+        self.particle_manager = ParticleManager()
+    
     def update(self):
         dt = self.game.window.dt
         self.master_clock += dt
@@ -38,11 +49,7 @@ class World:
         self.particle_manager.update(dt)
         self.spark_manager.update(dt)
         self.projectile_manager.update(dt)
-        
-        
-        
-            
-                        
+                
     def render(self, surf):
         offset = self.camera.pos
         self.tilemap.render(surf, offset=offset)
@@ -50,11 +57,8 @@ class World:
         self.particle_manager.render(surf, offset=offset)
         self.spark_manager.render(surf, offset=offset)
         self.projectile_manager.render(surf, offset=offset)
-        # pygame.draw.rect(surf, 'red', pygame.Rect(self.player.center[0] - offset[0], self.player.center[1] - offset[1], 1, 1)) # debug
     
         
-        # inventory_surf = surf.copy()
         
             
-        # surf.blit(surf, (0, 0))
         

@@ -72,6 +72,12 @@ class Player(Entity):
         self.air_timer += dt
         self.dash_timer = max(0, self.dash_timer - dt)
         
+        
+        if self.air_timer > 3:
+            print('boop')
+            self.game.world.reset_level()
+        
+        
         if self.dashes < self.max_dashes:
             self.dash_charge += dt
             if self.dash_charge > self.dash_charge_rate:

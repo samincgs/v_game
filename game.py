@@ -4,6 +4,7 @@ from scripts.assets import Assets
 from scripts.world import World
 from scripts.renderer import Renderer
 
+
 class Game:
     def __init__(self):
         self.window = Window(self)
