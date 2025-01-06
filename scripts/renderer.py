@@ -28,6 +28,13 @@ class Renderer:
             self.game.world.inventory_menu.render(surf)
         
         
+        if self.game.world.transition:
+            transition_surf = pygame.Surface(self.game.window.display.get_size())
+            transition_surf.set_colorkey((255, 255, 255))
+            pygame.draw.circle(transition_surf, (255, 255, 255), (self.game.window.display.get_width() // 2, self.game.window.display.get_height() // 2), (abs(self.game.world.transition) * 12))
+            surf.blit(transition_surf, (0, 0))
+        
+        
             
         
         

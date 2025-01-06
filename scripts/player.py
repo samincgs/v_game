@@ -68,14 +68,14 @@ class Player(Entity):
     def update(self, dt):
         self.frame_movement = self.velocity.copy()
         
+        
         r = super().update(dt)
         self.air_timer += dt
         self.dash_timer = max(0, self.dash_timer - dt)
         
-        
-        if self.air_timer > 3:
-            print('boop')
-            self.game.world.reset_level()
+        if self.air_timer > 4 and self.pos[1] > 700:
+            self.game.world.transition = 20
+            self.dead = True
         
         
         if self.dashes < self.max_dashes:

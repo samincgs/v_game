@@ -55,10 +55,10 @@ class GUI:
     def render_minimap(self, surf, assets):
          
         dark_surf = pygame.Surface(self.game.world.minimap.map_surf.get_size())
-        dark_surf.fill((10, 255, 180)) 
+        dark_surf.fill((30, 30, 40)) 
         
         # minimap
-        surf.blit(dark_surf, (323, 2), special_flags=pygame.BLEND_RGBA_SUB) # fix the blending and make it transparent
+        surf.blit(dark_surf, (323, 2)) # fix the blending and make it transparent
         surf.blit(self.game.world.minimap.map_surf, (323, 2))
         surf.blit(assets.misc['minimap'], (317, 0))
     

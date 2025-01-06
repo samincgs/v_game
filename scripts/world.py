@@ -32,16 +32,28 @@ class World:
         self.transition = 0
     
     def reset_level(self):
+        self.entities = Entities(self.game)
+        self.player = self.entities.player
+        self.camera.set_tracked_entity(self.player)
+        self.camera.focus()
         self.master_clock = 0
         self.tilemap.load_map('data/maps/' + self.map_area + '.json')
-        self.player.pos = [200, 120]
-        self.player.air_timer = 0
-        self.camera.focus()
         self.particle_manager = ParticleManager()
-    
+        self.spark_manager = SparkManager()
+        self.projectile_manager = ProjectileManager()
+        self.inventory_menu = InventoryMenu(self.game, self.player.inventory)
+        
+        
     def update(self):
         dt = self.game.window.dt
         self.master_clock += dt
+        
+        if self.transition:
+            self.transition = max(self.transition - dt * 45, -20)
+        if self.transition < 0:
+            self.reset_level()
+        if self.transition == -20:
+            self.transition = 0
         
         self.camera.update()
         self.entities.update(dt)
