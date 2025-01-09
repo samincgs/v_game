@@ -43,15 +43,15 @@ class Player(Entity):
             
     def jump(self):
         if self.jumps:
-            self.velocity[1] = -300
+            self.velocity[1] = -300 
             self.jumps -= 1
     
     def dash(self):
         if not self.dash_timer and self.dashes > 0:
             self.dashes -= 1
             self.dash_timer = 0.2
-            self.velocity[0] = math.cos(self.aim_angle) * 450
-            self.velocity[1] = math.sin(self.aim_angle) * 450
+            self.velocity[0] = math.cos(self.aim_angle) * 450 
+            self.velocity[1] = math.sin(self.aim_angle) * 450 
             for i in range(12):
                 self.game.world.spark_manager.sparks.append(CurvedSpark(self.center.copy(), math.pi + self.aim_angle + random.uniform(-math.pi / 6, math.pi / 6), random.randint(30,80) / 10, random.randint(-10, 10) / 100, scale=2, decay_rate=random.randint(40, 70) / 100))
             
@@ -68,15 +68,13 @@ class Player(Entity):
     def update(self, dt):
         self.frame_movement = self.velocity.copy()
         
-        
         r = super().update(dt)
         self.air_timer += dt
         self.dash_timer = max(0, self.dash_timer - dt)
-        
+    
         if self.air_timer > 4 and self.pos[1] > 700:
             self.game.world.transition = 20
             self.dead = True
-        
         
         if self.dashes < self.max_dashes:
             self.dash_charge += dt

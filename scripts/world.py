@@ -1,3 +1,5 @@
+import pygame
+
 from .tilemap import Tilemap
 from .camera import Camera
 from .entities import Entities
@@ -30,6 +32,8 @@ class World:
         
         self.master_clock = 0
         self.transition = 0
+        
+        self.portal_rect = pygame.Rect(*self.tilemap.extract_offgrid('portal'), 9, 16)
     
     def reset_level(self):
         self.entities = Entities(self.game)
@@ -37,11 +41,13 @@ class World:
         self.camera.set_tracked_entity(self.player)
         self.camera.focus()
         self.master_clock = 0
+        self.tilemap = Tilemap(self.game, tile_size=config['window']['tile_size'])
         self.tilemap.load_map('data/maps/' + self.map_area + '.json')
         self.particle_manager = ParticleManager()
         self.spark_manager = SparkManager()
         self.projectile_manager = ProjectileManager()
         self.inventory_menu = InventoryMenu(self.game, self.player.inventory)
+        self.minimap = Minimap(self.game, tile_size=config['window']['tile_size'])
         
         
     def update(self):
@@ -61,6 +67,11 @@ class World:
         self.particle_manager.update(dt)
         self.spark_manager.update(dt)
         self.projectile_manager.update(dt)
+        
+        if self.player.rect.colliderect(self.portal_rect):
+            self.transition = 20
+            self.map_area = 'intro_2'
+            self.reset_level()
                 
     def render(self, surf):
         offset = self.camera.pos
