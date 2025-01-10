@@ -59,6 +59,11 @@ class Entity:
         self.dead = True
         size = 4
         
+        for y in range(size + 1):
+            for x in range(size + 1):
+                pass
+                # clip(self.img, )
+        
             
         for item_drop in self.drops:
             self.game.world.entities.drop_item(self.center.copy(), (1, 1), item_drop, velocity=(random.randint(0, 300) - 150, random.randint(0, 20) - 200))

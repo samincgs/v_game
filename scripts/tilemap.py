@@ -20,7 +20,6 @@ class Tilemap:
         for rect in obj_list:
             if obj.colliderect(rect):
                 collision_list.append(rect)
-        
         return collision_list
     
     def get_nearby_rects(self, pos):

@@ -29,12 +29,14 @@ class Entities:
     
     def spawner(self):
         if random.randint(1, self.config['bat']['spawn_rate']) == 1:
+            
             spawn_point = (random.randint(-500, -200), random.randint(-100, 100))
             for i in range(3):
                 self.entities.append(Bat(self.game, spawn_point, self.config['bat']['size']))
     
     def update(self, dt):
         self.spawner()
+        
         
         for entity in self.entities.copy():
             kill = entity.update(dt)

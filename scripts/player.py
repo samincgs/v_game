@@ -138,7 +138,6 @@ class Player(Entity):
         # item pickup
         for entity in self.game.world.entities.entities:
             if entity.type == 'item' and self.rect.colliderect(entity.rect):
-                print('collided')
                 entity.dead = True
                 self.pickup_item(entity.item_data)
                 
