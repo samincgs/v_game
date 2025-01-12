@@ -1,10 +1,8 @@
 import random
-
 from .config import config
 from .player import Player
 from .enemy import Bat
 from .weapon import Weapon
-from .item import Item
 from .itemdrop import Itemdrop
 
 class Entities:
@@ -16,8 +14,9 @@ class Entities:
         
         # default player items
         self.entities.append(Player(game, (200, 90), self.config['player']['size'], 'player'))
-        self.player.inventory.add_item(Weapon(game, 'revolver', self.player, tags=['active']), 'weapons')
         self.player.inventory.add_item(Weapon(game, 'rifle', self.player, tags=['active']), 'weapons')
+        # self.player.inventory.add_item(Weapon(game, 'rifle', self.player, tags=['active']), 'weapons')
+        self.drop_item((300, 100), (1, 1), Weapon(game, 'revolver', None), [0, 160])
 
         
     @property

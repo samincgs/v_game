@@ -1,0 +1,10 @@
+{
+  "door_1": {
+    "target": "intro_2",
+    "current_world": "intro_1"
+  },
+  "door_2": {
+    "target": "intro_1",
+    "current_world": "intro_2"
+  }
+}

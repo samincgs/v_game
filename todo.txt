@@ -2,6 +2,8 @@
 - add decor/background tiles
 - add shopkeeper
 - add knife/swords
+- add rocks
+- add bush
 
 # Game/Coding
 - Create minimap

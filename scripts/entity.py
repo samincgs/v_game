@@ -59,10 +59,7 @@ class Entity:
         self.dead = True
         size = 4
         
-        for y in range(size + 1):
-            for x in range(size + 1):
-                pass
-                # clip(self.img, )
+        pass
         
             
         for item_drop in self.drops:

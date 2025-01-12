@@ -34,9 +34,9 @@ class GUI:
           
         # skills
         skill_offset = 20
-        for i in range(1):
+        for i in range(2):
             surf.blit(assets.misc['skill_holder'], (skill_offset, surf.get_height() - assets.misc['skill_holder'].get_height()))
-            skill_offset += assets.misc['skill_holder'].get_width()
+            skill_offset += assets.misc['skill_holder'].get_width() - 7
         
         
         dash_img = assets.misc['dash'].copy()

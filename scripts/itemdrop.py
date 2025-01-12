@@ -11,7 +11,6 @@ class Itemdrop(Entity):
         self.item_data = item_data
         self.velocity = list(velocity)
         
-        
         self.set_action(self.item_data.name)
         self.size = (self.img.get_width(), self.img.get_height() - 1)
         

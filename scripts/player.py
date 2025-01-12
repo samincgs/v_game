@@ -34,7 +34,8 @@ class Player(Entity):
     
     def pickup_item(self, item):
         item.owner = self
-        self.inventory.add_item(item, 'items')
+        item_type = 'weapons' if 'weapon' in item.tags else 'items'
+        self.inventory.add_item(item, item_type)
                    
     def slot_weapon(self, direction):
         active_weapons = self.inventory.get_active_weapons()
@@ -137,9 +138,10 @@ class Player(Entity):
             
         # item pickup
         for entity in self.game.world.entities.entities:
-            if entity.type == 'item' and self.rect.colliderect(entity.rect):
-                entity.dead = True
-                self.pickup_item(entity.item_data)
+            if self.rect.colliderect(entity.rect):
+                if entity.type == 'item':
+                    entity.dead = True
+                    self.pickup_item(entity.item_data)
                 
                 
         # weapon

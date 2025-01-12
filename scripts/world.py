@@ -33,15 +33,15 @@ class World:
         self.master_clock = 0
         self.transition = 0
         
-        self.portal_rect = pygame.Rect(*self.tilemap.extract_offgrid('portal'), 9, 16)
-        
-        self.portal_collided = False
-    
-    def reset_level(self):
-        self.entities = Entities(self.game)
-        self.player = self.entities.player
-        self.camera.set_tracked_entity(self.player)
+    def reset_level(self, dead=False):
+        if dead:
+            self.entities = Entities(self.game)
+            self.player = self.entities.player
+            self.camera.set_tracked_entity(self.player)
+            self.reset = False
+            
         self.master_clock = 0
+        self.portal_collided = False
         self.tilemap = Tilemap(self.game, tile_size=config['window']['tile_size'])
         self.tilemap.load_map('data/maps/' + self.map_area + '.json')
         self.particle_manager = ParticleManager()
@@ -49,6 +49,7 @@ class World:
         self.projectile_manager = ProjectileManager()
         self.inventory_menu = InventoryMenu(self.game, self.player.inventory)
         self.minimap = Minimap(self.game, tile_size=config['window']['tile_size'])
+        self.player.pos = list((200, 90))
         self.camera.focus()
         
         
@@ -58,26 +59,18 @@ class World:
         
         if self.transition:
             self.transition = max(self.transition - dt * 45, -20)
-            if self.transition < -5:
-                self.reset_level()
+            if self.transition < -10:
+                self.reset_level(dead=self.player.dead)
             if self.transition == -20:
                 self.transition = 0
             
-        
         self.camera.update()
         self.entities.update(dt)
         self.minimap.update()
         self.particle_manager.update(dt)
         self.spark_manager.update(dt)
         self.projectile_manager.update(dt)
-        
-        
-        if self.player.rect.colliderect(self.portal_rect) and not self.portal_collided:
-            self.portal_collided = True
-            self.transition = 20
-            self.map_area = 'intro_2'
             
-                
     def render(self, surf):
         offset = self.camera.pos
         self.tilemap.render(surf, offset=offset)
