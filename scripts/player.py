@@ -6,6 +6,7 @@ from .inventory import Inventory
 from .utils import normalize
 from .spark import CurvedSpark
 
+
 class Player(Entity):
     def __init__(self, game, pos, size, e_type):
         super().__init__(game, pos, size, e_type)
@@ -72,10 +73,10 @@ class Player(Entity):
         r = super().update(dt)
         self.air_timer += dt
         self.dash_timer = max(0, self.dash_timer - dt)
-    
-        if self.air_timer > 4 and self.pos[1] > 700:
-            self.game.world.transition = 20
-            self.dead = True
+      
+        # if self.air_timer > 4 and self.pos[1] > 700:
+        #     self.game.world.transition = 20
+        #     self.dead = True
         
         if self.dashes < self.max_dashes:
             self.dash_charge += dt
@@ -142,7 +143,8 @@ class Player(Entity):
                 if entity.type == 'item':
                     entity.dead = True
                     self.pickup_item(entity.item_data)
-                
+                    self.game.world.item_notifications.add_item_notif(entity.item_data)
+                    
                 
         # weapon
         angle = math.atan2(self.game.input.mpos[1] - self.center[1] + self.game.world.camera.pos[1], self.game.input.mpos[0] - self.center[0] + self.game.world.camera.pos[0])

@@ -73,7 +73,7 @@ class InventoryMenu:
         
         surf.blit(img, loc)
         self.game.assets.fonts['small_white'].render(surf, name, (loc[0] + img.get_width() + 5, loc[1])) # name
-        self.game.assets.fonts['small_white'].render(surf, desc, (loc[0], loc[1] + 20)) # description
+        self.game.assets.fonts['small_white'].render(surf, desc, (loc[0], loc[1] + 30)) # description
     
     
     def update(self):
@@ -112,7 +112,7 @@ class InventoryMenu:
     def render(self, surf):
         self.draw_ui(surf)
         if self.info:
-            self.draw_info(self.info, surf, (self.base_pos[0] + 110, self.base_pos[1]))
+            self.draw_info(self.info, surf, (self.base_pos[0] + 110, self.base_pos[1] + 10))
             
             
         

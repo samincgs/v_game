@@ -5,16 +5,17 @@
 - add rocks
 - add bush
 
+
 # Game/Coding
-- Create minimap
+- fix enemy chance rate and spawn location
 - create skills (maybe?)
 - add rings (maybe?)
 - add death particles
-- add bat goo on floor & player dmg if stepped on (maybe?)
-- add poison effect when player steps on goo  (maybe?) 
-- add poison indicator in gui (maybe?)
 - add a shopkeeper that sells weapons/items (maybe?)
 - add leaves falling from trees (maybe?)
 - add alpha to guns in ui to indicate reload delay (maybe?)
+- fix bat ai
+- create destructables (crates, vases(maybe?))
+- add item notification on pickup
 
 # Bugs

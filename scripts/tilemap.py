@@ -1,8 +1,9 @@
 import pygame
 import json
 
-TILE_COMP = {
-    "portal": ('structures', 2)
+OFFGRID_VARIANTS = {
+    'destructables': ['decor', (0, 1)],
+    'trees': ['foliage', (0, 1)]
 }
 
 class Tilemap:
@@ -48,9 +49,6 @@ class Tilemap:
                 if str_pos in self.tilemap[layer]:
                     return True
         
-        
-    
-     
     def tile_collide(self, pos):
         tile_pos = (int(pos[0] // self.tile_size), int(pos[1] // self.tile_size))
         tile_loc = str(tile_pos[0]) + ';' + str(tile_pos[1])
@@ -59,15 +57,17 @@ class Tilemap:
             if tile_loc in self.tilemap[layer]:
                 # if self.tilemap[layer][tile_loc]['type'] not in self.non_collideables: # for 
                 return True
-            
     
-    def extract_offgrid(self, tile_id):
-        for entity in self.offgrid_tiles:
-            for tile in self.offgrid_tiles[entity]:
-                lookup_tile = TILE_COMP[tile_id]
-                if tile['type'] == lookup_tile[0] and tile['variant'] == lookup_tile[1]:
-                    return tile['pos']
-       
+    def extract_offgrid(self, extract_type):
+        extract_list = []
+        for layer in self.offgrid_tiles:
+            for tile in self.offgrid_tiles[layer]:
+                if extract_type in OFFGRID_VARIANTS:
+                    extract_id_pair = OFFGRID_VARIANTS[extract_type]
+                    if tile['type'] in extract_id_pair[0] and tile['variant'] in extract_id_pair[1]:
+                        extract_list.append(tile)
+        return extract_list
+
     def load_map(self, path):
         f = open(path, 'r')
         map_data = json.load(fp=f)

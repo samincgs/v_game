@@ -132,7 +132,6 @@ class Entity:
             mask_img = temp_mask.to_surface(setcolor=(255, 255, 255, int(self.hurt * 255)), unsetcolor=(0, 0, 0, 0))
             surf.blit(mask_img, (self.pos[0] - offset[0], self.pos[1] - offset[1]))
         
-          
     def update(self, dt):
         if self.active_animation:
             self.active_animation.play(dt)

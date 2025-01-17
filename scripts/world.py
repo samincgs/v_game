@@ -9,6 +9,7 @@ from .particles import ParticleManager
 from .inventory_menu import InventoryMenu
 from .minimap import Minimap
 from .config import config
+from .item_notification import ItemNotification
 
 
 class World:
@@ -26,50 +27,25 @@ class World:
         self.particle_manager = ParticleManager()
         self.spark_manager = SparkManager()
         self.projectile_manager = ProjectileManager()
+        self.item_notifications = ItemNotification(game)
         
         self.inventory_menu = InventoryMenu(game, self.player.inventory)
         self.inventory_mode = False
         
         self.master_clock = 0
         self.transition = 0
-        
-    def reset_level(self, dead=False):
-        if dead:
-            self.entities = Entities(self.game)
-            self.player = self.entities.player
-            self.camera.set_tracked_entity(self.player)
-            self.reset = False
-            
-        self.master_clock = 0
-        self.portal_collided = False
-        self.tilemap = Tilemap(self.game, tile_size=config['window']['tile_size'])
-        self.tilemap.load_map('data/maps/' + self.map_area + '.json')
-        self.particle_manager = ParticleManager()
-        self.spark_manager = SparkManager()
-        self.projectile_manager = ProjectileManager()
-        self.inventory_menu = InventoryMenu(self.game, self.player.inventory)
-        self.minimap = Minimap(self.game, tile_size=config['window']['tile_size'])
-        self.player.pos = list((200, 90))
-        self.camera.focus()
-        
-        
+
     def update(self):
         dt = self.game.window.dt
         self.master_clock += dt
         
-        if self.transition:
-            self.transition = max(self.transition - dt * 45, -20)
-            if self.transition < -10:
-                self.reset_level(dead=self.player.dead)
-            if self.transition == -20:
-                self.transition = 0
-            
         self.camera.update()
         self.entities.update(dt)
         self.minimap.update()
         self.particle_manager.update(dt)
         self.spark_manager.update(dt)
         self.projectile_manager.update(dt)
+        self.item_notifications.update(dt)
             
     def render(self, surf):
         offset = self.camera.pos
@@ -78,7 +54,10 @@ class World:
         self.particle_manager.render(surf, offset=offset)
         self.spark_manager.render(surf, offset=offset)
         self.projectile_manager.render(surf, offset=offset)
-    
+        self.item_notifications.render(surf, offset=offset)
+        
+        # for tree in self.tilemap.extract_offgrid('trees'):
+        #     pygame.draw.rect(surf, (255, 0, 0), pygame.Rect(tree['pos'][0] - offset[0], tree['pos'][1] - offset[1], 57, 30))
         
         
             

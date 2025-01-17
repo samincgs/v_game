@@ -2,26 +2,26 @@
   "revolver": {
     "name": "Revolver",
     "type": "weapon",
-    "description": "A regular sidearm with decent accuracy."
+    "description": "A regular sidearm with decent accuracy"
   },
   "rifle": {
     "name": "KR-47",
     "type": "weapon",
-    "description": "A reliable, long-range rifle for precision shooting."
+    "description": "A reliable, long-range rifle for precision shooting"
   },
   "smg": {
     "name": "L70",
     "type": "weapon",
-    "description": "A compact smg with unmatched fire rate."
+    "description": "A compact smg with unmatched fire rate"
   },
   "wood": {
     "name": "Wood",
     "type": "item",
-    "description": "A versatile piece of lumber."
+    "description": "A versatile piece of lumber"
   },
   "bat_wing": {
     "name": "Bat Wing",
     "type": "item",
-    "description": "The wing of a poisonous creature."
+    "description": "The wing of a poisonous creature"
   }
 }

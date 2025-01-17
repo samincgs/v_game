@@ -22,7 +22,11 @@ class Animation:
     def __init__(self, animation_data):
         self.data = animation_data
         self.frame = 0
-        self.img = animation_data.images[0]
+        self.frame_index = 0
+    
+    @property
+    def img(self):
+        return self.data.images[self.frame_index]
     
     def play(self, dt):
         self.frame += dt * 60 * self.data.config['speed']
@@ -31,10 +35,8 @@ class Animation:
             if self.frame > self.data.duration:
                 self.frame -= self.data.duration
         
-        frame_index = int(self.frame / self.data.duration * len(self.data.config['frames']))
-        frame_index = min(frame_index, len(self.data.config['frames']) - 1)
-        self.img = self.data.images[frame_index]
-        
+        self.frame_index = int(self.frame / self.data.duration * len(self.data.config['frames']))
+        self.frame_index = min(self.frame_index, len(self.data.config['frames']) - 1)
         
 class AnimationManager:
     def __init__(self):

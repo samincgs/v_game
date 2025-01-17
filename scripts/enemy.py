@@ -27,8 +27,8 @@ class Bat(Entity):
 
         player = self.game.world.player
 
-        self.velocity[0] = normalize(self.velocity[0], 50 * dt)
-        self.velocity[1] = normalize(self.velocity[1], 50 * dt)
+        self.velocity[0] = normalize(self.velocity[0], 100 * dt)
+        self.velocity[1] = normalize(self.velocity[1], 100 * dt)
 
         self.pos[0] += self.velocity[0]
         self.pos[1] += self.velocity[1]
@@ -60,8 +60,9 @@ class Bat(Entity):
             
         return kill
        
-
-        
+ENEMIES = {
+    'bat': Bat
+}      
         
         
         

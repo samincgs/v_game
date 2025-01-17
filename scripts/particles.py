@@ -102,7 +102,7 @@ class ParticleManager:
         self.particles.append(Particle(game, p_type, pos, movement, decay_rate, frame, custom_color, physics))
     
     def add_death_particle(self, game, img, pos, rot, rot_speed, velocity, duration=3, physics=None):
-        self.particles.append(DestructionParticle(game, img, pos, rot, rot_speed, velocity, duration, physics))
+        self.destruction_particles.append(DestructionParticle(game, img, pos, rot, rot_speed, velocity, duration, physics))
     
     def update(self, dt):
         for particle in self.destruction_particles.copy():
