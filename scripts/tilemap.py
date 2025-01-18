@@ -58,14 +58,16 @@ class Tilemap:
                 # if self.tilemap[layer][tile_loc]['type'] not in self.non_collideables: # for 
                 return True
     
-    def extract_offgrid(self, extract_type):
+    def extract_offgrid(self, extract_type, keep=True):
         extract_list = []
         for layer in self.offgrid_tiles:
-            for tile in self.offgrid_tiles[layer]:
+            for tile in self.offgrid_tiles[layer].copy():
                 if extract_type in OFFGRID_VARIANTS:
                     extract_id_pair = OFFGRID_VARIANTS[extract_type]
                     if tile['type'] in extract_id_pair[0] and tile['variant'] in extract_id_pair[1]:
                         extract_list.append(tile)
+                        if not keep:
+                            self.offgrid_tiles[layer].remove(tile)
         return extract_list
 
     def load_map(self, path):

@@ -4,18 +4,20 @@
 - add knife/swords
 - add rocks
 - add bush
+- fix leaf particles
 
 
 # Game/Coding
 - fix enemy chance rate and spawn location
+- fix knockback when bullet hits enemy
 - create skills (maybe?)
 - add rings (maybe?)
 - add death particles
 - add a shopkeeper that sells weapons/items (maybe?)
-- add leaves falling from trees (maybe?)
 - add alpha to guns in ui to indicate reload delay (maybe?)
 - fix bat ai
 - create destructables (crates, vases(maybe?))
 - add item notification on pickup
+- make inventory draggable
 
 # Bugs

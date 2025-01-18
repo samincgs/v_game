@@ -1,5 +1,6 @@
 import pygame
 import math
+import random
 
 from .utils import palette_swap
 
@@ -23,7 +24,9 @@ class Particle:
             abs_motion = abs(self.movement[1]) + abs(self.movement[0])
             if abs_motion > 12:
                 self.rotation += 20 * dt * abs_motion
-  
+        elif self.type == 'leaf':
+            self.pos[0] += math.sin(self.frame * 0.86) * 0.15
+            
         if not self.physics:
             self.pos[0] += self.movement[0] * dt
             self.pos[1] += self.movement[1] * dt

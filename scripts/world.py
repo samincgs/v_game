@@ -1,4 +1,5 @@
 import pygame
+import random
 
 from .tilemap import Tilemap
 from .camera import Camera
@@ -34,7 +35,13 @@ class World:
         
         self.master_clock = 0
         self.transition = 0
-
+        
+        self.leaf_rects = []
+        
+    
+    def env_particles(self):
+        pass
+    
     def update(self):
         dt = self.game.window.dt
         self.master_clock += dt
@@ -56,9 +63,15 @@ class World:
         self.projectile_manager.render(surf, offset=offset)
         self.item_notifications.render(surf, offset=offset)
         
-        # for tree in self.tilemap.extract_offgrid('trees'):
-        #     pygame.draw.rect(surf, (255, 0, 0), pygame.Rect(tree['pos'][0] - offset[0], tree['pos'][1] - offset[1], 57, 30))
+        # leaf particles
+        for tree in self.tilemap.extract_offgrid('trees'):
+            # if the tree is visible on the players screen
+            if (self.camera.pos[0] <=  tree['pos'][0] + self.game.assets.tiles['foliage'][0].get_width() <= (self.camera.pos[0] + surf.get_width())) or (self.camera.pos[0] <=  tree['pos'][0] <= (self.camera.pos[0] + surf.get_width())):
+                r = pygame.Rect(tree['pos'][0] + 9, tree['pos'][1] + 8, 44, 17)
+                if random.randint(0, 9999) < r.height:
+                    pos = [r.x + random.random() * r.width, r.y + random.random() * r.height]
+                    self.particle_manager.add_particle(self.game, 'leaf', pos, [random.randint(-30, -15), random.randint(25, 35)], 0.8, random.randint(0, 2), (random.randint(100, 150), random.randint(80, 130), random.randint(10, 50)))
         
         
-            
+             
         
