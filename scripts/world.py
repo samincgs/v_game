@@ -11,6 +11,7 @@ from .inventory_menu import InventoryMenu
 from .minimap import Minimap
 from .config import config
 from .item_notification import ItemNotification
+from .crate import Crate
 
 
 class World:
@@ -38,10 +39,13 @@ class World:
         
         self.leaf_rects = []
         
+        for crate in self.tilemap.extract('destructables', keep=False):
+            self.entities.entities.append(Crate(game, crate['pos'], [1, 1]))
+        
     
     def environment_particles(self, surf):
         # leaf particles
-        for tree in self.tilemap.extract_offgrid('trees'):
+        for tree in self.tilemap.extract('trees'):
             # if the tree is visible on the players screen
             if (self.camera.pos[0] <=  tree['pos'][0] + self.game.assets.tiles['foliage'][0].get_width() <= (self.camera.pos[0] + surf.get_width())) or (self.camera.pos[0] <=  tree['pos'][0] <= (self.camera.pos[0] + surf.get_width())):
                 r = pygame.Rect(tree['pos'][0] + 9, tree['pos'][1] + 8, 44, 17)

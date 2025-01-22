@@ -2,7 +2,7 @@
   "revolver": {
     "shape": ["line", [255, 255, 255], 5, 2],
     "power": 13,
-    "knockback": 5
+    "knockback": 7
   },
   "rifle": {
     "shape": ["line", [255, 255, 255], 5, 2],
