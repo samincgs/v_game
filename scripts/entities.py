@@ -3,6 +3,7 @@ from .config import config
 from .player import Player
 from .enemy import ENEMIES
 from .weapon import Weapon
+from .item import Item
 from .itemdrop import Itemdrop
 
 class Entities:
@@ -15,16 +16,18 @@ class Entities:
         # default player items
         self.entities.append(Player(game, (200, 90), self.config['player']['size'], 'player'))
         # self.player.inventory.add_item(Weapon(game, 'rifle', self.player, tags=['active']), 'weapons')
-        # self.player.inventory.add_item(Weapon(game, 'rifle', self.player, tags=['active']), 'weapons')
         self.drop_item((300, 100), (1, 1), Weapon(game, 'revolver', None), [0, 160])
+
 
         
     @property
     def player(self):
         return self.entities[0]
 
-    def drop_item(self, pos, size,item_data ,velocity):
-        self.entities.append(Itemdrop(self.game, pos, size, 'item', item_data, velocity))
+    def drop_item(self, pos, size, item_data, velocity):
+        self.entities.append(Itemdrop(self.game, pos, size, 'item', item_data))
+        self.entities[-1].velocity = list(velocity)
+        
     
     def spawner(self):
         

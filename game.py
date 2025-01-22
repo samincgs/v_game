@@ -12,7 +12,7 @@ class Game:
         self.renderer = Renderer(self)
         self.world = World(self)
         
-    def run(self): 
+    def run(self):
         while True: 
             self.input.update()
             self.world.update()

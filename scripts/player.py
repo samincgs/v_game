@@ -69,7 +69,7 @@ class Player(Entity):
         
     def update(self, dt):
         self.frame_movement = self.velocity.copy()
-        
+    
         r = super().update(dt)
         self.air_timer += dt
         self.dash_timer = max(0, self.dash_timer - dt)
@@ -78,6 +78,7 @@ class Player(Entity):
         #     self.game.world.transition = 20
         #     self.dead = True
         
+    
         if self.dashes < self.max_dashes:
             self.dash_charge += dt
             if self.dash_charge > self.dash_charge_rate:
@@ -135,8 +136,7 @@ class Player(Entity):
             self.set_action('run')
         else:
             self.set_action('idle')
-            
-            
+                        
         # item pickup
         for entity in self.game.world.entities.entities:
             if self.rect.colliderect(entity.rect):

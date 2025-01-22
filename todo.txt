@@ -4,7 +4,7 @@
 - add knife/swords
 - add rocks
 - add bush
-- fix leaf particles
+- design item notification
 
 
 # Game/Coding
