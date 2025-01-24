@@ -2,7 +2,7 @@ import pygame
 import math
 import random
 
-from .utils import palette_swap
+from .utils import palette_swap, normalize
 
 class Particle:
     def __init__(self, game, p_type, pos, movement, decay_rate=0.1, frame=0, custom_color=None, physics=None):
@@ -17,6 +17,8 @@ class Particle:
         self.spawn = True
         self.rotation = 0
         
+        # self.wind_force = 0
+        
     def update(self, dt):
         
         if self.type in ['shells', 'mag']:
@@ -26,6 +28,12 @@ class Particle:
                 self.rotation += 20 * dt * abs_motion
         elif self.type == 'leaf':
             self.pos[0] += math.sin(self.frame * 0.76) * 0.13
+            # if not self.wind_force:
+            #     if random.randint(0, 999) == 1:
+            #         self.wind_force = 0.6
+            # else:
+            #     self.pos[0] -= self.wind_force * dt
+            
             
         if not self.physics:
             self.pos[0] += self.movement[0] * dt
@@ -67,7 +75,7 @@ class Particle:
         
 
 class DestructionParticle:
-    def __init__(self, game, img, pos, rot, rot_speed, velocity, duration=3, physics=None):
+    def __init__(self, game, img, pos, rot, rot_speed, decay_rate, velocity, duration=3, physics=None):
         self.game = game
         self.img = img
         self.pos = list(pos)
@@ -77,24 +85,27 @@ class DestructionParticle:
         self.physics = physics
         self.rotation = 0
         self.duration = duration
+        self.decay_rate = decay_rate
         
     def update(self, dt):
         
-        self.duration -= dt
-        
         self.pos[0] += self.velocity[0] * dt
         self.pos[1] += self.velocity[1] * dt
-        self.velocity[1] += 200 * dt
-        self.rotation += self.rotation_speed * dt
-    
+        
+        self.velocity[1] = min(300, self.velocity[1] + dt * 500)
+        
+        self.rotation += self.rotation_speed * dt 
+
+        self.duration -= max(self.decay_rate * dt, 0)
         if self.duration <= 0:
-            return not self.duration
+            return self.duration
 
     
     def render(self, surf, offset=(0, 0)):
+        img = self.img.copy()
         if self.rotation:
-            self.img = pygame.transform.rotate(self.img, self.rotation)
-        surf.blit(self.img, (self.pos[0] - self.img.get_width() // 2 - offset[0], self.pos[1] - self.img.get_height() // 2 - offset[1]))
+            img = pygame.transform.rotate(self.img, self.rotation)
+        surf.blit(img, (self.pos[0] - self.img.get_width() // 2 - offset[0], self.pos[1] - self.img.get_height() // 2 - offset[1]))
              
 class ParticleManager:
     def __init__(self):
@@ -104,8 +115,8 @@ class ParticleManager:
     def add_particle(self, game, p_type, pos, movement, decay_rate=0.1, frame=0, custom_color=None, physics=None):
         self.particles.append(Particle(game, p_type, pos, movement, decay_rate, frame, custom_color, physics))
     
-    def add_death_particle(self, game, img, pos, rot, rot_speed, velocity, duration=3, physics=None):
-        self.destruction_particles.append(DestructionParticle(game, img, pos, rot, rot_speed, velocity, duration, physics))
+    def add_death_particle(self, game, img, pos, rot, rot_speed, decay_rate, velocity, duration=3, physics=None):
+        self.destruction_particles.append(DestructionParticle(game, img, pos, rot, rot_speed, decay_rate, velocity, duration, physics))
     
     def update(self, dt):
         for particle in self.destruction_particles.copy():

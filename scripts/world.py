@@ -11,7 +11,6 @@ from .inventory_menu import InventoryMenu
 from .minimap import Minimap
 from .config import config
 from .item_notification import ItemNotification
-from .crate import Crate
 
 
 class World:
@@ -37,10 +36,8 @@ class World:
         self.master_clock = 0
         self.transition = 0
         
-        self.leaf_rects = []
         
-        for crate in self.tilemap.extract('destructables', keep=False):
-            self.entities.entities.append(Crate(game, crate['pos'], [1, 1]))
+        self.tilemap.load_entities(self.entities)
         
     
     def environment_particles(self, surf):

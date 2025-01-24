@@ -29,7 +29,7 @@ class Weapon(Item):
         self.flip = False
         self.last_attack = 0
         self.last_reload = 0
-    
+            
     @property
     def img(self):
         img = self.game.assets.weapons[self.name].copy()

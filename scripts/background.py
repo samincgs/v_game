@@ -11,10 +11,11 @@ class Background:
         self.speed = 30
         
     def update(self):
-        self.pos = (self.pos + self.speed * self.game.window.dt) % (self.thickness * 2)
+        self.pos += (self.speed * self.game.window.dt)
+        self.pos = self.pos % (self.thickness * 2)
     
     def render(self, surf):
-        angle = math.sin(self.angle) / math.cos(self.angle)
+        angle = math.sin(self.angle) / math.cos(self.angle)  
         offset = angle * surf.get_width()
         for i in range(15):
             base_y = i * (self.thickness * 2) + self.pos

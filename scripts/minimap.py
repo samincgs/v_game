@@ -58,6 +58,8 @@ class Minimap:
                 c = (255, 255, 255)
             elif entity.type == 'item':
                 c = (156, 216, 252)
+            elif entity.type == 'crate':
+                c = (64, 209, 25)
             else:
                 c = (255, 0, 0)
             self.map_surf.set_at(p, c)

@@ -27,12 +27,12 @@ class Bat(Entity):
 
         player = self.game.world.player
 
-        self.velocity[0] = normalize(self.velocity[0], 100 * dt)
-        self.velocity[1] = normalize(self.velocity[1], 100 * dt)
+        self.pos[0] += self.velocity[0] * dt
+        self.pos[1] += self.velocity[1] * dt
 
-        self.pos[0] += self.velocity[0]
-        self.pos[1] += self.velocity[1]
-        
+        self.velocity[0] = normalize(self.velocity[0], 150 * dt)
+        self.velocity[1] = normalize(self.velocity[1], 150 * dt)
+    
         self.target_offset_angle += 0.5 * dt 
         if self.target_offset_angle > 2 *  math.pi:  
             self.target_offset_angle = random.uniform(math.pi, 2 * math.pi) 

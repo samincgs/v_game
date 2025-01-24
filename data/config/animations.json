@@ -55,6 +55,13 @@
     "offset": [0, 0],
     "outline": null
   },
+  "item_iron": {
+    "frames": [5],
+    "loop": false,
+    "speed": 1.0,
+    "offset": [0, 0],
+    "outline": null
+  },
   "item_bat_wing": {
     "frames": [5],
     "loop": false,
@@ -73,7 +80,7 @@
     "frames": [5],
     "loop": false,
     "speed": 1.0,
-    "offset": [0, 0],
+    "offset": [0, -2],
     "outline": null
   }
 }

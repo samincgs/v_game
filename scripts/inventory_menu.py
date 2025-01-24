@@ -1,8 +1,9 @@
 import pygame
 
 from scripts.weapon import Weapon
-
 from .config import config
+from .utils import load_image
+
 
 
 class InventoryMenu:
@@ -20,7 +21,19 @@ class InventoryMenu:
         self.weapon_boxes = [] # 
         self.info = [] # [[item name (from config), item description, weapon/item name (weapon type), item_type]]
         
+        self.images = {}
         
+    
+    
+    def get_image(self, type):
+        if 'item_' + type in self.images:
+            return self.images['item_' + type]
+        img = load_image('data/images/animations/item_' + type + '/0.png')
+        self.images['item_' + type] = img
+        return self.images['item_' + type]
+        
+        
+    
     def draw_weapon_boxes(self, surf):
         surf.blit(self.game.assets.misc['weapons_logo'], (self.base_pos[0] - self.game.assets.misc['weapons_logo'].get_width() + 3, self.base_pos[1]))
 
@@ -31,7 +44,7 @@ class InventoryMenu:
             color = (154, 170, 186)
             for ix, weapon in enumerate(self.inventory.get_active_weapons()):
                 if ix == i:
-                    weapon_img = self.game.assets.weapons[weapon.name]
+                    weapon_img = self.get_image(weapon.name)
                     color = (255, 255, 255)
                     surf.blit(weapon_img, (rect.centerx - weapon_img.get_width() // 2 - 2, rect.centery - weapon_img.get_height() // 2 ))
                     self.weapon_boxes.append([rect, weapon])
@@ -52,7 +65,7 @@ class InventoryMenu:
                 for ix, item in enumerate(self.inventory.get_items()):
                     if ix == j + i * self.cols:
                         color = (255, 255, 255)
-                        item_img = self.game.assets.weapons[item.name] if item.type == 'weapon' else self.game.assets.items[item.name]
+                        item_img = self.get_image(item.name)
                         surf.blit(item_img, (rect.centerx - item_img.get_width() // 2, rect.centery - item_img.get_height() // 2))
                         if item.amount > 1:
                             self.game.assets.fonts['small_white'].render(surf, str(item.amount), (rect.centerx + 3.5, rect.centery + 5)) # name
@@ -68,18 +81,19 @@ class InventoryMenu:
         self.draw_item_boxes(surf)
                     
     def draw_info(self, info, surf, loc):
-        img = self.game.assets.weapons[info.name] if isinstance(info, Weapon) else self.game.assets.items[info.name]
-        name, desc = self.config[info.name]['name'], self.config[info.name]['description']
+        # img = self.game.assets.weapons[info.name] if isinstance(info, Weapon) else self.game.assets.items[info.name]
+        name, desc = info.name, self.config[info.name]['description']
         
+        img = self.get_image(name)
         surf.blit(img, loc)
-        self.game.assets.fonts['small_white'].render(surf, name, (loc[0] + img.get_width() + 5, loc[1])) # name
+        self.game.assets.fonts['small_white'].render(surf, name.replace('_', ' '), (loc[0] + img.get_width() + 5, loc[1])) # name
         self.game.assets.fonts['small_white'].render(surf, desc, (loc[0], loc[1] + 30)) # description
     
     
     def update(self):
         self.info = []
         clicked = False
-          
+        
         for box in self.weapon_boxes:
             if box[0].collidepoint(self.game.input.mpos):
                 self.info = box[1] 
@@ -101,14 +115,7 @@ class InventoryMenu:
                             if weapon.name == self.info.name:
                                 weapon.add_active()
                                 return
-                        
- 
-                                
-                    
-                            
-        
-    
-                           
+     
     def render(self, surf):
         self.draw_ui(surf)
         if self.info:

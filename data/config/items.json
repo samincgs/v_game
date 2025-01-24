@@ -19,6 +19,11 @@
     "type": "item",
     "description": "A versatile piece of lumber"
   },
+  "iron": {
+    "name": "Iron",
+    "type": "item",
+    "description": "A hard metal forged from underneath"
+  },
   "bat_wing": {
     "name": "Bat Wing",
     "type": "item",

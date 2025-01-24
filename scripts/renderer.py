@@ -7,7 +7,7 @@ class Renderer:
     def __init__(self, game):
         self.game = game
         
-        self.background = Background(game)
+        # self.background = Background(game)
         self.gui = GUI(game)
 
     def render(self):

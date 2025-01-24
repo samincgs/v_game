@@ -1,6 +1,8 @@
 import pygame
 import json
 
+from scripts.crate import Crate
+
 OFFGRID_VARIANTS = {
     'destructables': ['decor', (0, 1)],
     'trees': ['foliage', (0, 1)]
@@ -16,7 +18,7 @@ class Tilemap:
         
         # self.non_collideables = {'grass'}
         
-    
+        
     def collision_test(self, obj, obj_list):
         collision_list = []
         for rect in obj_list:
@@ -72,6 +74,10 @@ class Tilemap:
                                 self.offgrid_tiles[layer].remove(tile)
         return extract_list
 
+    def load_entities(self, em):
+        for crate in self.extract('destructables', keep=False):
+            em.entities.append(Crate(self.game, crate['pos'], [1, 1]))
+    
     def load_map(self, path):
         f = open(path, 'r')
         map_data = json.load(fp=f)

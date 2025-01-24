@@ -57,13 +57,18 @@ class Entity:
     def die(self): # TODO: Finish and add death particles
         
         self.dead = True
+        
         size = 4
+        entity_img = self.img.copy()
         
-        pass
+        for y in range(entity_img.get_height() // size + 1):
+            for x in range(entity_img.get_width() // size + 1):
+                particle_img = clip(entity_img, x * size, y * size, size, size)
+                self.game.world.particle_manager.add_death_particle(self.game, particle_img, self.center.copy(), 0, random.randint(300, 500), 0.9, [random.randint(0, 150) - 75, random.randint(0, 100) - 125], duration=2)
         
-            
+
         for item_drop in self.drops:
-            self.game.world.entities.drop_item(self.center.copy(), (1, 1), item_drop, velocity=(random.randint(0, 300) - 150, random.randint(0, 20) - 200))
+            self.game.world.entities.drop_item(self.pos.copy(), (1, 1), item_drop, velocity=(random.randint(0, 320) - 150, random.randint(0, 20) - 200))
 
     def get_angle(self, target):
         if isinstance(target, Entity):

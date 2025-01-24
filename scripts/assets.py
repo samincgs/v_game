@@ -22,7 +22,7 @@ class Assets:
         self.weapons = self.load_dir('weapons')
         self.particles = self.load_dir_list('particles')
         self.tiles = self.load_dir_list('tiles')
-        self.items = self.load_dir('items')
+        # self.items = self.load_dir('items')
         
         self.fonts = {font_name: Font(font[0], font[1]) for font_name, font in FONTS.items()}
     
