@@ -14,5 +14,5 @@ class Crate(PhysicsEntity):
         
         self.size = (self.img.get_width(), self.img.get_height())
         
-        self.drops = [create_item(game, random.choice(['wood', 'wood', 'iron']), self) for i in range(random.randint(0, 2))]
+        self.drops = [create_item(game, random.choice(['wood', 'wood', 'iron', 'apple']), self) for i in range(random.randint(0, 2))]
         

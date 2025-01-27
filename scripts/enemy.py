@@ -56,7 +56,7 @@ class Bat(Entity):
         if distance_to_target <= 150:
             if self.attack_timer > 6:
                 self.attack_timer = 0
-                self.game.world.projectile_manager.add_projectile(self.game, self.center, attack_angle, 140, 'bat_goo')
+                self.game.world.projectile_manager.add_projectile(self.game, owner=self, pos=self.center, rot=attack_angle, speed=140, p_type='bat_goo')
             
         return kill
        

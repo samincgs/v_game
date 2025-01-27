@@ -32,8 +32,6 @@ class InventoryMenu:
         self.images['item_' + type] = img
         return self.images['item_' + type]
         
-        
-    
     def draw_weapon_boxes(self, surf):
         surf.blit(self.game.assets.misc['weapons_logo'], (self.base_pos[0] - self.game.assets.misc['weapons_logo'].get_width() + 3, self.base_pos[1]))
 
@@ -68,7 +66,7 @@ class InventoryMenu:
                         item_img = self.get_image(item.name)
                         surf.blit(item_img, (rect.centerx - item_img.get_width() // 2, rect.centery - item_img.get_height() // 2))
                         if item.amount > 1:
-                            self.game.assets.fonts['small_white'].render(surf, str(item.amount), (rect.centerx + 3.5, rect.centery + 5)) # name
+                            self.game.assets.fonts['small_white'].render(surf, str(item.amount), (rect.centerx + 5, rect.centery + 5)) # name
                             
                         self.item_boxes.append([rect, item])
                     
@@ -86,7 +84,7 @@ class InventoryMenu:
         
         img = self.get_image(name)
         surf.blit(img, loc)
-        self.game.assets.fonts['small_white'].render(surf, name.replace('_', ' '), (loc[0] + img.get_width() + 5, loc[1])) # name
+        self.game.assets.fonts['small_white'].render(surf, name.replace('_', ' ').title(), (loc[0] + img.get_width() + 5, loc[1])) # name
         self.game.assets.fonts['small_white'].render(surf, desc, (loc[0], loc[1] + 30)) # description
     
     

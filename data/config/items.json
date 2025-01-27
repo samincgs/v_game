@@ -28,5 +28,10 @@
     "name": "Bat Wing",
     "type": "item",
     "description": "The wing of a poisonous creature"
+  },
+  "apple": {
+    "name": "Apple",
+    "type": "item",
+    "description": "A fruit fallen from a flourishing tree"
   }
 }

@@ -1,11 +1,12 @@
 import pygame
 import json
 
-from scripts.crate import Crate
 
-OFFGRID_VARIANTS = {
+
+TILE_EXTRACTS = {
     'destructables': ['decor', (0, 1)],
-    'trees': ['foliage', (0, 1)]
+    'trees': ['foliage', (0, 1)],
+    'grass': ['grass', (0,)]
 }
 
 class Tilemap:
@@ -16,7 +17,7 @@ class Tilemap:
         self.tilemap = {} # { 0 : {'5;7' : {'type': 'grass', 'variant': 0, 'pos': [x, x]}}}
         self.offgrid_tiles = {} # {0: [{'type': 'grass', 'variant': 0, 'pos': [x, x]}]}
         
-        # self.non_collideables = {'grass'}
+        self.non_collideables = {'grass'}
         
         
     def collision_test(self, obj, obj_list):
@@ -35,8 +36,8 @@ class Tilemap:
             str_loc = str(tile_loc[0]) + ';' + str(tile_loc[1])
             for layer in sorted(self.tilemap):
                 if str_loc in self.tilemap[layer]:
-                    # if self.tilemap[layer][str_loc]['type'] not in self.non_collideables:
-                    rects.append(pygame.Rect(tile_loc[0] * self.tile_size, tile_loc[1] * self.tile_size, self.tile_size, self.tile_size))
+                    if self.tilemap[layer][str_loc]['type'] not in self.non_collideables:
+                        rects.append(pygame.Rect(tile_loc[0] * self.tile_size, tile_loc[1] * self.tile_size, self.tile_size, self.tile_size))
         return rects
 
     # gets position in tiles
@@ -58,25 +59,37 @@ class Tilemap:
         for layer in sorted([int(key) for key in self.tilemap.keys()]):
             layer = str(layer)
             if tile_loc in self.tilemap[layer]:
-                # if self.tilemap[layer][tile_loc]['type'] not in self.non_collideables: # for 
-                return True
+                if self.tilemap[layer][tile_loc]['type'] not in self.non_collideables: # for 
+                    return True
     
     def extract(self, extract_type, keep=True, offgrid=True):
         extract_list = []
         if offgrid:
             for layer in self.offgrid_tiles:
                 for tile in self.offgrid_tiles[layer].copy():
-                    if extract_type in OFFGRID_VARIANTS:
-                        extract_id_pair = OFFGRID_VARIANTS[extract_type]
+                    if extract_type in TILE_EXTRACTS:
+                        extract_id_pair = TILE_EXTRACTS[extract_type]
                         if tile['type'] in extract_id_pair[0] and tile['variant'] in extract_id_pair[1]:
                             extract_list.append(tile)
                             if not keep:
                                 self.offgrid_tiles[layer].remove(tile)
+        else:
+            for layer in self.tilemap:                        
+               for tile in self.tilemap[layer].copy():    
+                   data = self.tilemap[layer][tile]
+                   if extract_type in TILE_EXTRACTS:
+                       extract_id_pair = TILE_EXTRACTS[extract_type]
+                       if data['type'] in extract_id_pair[0] and data['variant'] in extract_id_pair[1]:
+                           extract_list.append(data.copy())
+                           extract_list[-1]['pos'] = extract_list[-1]['pos'].copy()
+                           extract_list[-1]['pos'][0] *= self.tile_size 
+                           extract_list[-1]['pos'][1] *= self.tile_size 
+                    
         return extract_list
 
-    def load_entities(self, em):
+    def load_destructables(self, em):
         for crate in self.extract('destructables', keep=False):
-            em.entities.append(Crate(self.game, crate['pos'], [1, 1]))
+            em.load_destructable(crate)
     
     def load_map(self, path):
         f = open(path, 'r')
@@ -186,6 +199,7 @@ class Tilemap:
                         img = self.game.assets.tiles[tile['type']][tile['variant']].copy()
                         img.set_alpha(100)
                         surf.blit(img, (tile['pos'][0] * self.tile_size - offset[0], tile['pos'][1] * self.tile_size - offset[1]))
+                        
                         
                         
         

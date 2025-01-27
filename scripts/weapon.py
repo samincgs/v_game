@@ -40,7 +40,7 @@ class Weapon(Item):
             curr_time = time.time()
             if curr_time - self.last_attack >= self.attack_rate:
                 self.ammo -= 1
-                self.game.world.projectile_manager.add_projectile(self.game, self.owner.center, math.radians(self.rotation), 300, self.name)
+                self.game.world.projectile_manager.add_projectile(self.game, self.owner.center, self.owner, math.radians(self.rotation), 300, self.name)
                 self.last_attack = curr_time
                                 
                 # TODO add sparks for gun shot

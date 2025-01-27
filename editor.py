@@ -20,7 +20,7 @@ class LevelEditor:
         pygame.display.set_caption('Level Editor')
         self.screen = pygame.display.set_mode((display_size[0] * display_scale, display_size[1] * display_scale))
         self.display = pygame.Surface(self.display_size)
-        self.clock = pygame.time.Clock()
+        self.clock = pygame.time.Clock() 
                 
         self.file_name = None
         

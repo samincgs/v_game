@@ -108,7 +108,8 @@ class DestructionParticle:
         surf.blit(img, (self.pos[0] - self.img.get_width() // 2 - offset[0], self.pos[1] - self.img.get_height() // 2 - offset[1]))
              
 class ParticleManager:
-    def __init__(self):
+    def __init__(self, game):
+        self.game = game
         self.particles = []
         self.destruction_particles = []
     
@@ -117,7 +118,18 @@ class ParticleManager:
     
     def add_death_particle(self, game, img, pos, rot, rot_speed, decay_rate, velocity, duration=3, physics=None):
         self.destruction_particles.append(DestructionParticle(game, img, pos, rot, rot_speed, decay_rate, velocity, duration, physics))
-    
+        
+    def environment_particles(self, surf):
+        # leaf particles
+        for tree in self.game.world.tilemap.extract('trees'):
+            # if the tree is visible on the players screen
+            if (self.game.world.camera.pos[0] <=  tree['pos'][0] + self.game.assets.tiles['foliage'][0].get_width() <= (self.game.world.camera.pos[0] + surf.get_width())) or (self.game.world.camera.pos[0] <=  tree['pos'][0] <= (self.game.world.camera.pos[0] + surf.get_width())):
+                r = pygame.Rect(tree['pos'][0] + 9, tree['pos'][1] + 8, 44, 17)
+                if random.randint(0, 9999) < (r.width - r.height):
+                    pos = [r.x + random.random() * r.width, r.y + random.random() * r.height]
+                    color = (random.randint(100, 150), random.randint(80, 130), random.randint(10, 50))
+                    self.add_particle(self.game, 'leaf', pos, [random.randint(-60, -35), random.randint(25, 35)], 0.8, random.randint(0, 2), color)
+                    
     def update(self, dt):
         for particle in self.destruction_particles.copy():
             kill = particle.update(dt)
@@ -135,6 +147,8 @@ class ParticleManager:
     
         for particle in self.particles:
             particle.render(surf, offset=offset)
+            
+        self.environment_particles(surf)
             
      
                        

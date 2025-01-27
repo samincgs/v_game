@@ -22,10 +22,11 @@ class World:
         self.tilemap = Tilemap(game, tile_size=config['window']['tile_size']) # tile_size is 16
         self.tilemap.load_map('data/maps/' + self.map_area + '.json')
         self.entities = Entities(game)
+        self.tilemap.load_destructables(self.entities)
         self.player = self.entities.player
         self.camera.set_tracked_entity(self.player)
         self.minimap = Minimap(game, tile_size=config['window']['tile_size'])
-        self.particle_manager = ParticleManager()
+        self.particle_manager = ParticleManager(game)
         self.spark_manager = SparkManager()
         self.projectile_manager = ProjectileManager()
         self.item_notifications = ItemNotification(game)
@@ -37,24 +38,10 @@ class World:
         self.transition = 0
         
         
-        self.tilemap.load_entities(self.entities)
-        
-    
-    def environment_particles(self, surf):
-        # leaf particles
-        for tree in self.tilemap.extract('trees'):
-            # if the tree is visible on the players screen
-            if (self.camera.pos[0] <=  tree['pos'][0] + self.game.assets.tiles['foliage'][0].get_width() <= (self.camera.pos[0] + surf.get_width())) or (self.camera.pos[0] <=  tree['pos'][0] <= (self.camera.pos[0] + surf.get_width())):
-                r = pygame.Rect(tree['pos'][0] + 9, tree['pos'][1] + 8, 44, 17)
-                if random.randint(0, 9999) < (r.width - r.height):
-                    pos = [r.x + random.random() * r.width, r.y + random.random() * r.height]
-                    color = (random.randint(100, 150), random.randint(80, 130), random.randint(10, 50))
-                    self.particle_manager.add_particle(self.game, 'leaf', pos, [random.randint(-60, -35), random.randint(25, 35)], 0.8, random.randint(0, 2), color)
-    
     def update(self):
         dt = self.game.window.dt
         self.master_clock += dt
-        
+            
         self.camera.update()
         self.entities.update(dt)
         self.minimap.update()
@@ -65,9 +52,7 @@ class World:
             
     def render(self, surf):
         offset = self.camera.pos
-        
-        self.environment_particles(surf)
-        
+                
         self.tilemap.render(surf, offset=offset)
         self.entities.render(surf, offset=offset)
         self.particle_manager.render(surf, offset=offset)

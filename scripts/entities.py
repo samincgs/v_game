@@ -3,23 +3,23 @@ from .config import config
 from .player import Player
 from .enemy import ENEMIES
 from .weapon import Weapon
-from .item import Item
+from scripts.crate import Crate
 from .itemdrop import Itemdrop
 
 class Entities:
     def __init__(self, game):
         self.game = game
+        self.entities = []
+        
         self.config = config['entities']
         
-        self.entities = []
         
         # default player items
         self.entities.append(Player(game, (200, 90), self.config['player']['size'], 'player'))
         # self.player.inventory.add_item(Weapon(game, 'rifle', self.player, tags=['active']), 'weapons')
-        self.drop_item((300, 100), (1, 1), Weapon(game, 'revolver', None), [0, 160])
+        self.drop_item((220, 100), (1, 1), Weapon(game, 'revolver', None), [0, 160])
 
 
-        
     @property
     def player(self):
         return self.entities[0]
@@ -28,7 +28,9 @@ class Entities:
         self.entities.append(Itemdrop(self.game, pos, size, 'item', item_data))
         self.entities[-1].velocity = list(velocity)
         
-    
+    def load_destructable(self, entity_data):
+        self.entities.append(Crate(self.game, entity_data['pos'], [1, 1]))
+     
     def spawner(self):
         
         if random.randint(1, self.config['bat']['spawn_rate']) == 1:

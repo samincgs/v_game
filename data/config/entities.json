@@ -7,7 +7,7 @@
   "bat": {
     "base_health": 20,
     "size": [15, 7],
-    "spawn_rate": 5000
+    "spawn_rate": 50000
   },
   "crate": {
     "base_health": 14,

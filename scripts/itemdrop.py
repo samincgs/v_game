@@ -10,7 +10,7 @@ class Itemdrop(PhysicsEntity):
         
         self.set_action(self.item_data.name)
         
-        self.size = (self.img.get_width(), self.img.get_height() - 1)
+        self.size = (self.img.get_width(), self.img.get_height() - 2)
         
         
     def render(self, surf, offset=(0, 0)):

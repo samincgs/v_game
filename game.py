@@ -18,6 +18,6 @@ class Game:
             self.world.update()
             self.renderer.render()
             self.window.create()
-        
+         
 if __name__ == '__main__':
     Game().run() 

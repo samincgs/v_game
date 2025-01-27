@@ -4,6 +4,7 @@ import random
 
 from .config import config
 from .utils import outline, clip
+from .spark import CurvedSpark
 
 class Entity:
     def __init__(self, game, pos, size, e_type):
@@ -52,6 +53,7 @@ class Entity:
         self.health -= amt
         if self.health <= 0:
             self.die()
+        return self.dead
         
         
     def die(self): # TODO: Finish and add death particles
@@ -66,7 +68,11 @@ class Entity:
                 particle_img = clip(entity_img, x * size, y * size, size, size)
                 self.game.world.particle_manager.add_death_particle(self.game, particle_img, self.center.copy(), 0, random.randint(300, 500), 0.9, [random.randint(0, 150) - 75, random.randint(0, 100) - 125], duration=2)
         
-
+        # create death sparks
+        for i in range(16):
+            angle = i / 8 * math.pi
+            self.game.world.spark_manager.sparks.append(CurvedSpark(self.center.copy(), angle + random.random() / 5, speed=random.random() * 2 + 1, curve=0, scale=4, decay_rate=0.08))
+            
         for item_drop in self.drops:
             self.game.world.entities.drop_item(self.pos.copy(), (1, 1), item_drop, velocity=(random.randint(0, 320) - 150, random.randint(0, 20) - 200))
 
