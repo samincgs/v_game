@@ -1,10 +1,7 @@
 import pygame
 
-from scripts.weapon import Weapon
 from .config import config
 from .utils import load_image
-
-
 
 class InventoryMenu:
     def __init__(self, game, inventory):

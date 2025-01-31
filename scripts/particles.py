@@ -2,7 +2,7 @@ import pygame
 import math
 import random
 
-from .utils import palette_swap, normalize
+from .utils import palette_swap
 
 class Particle:
     def __init__(self, game, p_type, pos, movement, decay_rate=0.1, frame=0, custom_color=None, physics=None):
@@ -27,6 +27,7 @@ class Particle:
             if abs_motion > 12:
                 self.rotation += 20 * dt * abs_motion
         elif self.type == 'leaf':
+            # TODO: fix sin wave
             self.pos[0] += math.sin(self.frame * 0.76) * 0.13
             # if not self.wind_force:
             #     if random.randint(0, 999) == 1:
@@ -128,7 +129,7 @@ class ParticleManager:
                 if random.randint(0, 9999) < (r.width - r.height):
                     pos = [r.x + random.random() * r.width, r.y + random.random() * r.height]
                     color = (random.randint(100, 150), random.randint(80, 130), random.randint(10, 50))
-                    self.add_particle(self.game, 'leaf', pos, [random.randint(-60, -35), random.randint(25, 35)], 0.8, random.randint(0, 2), color)
+                    self.add_particle(self.game, 'leaf', pos, [random.randint(-60, -35), random.randint(35, 50)], 0.8, random.randint(0, 2), color)
                     
     def update(self, dt):
         for particle in self.destruction_particles.copy():

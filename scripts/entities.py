@@ -1,4 +1,5 @@
 import random
+
 from .config import config
 from .player import Player
 from .enemy import ENEMIES
@@ -18,8 +19,7 @@ class Entities:
         self.entities.append(Player(game, (200, 90), self.config['player']['size'], 'player'))
         # self.player.inventory.add_item(Weapon(game, 'rifle', self.player, tags=['active']), 'weapons')
         self.drop_item((220, 100), (1, 1), Weapon(game, 'revolver', None), [0, 160])
-
-
+    
     @property
     def player(self):
         return self.entities[0]
@@ -32,7 +32,6 @@ class Entities:
         self.entities.append(Crate(self.game, entity_data['pos'], [1, 1]))
      
     def spawner(self):
-        
         if random.randint(1, self.config['bat']['spawn_rate']) == 1:
             
             spawn_point = (random.randint(-500, -200), random.randint(-100, 100))

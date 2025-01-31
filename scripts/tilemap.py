@@ -1,8 +1,6 @@
 import pygame
 import json
 
-
-
 TILE_EXTRACTS = {
     'destructables': ['decor', (0, 1)],
     'trees': ['foliage', (0, 1)],

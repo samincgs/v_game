@@ -9,9 +9,7 @@ class Window:
         
         self.game = game
         self.config = config['window']
-        
-        # self.monitor_x, self.monitor_y = pygame.display.Info().current_w, pygame.display.Info().current_h
-        
+                
         self.window = pygame.display.set_mode(self.config['scaled_res']) # pygame.RESIZABLE
         pygame.display.set_caption(self.config['caption'])
         self.display = pygame.Surface(self.config['base_res'])
@@ -25,7 +23,6 @@ class Window:
         self.dt = 0.01
         
         self.scaled = False
-    
     
     @property
     def fps(self):
@@ -48,7 +45,7 @@ class Window:
         self.window.blit(pygame.transform.scale(self.display, self.window.get_size()), (0, 0))
         pygame.display.update()
         
-        self.display.fill(config['window']['bg_color'])
+        self.display.fill(self.config['bg_color'])
         
         
         

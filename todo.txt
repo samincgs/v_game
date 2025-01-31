@@ -12,7 +12,6 @@
 - fix enemy chance rate and spawn location
 - fix knockback when bullet hits enemy
 - create skills (maybe?)
-- add rings (maybe?)
 - add death particles
 - add a shopkeeper that sells weapons/items (maybe?)
 - add alpha to guns in ui to indicate reload delay (maybe?)

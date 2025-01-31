@@ -37,6 +37,12 @@ def normalize(value, amt, target=0):
 def blit_center(surf, img, pos):
     surf.blit(img, (pos[0] - img.get_width() // 2, pos[1] - img.get_height() // 2))
     
+def glow(surf, pos, radius, color):
+    circle_surf = pygame.Surface((radius * 2, radius * 2))
+    circle_surf.set_colorkey((0, 0, 0))
+    pygame.draw.circle(circle_surf, color, (radius, radius), radius)
+    surf.blit(circle_surf, (pos[0] - radius, pos[1] - radius), special_flags=pygame.BLEND_RGB_ADD)
+    
         
 
         

@@ -1,6 +1,3 @@
-import pygame
-import random
-
 from .tilemap import Tilemap
 from .camera import Camera
 from .entities import Entities
