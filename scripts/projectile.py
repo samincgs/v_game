@@ -87,8 +87,7 @@ class Projectile:
         p_len = self.config['shape'][2]
         if self.config['shape'][0] == 'line':
             pygame.draw.line(surf, self.config['shape'][1], render_pos, [render_pos[0] + math.cos(self.rot) * p_len, render_pos[1] + math.sin(self.rot) * p_len], self.config['shape'][3])
-            radius = p_len * 1.5
-            glow(surf, (render_pos[0], render_pos[1]), radius, (15, 15, 15))
+            
             
             
 class ProjectileManager:

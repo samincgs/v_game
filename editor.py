@@ -30,6 +30,7 @@ class LevelEditor:
         self.config = config['autotile']
         
         self.scroll = [0, 0]
+        self.sidebar_scroll = [0, 0]
         self.scroll_speed = 4
         self.movement = [False, False, False, False]
         
@@ -37,6 +38,8 @@ class LevelEditor:
         self.right_clicking = False
         self.click = False
         self.right_click = False
+        self.scrolled_up = False
+        self.scrolled_down = False
         
         self.tile_list = list(self.assets.tiles)
         self.tile_group = 0
@@ -112,11 +115,7 @@ class LevelEditor:
                 for b in bordering_tiles:
                     if not self.tilemap.get_tile(b, curr_layer) and tuple(b) not in visited:
                         floodfill_list.append(b)
-            
-
-        
-            
-                    
+                     
     def run(self):
         while True:
             self.display.fill((0, 0, 0))
@@ -160,14 +159,15 @@ class LevelEditor:
             # SELECT TYPE OF TILE GROUP (TOP HALF)
             for ix, val in enumerate(self.tile_list):
                 offset_x = 0
-                tile_sheet = pygame.Rect(1, 2 + ix * 11, self.sidebar_size, 10)
+                tile_h = 2 + ix * 11 - self.sidebar_scroll[0]
+                tile_sheet = pygame.Rect(1, tile_h, self.sidebar_size, 10)
                 if tile_sheet.collidepoint(mpos):
                     if self.clicking:
                         self.tile_variant = 0
                         self.selected_group = val
                         self.tile_group = self.tile_list.index(self.selected_group)
                     offset_x = 2
-                self.font.render(sidebar_surf, str(val), (1 + offset_x, 2 + ix * 11))
+                self.font.render(sidebar_surf, str(val), (1 + offset_x, tile_h))
             
             # draw bottom left sidebar
             tile_selector_surf = pygame.Surface((sidebar_surf.get_width(), self.display_size[1] - sidebar_surf.get_height()))
@@ -178,12 +178,13 @@ class LevelEditor:
             max_height = max([tile.get_height() for tile in self.assets.tiles[self.tile_list[self.tile_group]]])
             for ix, val in enumerate(self.assets.tiles[self.tile_list[self.tile_group]]):
                 y_offset = 0
-                tile_rect = pygame.Rect(1, sidebar_surf.get_height() + 2 + (max_height * ix * 1.5) , val.get_width(), val.get_height())
+                tile_h = sidebar_surf.get_height() + 2 + (max_height * ix * 1.5) + self.sidebar_scroll[1]
+                tile_rect = pygame.Rect(1, tile_h, val.get_width(), val.get_height())
                 if tile_rect.collidepoint(mpos):
                     if self.clicking:
                         self.tile_variant = ix
                     y_offset = 2
-                tile_selector_surf.blit(val, (1, 2 + (max_height * ix * 1.5) - y_offset))
+                tile_selector_surf.blit(val, (1, 2 + (max_height * ix * 1.5) - y_offset + self.sidebar_scroll[1]))
             
             self.tilemap.render_editor(self.current_layer, self.layer_opacity, self.display, offset=render_scroll)
             
@@ -198,6 +199,19 @@ class LevelEditor:
             self.font.render(self.display, 'placement_mode: ' + str(self.placement_mode), (self.display.get_width() - 98, 20))
             self.font.render(self.display, 'layer: ' + str(self.current_layer), (self.display.get_width() - 46, 35))
             self.font.render(self.display, 'pos: ' + str(list(tile_pos) if self.placement_mode == 'grid' else list(scaled_mpos)), (self.display.get_width() - 60, 50))
+            
+            if mpos[0] < self.sidebar_size:
+                if mpos[1] < 100:
+                    if len(self.tile_list) > 10:
+                        if self.scrolled_up and self.sidebar_scroll[0] > 0:
+                            self.sidebar_scroll[0] -= 10
+                        if self.scrolled_down :
+                            self.sidebar_scroll[0] += 10
+                else:
+                    if self.scrolled_up and self.sidebar_scroll[1] > 0:
+                        self.sidebar_scroll[1] -= 10
+                    if self.scrolled_down:
+                        self.sidebar_scroll[1] += 10
             
             if len(self.selection_points):
                 start_point = self.selection_points[0]
@@ -221,6 +235,8 @@ class LevelEditor:
                 
             self.click = False
             self.right_click = False
+            self.scrolled_up = False
+            self.scrolled_down = False
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     pygame.quit()
@@ -287,16 +303,21 @@ class LevelEditor:
                         self.right_clicking = True
                         self.right_click = True
                     if event.button == 4:
-                        self.current_layer = int(self.current_layer) + 1
-                        self.current_layer = str(self.current_layer)
+                        self.scrolled_up = True
+                        if mpos[0] > self.sidebar_size:
+                            self.current_layer = int(self.current_layer) + 1
+                            self.current_layer = str(self.current_layer)
                     if event.button == 5:
-                        self.current_layer = int(self.current_layer) - 1
-                        self.current_layer = str(self.current_layer)
+                        self.scrolled_down = True
+                        if mpos[0] > self.sidebar_size:
+                            self.current_layer = int(self.current_layer) - 1
+                            self.current_layer = str(self.current_layer)
                 if event.type == pygame.MOUSEBUTTONUP:
                     if event.button == 1:
                         self.clicking = False
                     if event.button == 3:
                         self.right_clicking = False
+                        
                         
             self.display.blit(sidebar_surf, (0, 0))
             self.display.blit(tile_selector_surf, (0, sidebar_surf.get_height()))
