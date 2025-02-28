@@ -79,7 +79,7 @@ class Projectile:
             elif self.type == 'bat_goo':
                 self.game.world.projectile_manager.goo.append(Goo(self.game, self.game.assets.misc['goo'], self.last_pos, math.degrees(angle - math.pi / 2)))
             return True
-        if self.timer > 3:
+        if self.timer > 3 or self.pos[0] >= self.game.world.camera.pos[0] + self.game.window.display.get_width():
             return True
         
     def render(self, surf, offset=(0, 0)):

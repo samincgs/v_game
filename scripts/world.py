@@ -13,11 +13,12 @@ from .item_notification import ItemNotification
 class World:
     def __init__(self, game):
         self.game = game
-        self.map_area = 'intro'
+        self.map_area = 'test'
         
         self.camera = Camera(game)
         self.tilemap = Tilemap(game, tile_size=config['window']['tile_size']) # tile_size is 16
         self.tilemap.load_map('data/maps/' + self.map_area + '.json')
+        print(self.tilemap.tilemap)
         self.entities = Entities(game)
         self.tilemap.load_destructables(self.entities)
         self.player = self.entities.player

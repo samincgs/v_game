@@ -2,16 +2,16 @@ import os
 
 from . import animation
 from .font import Font
-from .utils import load_image
+from .utils import load_img
 
 
 BASE_PATH = 'data/images/' 
 BASE_PATH_FONT = 'data/fonts/' 
 
 FONTS = {
-    "small_white": [BASE_PATH_FONT + 'small_font.png', (255, 255, 255)],
-    "small_black": [BASE_PATH_FONT + 'small_font.png', (0, 0, 1)],
-    "small_red": [BASE_PATH_FONT + 'small_font.png', (203, 10, 7)],
+    "small_white": [BASE_PATH_FONT + 'main_font.png', (255, 255, 255)],
+    "small_black": [BASE_PATH_FONT + 'main_font.png', (0, 0, 1)],
+    "small_red": [BASE_PATH_FONT + 'main_font.png', (203, 10, 7)],
     # "large_white": (BASE_PATH_FONT + 'large_font.png', (255, 255, 255)),
     # "large_black": (BASE_PATH_FONT + 'large_font.png', (0, 0, 1)),
 }
@@ -29,7 +29,7 @@ class Assets:
     def load_dir(self, path):
         image_dir = {}
         for img in os.listdir(BASE_PATH + path):
-            image_dir[img.split('.')[0]] = load_image(BASE_PATH + path + '/' + img)
+            image_dir[img.split('.')[0]] = load_img(BASE_PATH + path + '/' + img)
         return image_dir
     
     def load_dir_list(self, path):
@@ -37,7 +37,7 @@ class Assets:
         for folder in os.listdir(BASE_PATH + path):
             image_dir[folder] = []
             for img in os.listdir(BASE_PATH + path + '/' + folder):
-                image_dir[folder].append(load_image(os.path.join(BASE_PATH, path, folder, img)))                                       
+                image_dir[folder].append(load_img(os.path.join(BASE_PATH, path, folder, img)))                                       
         return image_dir
         
         

@@ -22,8 +22,7 @@ class Entity:
                 
         if self.type + '_idle' in self.game.assets.animations.animations:
             self.set_action('idle')
-        
-            
+              
     @property 
     def img(self):
         if self.active_animation:
@@ -36,7 +35,6 @@ class Entity:
     def rect(self):
         return pygame.Rect(self.pos[0], self.pos[1], self.size[0], self.size[1])
     
-      
     @property
     def center(self):
         return [self.pos[0] + self.size[0] // 2, self.pos[1] + self.size[1] // 2] 
@@ -48,16 +46,15 @@ class Entity:
             self.active_animation = self.game.assets.animations.new(self.type + '_' + action_id)
 
     def damage(self, amt):
-        if self.type in self.type in config['entities']:
-            self.hurt = 1
         self.health -= amt
         if self.health <= 0:
             self.die()
+        if self.type in self.type in config['entities']:
+            self.hurt = 1
         return self.dead
         
         
-    def die(self): # TODO: Finish and add death particles
-        
+    def die(self): 
         self.dead = True
         
         size = 4
@@ -91,6 +88,12 @@ class Entity:
     def in_range(self, target, radius):
         return self.get_distance(target) <= radius
     
+    
+    def gen_mask(self, img, setcolor, unsetcolor=(0, 0, 0, 0)):
+        temp_mask = pygame.mask.from_surface(img)
+        mask_img = temp_mask.to_surface(setcolor=setcolor, unsetcolor=unsetcolor)
+        return mask_img
+    
     def collisions(self, tilemap, movement=(0, 0)):
         directions = {d: False for d in ['top', 'right', 'left', 'bottom']}
         
@@ -114,7 +117,7 @@ class Entity:
         tiles = tilemap.get_nearby_rects(self.pos)
         hit_list = tilemap.collision_test(self.rect, tiles)
         temp_rect = self.rect
-        
+ 
         for tile in hit_list:
             if movement[1] > 0:
                 temp_rect.bottom = tile.top
@@ -137,10 +140,9 @@ class Entity:
         offset = self.calculate_render_offset(offset=offset)
         if self.active_animation.data.config['outline']:
             outline(surf, self.img, loc=(self.pos[0] - offset[0], self.pos[1] - offset[1]), color=self.active_animation.data.config['outline'])
-        surf.blit(self.img, (self.pos[0] - offset[0], self.pos[1] - offset[1])) 
+        surf.blit(self.img, (int(self.pos[0] - offset[0]), int(self.pos[1] - offset[1]))) 
         if self.hurt:
-            temp_mask = pygame.mask.from_surface(self.img)
-            mask_img = temp_mask.to_surface(setcolor=(255, 255, 255, int(self.hurt * 255)), unsetcolor=(0, 0, 0, 0))
+            mask_img = self.gen_mask(self.img, setcolor=(255, 255, 255, int(self.hurt * 255)))
             surf.blit(mask_img, (self.pos[0] - offset[0], self.pos[1] - offset[1]))
         
     def update(self, dt):

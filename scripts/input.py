@@ -17,6 +17,10 @@ class Input:
         
         self.create_inputs()
     
+    @property
+    def key_pressed(self):
+        return any(self.states.values())
+    
     def create_inputs(self):
         for binding in self.config:
             if self.config[binding]['binding'][0] == 'keyboard':

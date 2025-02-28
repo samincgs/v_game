@@ -2,7 +2,7 @@
   "revolver": {
     "name": "Revolver",
     "type": "weapon",
-    "description": "A regular sidearm with decent accuracy"
+    "description": "A simple sidearm with decentish accuracy"
   },
   "rifle": {
     "name": "KR-47",

@@ -16,8 +16,6 @@ class ItemNotification:
         self.item_data.append([item.name, 1, 0])
     
     def update(self, dt):
-        
-        
         for item_info in self.item_data.copy():
             item_info[2] += dt
             if item_info[2] > self.item_appear_time:
@@ -26,8 +24,6 @@ class ItemNotification:
                     self.item_data.remove(item_info)
             else:
                 self.transition = min(self.transition + dt * self.transition_speed, 60)
-            
-                
             
     def render(self, surf):
         height = 20 

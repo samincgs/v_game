@@ -1,7 +1,7 @@
 import pygame
 
 from .config import config
-from .utils import load_image
+from .utils import load_img
 
 class InventoryMenu:
     def __init__(self, game, inventory):
@@ -20,12 +20,10 @@ class InventoryMenu:
         
         self.images = {}
         
-    
-    
     def get_image(self, type):
         if 'item_' + type in self.images:
             return self.images['item_' + type]
-        img = load_image('data/images/animations/item_' + type + '/0.png')
+        img = load_img('data/images/animations/item_' + type + '/0.png')
         self.images['item_' + type] = img
         return self.images['item_' + type]
         

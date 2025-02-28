@@ -1,5 +1,8 @@
 import pygame
-import json
+
+from .utils import load_json, save_json, load_dir_list
+
+TILE_PATH = 'data/images/tiles/'
 
 TILE_EXTRACTS = {
     'destructables': ['decor', (0, 1)],
@@ -10,13 +13,11 @@ TILE_EXTRACTS = {
 class Tilemap:
     def __init__(self, game, tile_size):
         self.game = game
-        self.tile_size = tile_size 
+        self.tile_size = tile_size
+        self.tiles = load_dir_list(TILE_PATH, colorkey=(0, 0, 0))
         
-        self.tilemap = {} # { 0 : {'5;7' : {'type': 'grass', 'variant': 0, 'pos': [x, x]}}}
+        self.tilemap = {} # { {'5;7' : 0 {{'type': 'grass', 'variant': 0, 'pos': [x, x]}}}}
         self.offgrid_tiles = {} # {0: [{'type': 'grass', 'variant': 0, 'pos': [x, x]}]}
-        
-        self.non_collideables = {'grass'}
-        
         
     def collision_test(self, obj, obj_list):
         collision_list = []
@@ -32,33 +33,23 @@ class Tilemap:
         for loc in check_locs:
             tile_loc = (tile_pos[0] + loc[0], tile_pos[1] + loc[1])
             str_loc = str(tile_loc[0]) + ';' + str(tile_loc[1])
-            for layer in sorted(self.tilemap):
-                if str_loc in self.tilemap[layer]:
-                    if self.tilemap[layer][str_loc]['type'] not in self.non_collideables:
-                        rects.append(pygame.Rect(tile_loc[0] * self.tile_size, tile_loc[1] * self.tile_size, self.tile_size, self.tile_size))
+            if str_loc in self.tilemap:
+                rects.append(pygame.Rect(tile_loc[0] * self.tile_size, tile_loc[1] * self.tile_size, self.tile_size, self.tile_size))
         return rects
 
     # gets position in tiles
-    def get_tile(self, pos, curr_layer=None):
-        # tile_pos = (int(pos[0] // self.tile_size), int(pos[1] // self.tile_size))
-        str_pos = str(pos[0]) + ';' + str(pos[1])
-        if curr_layer:
-            if str_pos in self.tilemap[curr_layer]:
-                return True
-        else:
-            for layer in sorted([int(key) for key in self.tilemap.keys()]):
-                layer = str(layer)
-                if str_pos in self.tilemap[layer]:
-                    return True
+    def get_tile(self, pos):
+        tile_pos = (int(pos[0] // self.tile_size), int(pos[1] // self.tile_size))
+        str_pos = str(tile_pos[0]) + ';' + str(tile_pos[1])
+        if str_pos in self.tilemap:
+            return True
+        
         
     def tile_collide(self, pos):
         tile_pos = (int(pos[0] // self.tile_size), int(pos[1] // self.tile_size))
         tile_loc = str(tile_pos[0]) + ';' + str(tile_pos[1])
-        for layer in sorted([int(key) for key in self.tilemap.keys()]):
-            layer = str(layer)
-            if tile_loc in self.tilemap[layer]:
-                if self.tilemap[layer][tile_loc]['type'] not in self.non_collideables: # for 
-                    return True
+        if tile_loc in self.tilemap:
+            return True
     
     def extract(self, extract_type, keep=True, offgrid=True):
         extract_list = []
@@ -72,16 +63,7 @@ class Tilemap:
                             if not keep:
                                 self.offgrid_tiles[layer].remove(tile)
         else:
-            for layer in self.tilemap:                        
-               for tile in self.tilemap[layer].copy():    
-                   data = self.tilemap[layer][tile]
-                   if extract_type in TILE_EXTRACTS:
-                       extract_id_pair = TILE_EXTRACTS[extract_type]
-                       if data['type'] in extract_id_pair[0] and data['variant'] in extract_id_pair[1]:
-                           extract_list.append(data.copy())
-                           extract_list[-1]['pos'] = extract_list[-1]['pos'].copy()
-                           extract_list[-1]['pos'][0] *= self.tile_size 
-                           extract_list[-1]['pos'][1] *= self.tile_size 
+            pass 
                     
         return extract_list
 
@@ -90,9 +72,7 @@ class Tilemap:
             em.load_destructable(crate)
     
     def load_map(self, path):
-        f = open(path, 'r')
-        map_data = json.load(fp=f)
-        f.close()
+        map_data = load_json(path)
         
         self.tilemap = map_data['tilemap'] 
         self.offgrid_tiles = map_data['offgrid_tiles']
@@ -104,33 +84,36 @@ class Tilemap:
             'tile_size': self.tile_size
         }
         
-        f = open(path, 'w')
-        json.dump(map_data, fp=f)
-        f.close()
+        save_json(path, data=map_data)
     
     # gives grid positions (USES GRID POS)
-    def add_tile(self, tile, layer):
-            pos = tile['pos']
-            if layer in sorted(self.tilemap):
-                tile_loc = str(pos[0]) + ';' + str(pos[1])
-                self.tilemap[layer][tile_loc] = tile
-            else:
-                self.tilemap[layer] = {} # if layer doesnt exist
+    def add_tile(self, tile_data):
+        tile_pos = tile_data['tile_pos']
+        layer = tile_data['layer']
+        tile_loc = str(tile_pos[0]) + ';' + str(tile_pos[1])
+        if tile_loc in self.tilemap:
+            self.tilemap[tile_loc][layer] = tile_data
+        else:
+            self.tilemap[tile_loc] = {}
+            
     
     # gives grid positions (USES GRID POS)
-    def remove_tile(self, tile, layer):
-        pos = tile['pos']
-        if layer in sorted(self.tilemap).copy():
-            tile_loc = str(pos[0]) + ';' + str(pos[1])
-            if tile_loc in self.tilemap[layer]:
-                del self.tilemap[layer][tile_loc]
+    def remove_tile(self, tile_data):
+        tile_pos = tile_data['tile_pos']
+        layer = tile_data['layer']
+        tile_loc = str(tile_pos[0]) + ';' + str(tile_pos[1])
+        if tile_loc in self.tilemap:
+            if self.tilemap[tile_loc][layer] in self.tilemap:
+                self.tilemap[tile_loc][layer] = {}
 
-    def add_offgrid_tile(self, tile, layer):   
+    
+    def add_offgrid_tile(self, tile_data):   
+        layer = tile_data['layer']
         if layer in self.offgrid_tiles:
-            self.offgrid_tiles[layer].append(tile)
+            self.offgrid_tiles[layer].append(tile_data)
         else:
             self.offgrid_tiles[layer] = []
-            self.offgrid_tiles[layer].append(tile)
+            self.offgrid_tiles[layer].append(tile_data)
             
     def remove_offgrid_tile(self, layer, curr_mpos=(0,0)):
         if layer in self.offgrid_tiles:
@@ -141,63 +124,19 @@ class Tilemap:
                 
     # be careful of layer in self.tilemap because when converted from json the layer is in STRING          
     def render(self, surf, offset=(0, 0)):
-        
-        for layer in self.offgrid_tiles: # convert layer into int so it can be sorted then convert it back for proper layer opacity functionality
+        for layer in self.offgrid_tiles: 
             tile_layer = self.offgrid_tiles[layer]
             for tile in tile_layer:
-                surf.blit(self.game.assets.tiles[tile['type']][tile['variant']], (tile['pos'][0] - offset[0], tile['pos'][1] - offset[1]))
-        
-        for layer in sorted([int(key) for key in self.tilemap.keys()]): # 0
-            layer = str(layer)
-            tile_layer = self.tilemap[layer]
-            # for loc in tile_layer:
-            #     tile = tile_layer[loc]
-            #     surf.blit(self.game.assets.tiles[tile['type']][tile['variant']], (tile['pos'][0] * self.tile_size - offset[0], tile['pos'][1] * self.tile_size - offset[1]))
-            for y in range(self.game.world.camera.pos[1] // self.tile_size, ((self.game.world.camera.pos[1] + surf.get_height()) // self.tile_size) + 1):
-                for x in range(self.game.world.camera.pos[0] // self.tile_size, ((self.game.world.camera.pos[0] + surf.get_width()) // self.tile_size) + 1):
-                    tile_loc = str(x) + ';' + str(y)
-                    if tile_loc in tile_layer:
-                        tile = tile_layer[tile_loc]
-                        surf.blit(self.game.assets.tiles[tile['type']][tile['variant']], (tile['pos'][0] * self.tile_size - offset[0], tile['pos'][1] * self.tile_size - offset[1]))
-        
-        
-    
+                surf.blit(self.tiles[tile['type']][tile['variant']], (tile['pos'][0] - offset[0], tile['pos'][1] - offset[1]))
                 
-    def render_editor(self, curr_layer, layer_opacity, surf, offset=(0,0)):
-        
-        for layer in sorted([int(key) for key in self.offgrid_tiles.keys()]):
-            layer = str(layer)
-            tile_layer = self.offgrid_tiles[layer]
-            for tile in tile_layer:
-                if not layer_opacity:
-                    img = self.game.assets.tiles[tile['type']][tile['variant']]
-                    surf.blit(img, (tile['pos'][0] - offset[0], tile['pos'][1] - offset[1]))
-                else:
-                    if curr_layer == layer:
-                        img = self.game.assets.tiles[tile['type']][tile['variant']]
-                        surf.blit(img, (tile['pos'][0] - offset[0], tile['pos'][1] - offset[1]))
-                    else:
-                        img = self.game.assets.tiles[tile['type']][tile['variant']].copy()
-                        img.set_alpha(100)
-                        surf.blit(img, (tile['pos'][0] - offset[0], tile['pos'][1] - offset[1]))
+        for y in range(self.game.world.camera.pos[1] // self.tile_size, ((self.game.world.camera.pos[1] + surf.get_height()) // self.tile_size) + 1):
+            for x in range(self.game.world.camera.pos[0] // self.tile_size, ((self.game.world.camera.pos[0] + surf.get_width()) // self.tile_size) + 1):
+                tile_loc = str(x) + ';' + str(y)
+                if tile_loc in self.tilemap:
+                    for tile_data in sorted(int(layer) for layer in self.tilemap[tile_loc]):
+                        tile = self.tilemap[tile_loc][str(tile_data)]
+                        surf.blit(self.tiles[tile['type']][tile['variant']], (tile['tile_pos'][0] * self.tile_size - offset[0], tile['tile_pos'][1] * self.tile_size - offset[1]))
                                 
-        for layer in sorted([int(key) for key in self.tilemap.keys()]): 
-            layer = str(layer)
-            tile_layer = self.tilemap[layer]
-            for loc in tile_layer:
-                tile = tile_layer[loc]
-                if not layer_opacity:
-                    img = self.game.assets.tiles[tile['type']][tile['variant']]
-                    surf.blit(img, (tile['pos'][0] * self.tile_size - offset[0], tile['pos'][1] * self.tile_size - offset[1]))
-                else:
-                    if curr_layer == layer:
-                        img = self.game.assets.tiles[tile['type']][tile['variant']]
-                        surf.blit(img, (tile['pos'][0] * self.tile_size - offset[0], tile['pos'][1] * self.tile_size - offset[1]))
-                    else:
-                        img = self.game.assets.tiles[tile['type']][tile['variant']].copy()
-                        img.set_alpha(100)
-                        surf.blit(img, (tile['pos'][0] * self.tile_size - offset[0], tile['pos'][1] * self.tile_size - offset[1]))
-                        
                         
                         
         

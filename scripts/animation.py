@@ -1,7 +1,7 @@
 import os
 
 from .config import config
-from .utils import load_image
+from .utils import load_img
 
 ANIMATION_PATH = 'data/images/animations'
 COLORKEY = (0, 0, 0)
@@ -12,7 +12,7 @@ class AnimationData:
         self.config = config['animations'][self.id]
         self.images = []
         for img in sorted(os.listdir(path)):
-            self.images.append(load_image(path + '/' + img, colorkey))
+            self.images.append(load_img(path + '/' + img, colorkey))
         
     @property
     def duration(self):

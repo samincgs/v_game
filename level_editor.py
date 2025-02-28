@@ -5,18 +5,19 @@ import tkinter as tk
 from tkinter import filedialog
 
 from scripts.tilemap import Tilemap
-from scripts.assets import Assets
 from scripts.font import Font
 from scripts.config import config
+from scripts.utils import load_dir_list
 
 AUTOTILE_TYPES = ['main_tiles']
 
 class LevelEditor:
     def __init__(self, display_size, display_scale):
+        pygame.init()
+        
         self.display_size = display_size
         self.display_scale = display_scale
         
-        pygame.init()
         pygame.display.set_caption('Level Editor')
         self.screen = pygame.display.set_mode((display_size[0] * display_scale, display_size[1] * display_scale))
         self.display = pygame.Surface(self.display_size)
@@ -25,8 +26,9 @@ class LevelEditor:
         self.file_name = None
         
         self.tilemap = Tilemap(self, tile_size=16)
-        self.assets = Assets()
-        self.font = Font('data/fonts/small_font.png', (208, 223, 215))
+        
+        self.assets = self.tilemap.tiles
+        self.font = Font('data/fonts/main_font.png', (208, 223, 215))
         self.config = config['autotile']
         
         self.scroll = [0, 0]
@@ -41,25 +43,26 @@ class LevelEditor:
         self.scrolled_up = False
         self.scrolled_down = False
         
-        self.tile_list = list(self.assets.tiles)
+        self.tile_list = list(self.assets)
         self.tile_group = 0
         self.tile_variant = 0
         self.selected_group = self.tile_list[0]
         self.layer_opacity = False
-        self.sidebar_size = 130
+        self.sidebar_size = 100
         self.sidebar_color = (20, 36, 50)
         self.sidebar_rect_color = (33, 57, 78)
         self.selection_points = []
         self.selection_rect = None
         
         self.placement_mode = 'grid'
-        self.current_layer = "0"
+        self.current_layer = 0
     
     def reset_rect(self):
         self.selection_rect = None # only with rect
         self.selection_points = [] # only with rect
     
     def autotile(self, curr_layer): # keybinding: t
+        
         if self.selection_rect: # only with rect
             for layer in self.tilemap.tilemap:
                 if curr_layer == layer:
@@ -85,37 +88,69 @@ class LevelEditor:
     
     def remove_all_tiles(self, curr_layer): # keybinding: x
         
-        if self.selection_rect: # only with rect
-            for layer in self.tilemap.tilemap:
-                if curr_layer == layer:
-                    for str_tile in self.tilemap.tilemap[layer].copy():
-                        tile = self.tilemap.tilemap[layer][str_tile]
-                        if self.selection_rect.collidepoint((tile['pos'][0] * self.tilemap.tile_size, tile['pos'][1] * self.tilemap.tile_size)):  # only with rect
-                            del self.tilemap.tilemap[layer][str_tile]
+        # if self.selection_rect: # only with rect
+        #     for layer in self.tilemap.tilemap:
+        #         if curr_layer == layer:
+        #             for str_tile in self.tilemap.tilemap[layer].copy():
+        #                 tile = self.tilemap.tilemap[layer][str_tile]
+        #                 if self.selection_rect.collidepoint((tile['pos'][0] * self.tilemap.tile_size, tile['pos'][1] * self.tilemap.tile_size)):  # only with rect
+        #                     del self.tilemap.tilemap[layer][str_tile]
         
         self.reset_rect()
         
     def floodfill(self, curr_pos, curr_layer):
-        floodfill_list = [curr_pos]
-        visited = set()
+        pass
+        # floodfill_list = [curr_pos]
+        # visited = set()
         
-        while floodfill_list != []:
-            remaining_tiles = floodfill_list.copy()
-            floodfill_list = []
+        # while floodfill_list != []:
+        #     remaining_tiles = floodfill_list.copy()
+        #     floodfill_list = []
             
-            for tile in remaining_tiles:
-                if tuple(tile) in visited:
-                    continue
-                visited.add(tuple(tile))
+        #     for tile in remaining_tiles:
+        #         if tuple(tile) in visited:
+        #             continue
+        #         visited.add(tuple(tile))
                 
-                tile_data = {'type': self.tile_list[self.tile_group], 'variant': self.tile_variant, 'pos': tile }
-                self.tilemap.add_tile(tile_data, curr_layer)
+        #         tile_data = {'type': self.tile_list[self.tile_group], 'variant': self.tile_variant, 'pos': tile }
+        #         self.tilemap.add_tile(tile_data, curr_layer)
                 
-                bordering_tiles = [[tile[0] + 1, tile[1]], [tile[0] - 1, tile[1]], [tile[0], tile[1] + 1], [tile[0], tile[1] - 1]]
-                for b in bordering_tiles:
-                    if not self.tilemap.get_tile(b, curr_layer) and tuple(b) not in visited:
-                        floodfill_list.append(b)
-                     
+        #         bordering_tiles = [[tile[0] + 1, tile[1]], [tile[0] - 1, tile[1]], [tile[0], tile[1] + 1], [tile[0], tile[1] - 1]]
+        #         for b in bordering_tiles:
+        #             if not self.tilemap.get_tile(b, curr_layer) and tuple(b) not in visited:
+        #                 floodfill_list.append(b)
+    
+    def render_editor(self, surf, offset=(0,0)): 
+        for layer in sorted(self.tilemap.offgrid_tiles):
+            for tile in self.tilemap.offgrid_tiles[layer]:
+                if not self.layer_opacity:
+                    img = self.assets[tile['type']][tile['variant']]
+                    surf.blit(img, (tile['pos'][0] - offset[0], tile['pos'][1] - offset[1]))
+                else:
+                    if self.curr_layer == layer:
+                        img = self.assets[tile['type']][tile['variant']]
+                        surf.blit(img, (tile['pos'][0] - offset[0], tile['pos'][1] - offset[1]))
+                    else:
+                        img = self.assets[tile['type']][tile['variant']].copy()
+                        img.set_alpha(100)
+                        surf.blit(img, (tile['pos'][0] - offset[0], tile['pos'][1] - offset[1]))
+        
+        for loc in self.tilemap.tilemap:
+            tile_pos = self.tilemap.tilemap[loc]
+            for layer in sorted(int(layer) for layer in tile_pos):
+                tile = tile_pos[str(layer)]
+                if not self.layer_opacity:
+                    img = self.assets[tile['type']][tile['variant']]
+                    surf.blit(img, (tile['tile_pos'][0] * self.tilemap.tile_size - offset[0], tile['tile_pos'][1] * self.tilemap.tile_size - offset[1]))
+                else:
+                    if self.curr_layer == layer:
+                        img = self.assets[tile['type']][tile['variant']]
+                        surf.blit(img, (tile['tile_pos'][0] * self.tilemap.tile_size - offset[0], tile['tile_pos'][1] * self.tilemap.tile_size - offset[1]))
+                    else:
+                        img = self.assets[tile['type']][tile['variant']].copy()
+                        img.set_alpha(100)
+                        surf.blit(img, (tile['tile_pos'][0] * self.tilemap.tile_size - offset[0], tile['tile_pos'][1] * self.tilemap.tile_size - offset[1]))
+                                              
     def run(self):
         while True:
             self.display.fill((0, 0, 0))
@@ -127,26 +162,26 @@ class LevelEditor:
             
             # mouse pos
             mpos = pygame.mouse.get_pos()
-            mpos = (int(mpos[0] / self.display_scale), int(mpos[1] / self.display_scale))
+            mpos = (int(mpos[0] // self.display_scale), int(mpos[1] // self.display_scale))
             scaled_mpos = (mpos[0] + self.scroll[0], mpos[1] + self.scroll[1])
             tile_pos = (int(mpos[0] + self.scroll[0]) // self.tilemap.tile_size, int(mpos[1] + self.scroll[1]) // self.tilemap.tile_size)
             
-            current_tile = self.assets.tiles[self.tile_list[self.tile_group]][self.tile_variant].copy()
+            current_tile = self.assets[self.tile_list[self.tile_group]][self.tile_variant].copy()
             tile_choice = current_tile.copy()
             tile_choice.set_alpha(210)
                         
             if mpos[0] > self.sidebar_size:
                 if self.placement_mode == 'grid':
-                    tile_data = {'type': self.tile_list[self.tile_group], 'variant': self.tile_variant, 'pos': tile_pos }
+                    tile_data = {'type': self.tile_list[self.tile_group], 'variant': self.tile_variant, 'pos': scaled_mpos, 'tile_pos': tile_pos, 'layer': self.current_layer }
                     if self.clicking:
-                        self.tilemap.add_tile(tile_data, self.current_layer)
+                        self.tilemap.add_tile(tile_data)
                     elif self.right_clicking:
                         self.tilemap.remove_tile(tile_data, self.current_layer)
                         # remove grid tile
                 else: # offgrid
-                    tile_data = {'type': self.tile_list[self.tile_group], 'variant': self.tile_variant, 'pos': scaled_mpos }
+                    tile_data = {'type': self.tile_list[self.tile_group], 'variant': self.tile_variant, 'pos': scaled_mpos, 'tile_pos': tile_pos, 'layer': self.current_layer }
                     if self.click:
-                        self.tilemap.add_offgrid_tile(tile_data, self.current_layer)
+                        self.tilemap.add_offgrid_tile(tile_data)
                     elif self.right_click:
                         self.tilemap.remove_offgrid_tile(self.current_layer, curr_mpos=scaled_mpos)
                                 
@@ -175,8 +210,8 @@ class LevelEditor:
             pygame.draw.line(tile_selector_surf, self.sidebar_rect_color, (tile_selector_surf.get_width() - 1, 0), (tile_selector_surf.get_width() - 1, tile_selector_surf.get_height() - 1))
             
             # SELECT TILES (BOTTOM HALF)
-            max_height = max([tile.get_height() for tile in self.assets.tiles[self.tile_list[self.tile_group]]])
-            for ix, val in enumerate(self.assets.tiles[self.tile_list[self.tile_group]]):
+            max_height = max([tile.get_height() for tile in self.assets[self.tile_list[self.tile_group]]])
+            for ix, val in enumerate(self.assets[self.tile_list[self.tile_group]]): 
                 y_offset = 0
                 tile_h = sidebar_surf.get_height() + 2 + (max_height * ix * 1.5) + self.sidebar_scroll[1]
                 tile_rect = pygame.Rect(1, tile_h, val.get_width(), val.get_height())
@@ -186,7 +221,7 @@ class LevelEditor:
                     y_offset = 2
                 tile_selector_surf.blit(val, (1, 2 + (max_height * ix * 1.5) - y_offset + self.sidebar_scroll[1]))
             
-            self.tilemap.render_editor(self.current_layer, self.layer_opacity, self.display, offset=render_scroll)
+            self.render_editor(self.display, offset=render_scroll)
             
             if self.placement_mode == 'grid':
                 self.display.blit(tile_choice, (tile_pos[0] * self.tilemap.tile_size - self.scroll[0], tile_pos[1] * self.tilemap.tile_size - self.scroll[1]))
@@ -195,10 +230,29 @@ class LevelEditor:
             
             self.display.blit(current_tile, (self.sidebar_size + 20, 20))
             
-            self.font.render(self.display, 'file: ' + (str(self.file_name.split('/')[-1]) if self.file_name else 'None'), ((self.display.get_width() - 70 if self.file_name else self.display.get_width() - 53), 5))
-            self.font.render(self.display, 'placement_mode: ' + str(self.placement_mode), (self.display.get_width() - 98, 20))
-            self.font.render(self.display, 'layer: ' + str(self.current_layer), (self.display.get_width() - 46, 35))
-            self.font.render(self.display, 'pos: ' + str(list(tile_pos) if self.placement_mode == 'grid' else list(scaled_mpos)), (self.display.get_width() - 60, 50))
+            right_offset = 5
+            y_text_pos = 7
+            
+            file_text = 'file: ' + (str(self.file_name.split('/')[-1]) if self.file_name else 'None')
+            self.font.render(self.display, file_text, (self.display.get_width() - self.font.width(file_text) - right_offset, y_text_pos))
+            y_text_pos += 15
+            
+            placement_text = 'placement_mode: ' + str(self.placement_mode)
+            self.font.render(self.display, placement_text, (self.display.get_width() - self.font.width(placement_text) - right_offset, y_text_pos))
+            y_text_pos += 15
+            
+            layer_text = 'layer: ' + str(self.current_layer)
+            self.font.render(self.display, layer_text, (self.display.get_width() - self.font.width(layer_text) - right_offset, y_text_pos))
+            y_text_pos += 15
+            
+            pos_text = 'pos: ' + str(list(scaled_mpos))
+            self.font.render(self.display, pos_text, (self.display.get_width() - self.font.width(pos_text) - right_offset, y_text_pos))
+            y_text_pos += 15
+            
+            tile_pos_text = 'tile_pos: ' + str(list(tile_pos))
+            self.font.render(self.display, tile_pos_text, (self.display.get_width() - self.font.width(tile_pos_text) - right_offset, y_text_pos))
+            y_text_pos += 15
+            
             
             if mpos[0] < self.sidebar_size:
                 if mpos[1] < 100:
@@ -260,13 +314,12 @@ class LevelEditor:
                     if event.key == pygame.K_o:
                         root = tk.Tk()
                         root.withdraw()
-                        if self.file_name:
-                            self.tilemap.write_map(self.file_name)
-                        else:
-                            file = filedialog.asksaveasfile(title='Save Map', filetypes=[('json files', '*.json'), ('all files', "*.*")], initialdir=os.path.join(os.getcwd(), 'data', 'maps'))
-                            if file:
-                                self.tilemap.write_map(file.name)
-                                self.file_name = file.name              
+                        current_file = self.file_name.split('/')[-1] if self.file_name else None
+                        file = filedialog.asksaveasfile(initialfile=current_file, defaultextension='.json', title='Save Map', filetypes=[('json files', '*.json'), ('all files', "*.*")], initialdir=os.path.join(os.getcwd(), 'data', 'maps'))
+                        if file:
+                            self.tilemap.write_map(file.name)
+                            self.file_name = file.name     
+                            file.close()         
                     if event.key == pygame.K_i:
                         root = tk.Tk()
                         root.withdraw()
@@ -305,13 +358,11 @@ class LevelEditor:
                     if event.button == 4:
                         self.scrolled_up = True
                         if mpos[0] > self.sidebar_size:
-                            self.current_layer = int(self.current_layer) + 1
-                            self.current_layer = str(self.current_layer)
+                            self.current_layer = self.current_layer + 1
                     if event.button == 5:
                         self.scrolled_down = True
                         if mpos[0] > self.sidebar_size:
-                            self.current_layer = int(self.current_layer) - 1
-                            self.current_layer = str(self.current_layer)
+                            self.current_layer = self.current_layer - 1
                 if event.type == pygame.MOUSEBUTTONUP:
                     if event.button == 1:
                         self.clicking = False

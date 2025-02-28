@@ -6,11 +6,14 @@ class Camera:
         self.true_pos = [0, 0]
         self.target_pos = [0, 0]
         self.tracked_entity = None
-        self.camera_speed = 0.6
+        self.slowness = 40
     
     @property
     def pos(self):
         return (int(self.true_pos[0]), int(self.true_pos[1]))
+    
+    def smooth_approach(self, val, target, slowness):
+        return val + (target - val) / slowness * min(self.game.window.dt * 60, slowness)
     
     def set_tracked_entity(self, entity):
         self.tracked_entity = entity
@@ -26,7 +29,7 @@ class Camera:
         if self.tracked_entity:
             self.set_target((self.tracked_entity.pos[0] - self.game.window.display.get_width() // 2, self.tracked_entity.pos[1] - self.game.window.display.get_height() // 2))
         
-        self.true_pos[0] += (self.target_pos[0] - self.true_pos[0]) / 200
-        self.true_pos[1] += (self.target_pos[1] - self.true_pos[1]) / 200
+        self.true_pos[0] = self.smooth_approach(self.true_pos[0], self.target_pos[0], self.slowness)
+        self.true_pos[1] = self.smooth_approach(self.true_pos[1], self.target_pos[1], self.slowness)
         
         

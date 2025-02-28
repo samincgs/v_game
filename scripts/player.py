@@ -1,5 +1,6 @@
 import math
 import random
+import pygame
 
 from .entity import Entity
 from .inventory import Inventory
@@ -69,7 +70,7 @@ class Player(Entity):
         
     def update(self, dt):
         self.frame_movement = self.velocity.copy()
-    
+            
         r = super().update(dt)
         self.air_timer += dt
         self.dash_timer = max(0, self.dash_timer - dt)
@@ -87,7 +88,7 @@ class Player(Entity):
                 
         if self.dash_timer:
             self.game.world.spark_manager.sparks.append(CurvedSpark([self.center[0], self.center[1] + 9], math.pi + self.aim_angle, random.randint(1,10) / 10, random.randint(-40, 40) / 100, scale=1, decay_rate=random.randint(10, 20) / 100))
-            if random.randint(1, 4) == 1:
+            if random.randint(1, 3) == 1:
                 self.dash_info.append({'pos': self.pos.copy(), 'img': self.img.copy()})
         else:
             self.dash_info = []
@@ -119,7 +120,7 @@ class Player(Entity):
         
         self.velocity[0] = normalize(self.velocity[0], 550 * dt)
         self.velocity[1] = min(500, self.velocity[1] + dt * 700)
-                
+            
         self.frame_movement[0] *= dt
         self.frame_movement[1] *= dt
         
@@ -145,7 +146,8 @@ class Player(Entity):
                     self.pickup_item(entity.item_data)
                     self.game.world.item_notifications.add_item_notif(entity.item_data)
                     
-                
+        
+        
         # weapon
         angle = math.atan2(self.game.input.mpos[1] - self.center[1] + self.game.world.camera.pos[1], self.game.input.mpos[0] - self.center[0] + self.game.world.camera.pos[0])
         self.aim_angle = angle
@@ -167,7 +169,9 @@ class Player(Entity):
             img = dash['img']
             img.set_alpha(45)
             surf.blit(img, (dash['pos'][0] - offset[0], dash['pos'][1] - offset[1]))
-        # pygame.draw.rect(surf, (0, 255, 0), pygame.Rect(self.pos[0] - offset[0], self.pos[1] - offset[1], *self.size), 1) # debug
+       
+        
+        
         
             
     

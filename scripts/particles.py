@@ -28,7 +28,7 @@ class Particle:
                 self.rotation += 20 * dt * abs_motion
         elif self.type == 'leaf':
             # TODO: fix sin wave
-            self.pos[0] += math.sin(self.frame * 0.76) * 0.13
+            self.pos[0] += math.sin(self.frame * 0.76) * 0.21
             # if not self.wind_force:
             #     if random.randint(0, 999) == 1:
             #         self.wind_force = 0.6
@@ -126,7 +126,7 @@ class ParticleManager:
             # if the tree is visible on the players screen
             if (self.game.world.camera.pos[0] <=  tree['pos'][0] + self.game.assets.tiles['foliage'][0].get_width() <= (self.game.world.camera.pos[0] + surf.get_width())) or (self.game.world.camera.pos[0] <=  tree['pos'][0] <= (self.game.world.camera.pos[0] + surf.get_width())):
                 r = pygame.Rect(tree['pos'][0] + 9, tree['pos'][1] + 8, 44, 17)
-                if random.randint(0, 9999) < (r.width - r.height):
+                if random.randint(0, 6999) < (r.width - r.height):
                     pos = [r.x + random.random() * r.width, r.y + random.random() * r.height]
                     color = (random.randint(100, 150), random.randint(80, 130), random.randint(10, 50))
                     self.add_particle(self.game, 'leaf', pos, [random.randint(-60, -35), random.randint(35, 50)], 0.8, random.randint(0, 2), color)

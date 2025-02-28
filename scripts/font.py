@@ -1,9 +1,9 @@
-from .utils import clip, load_image, palette_swap
+from .utils import clip, load_img, palette_swap
 
 class Font:
     def __init__(self, path, font_color=(255, 255, 255)):
-        self.font_order = ['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z','a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '.', '/', '\\', '-', '\'', ',', ']','[', '_', ':', '%']
-        self.font_sheet = load_image(path)
+        self.font_order = ['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z','a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '.', '/', '\\', '-', '\'', ',', ']','[', '_', ':', '%', '?']
+        self.font_sheet = load_img(path, colorkey=(0, 0, 0))
         if font_color != (255, 255, 255):
             self.font_sheet = palette_swap(self.font_sheet, (255, 255, 255), font_color)
             
@@ -23,6 +23,16 @@ class Font:
             x += 1 
             
         self.base_size = self.characters['a'].get_size()
+        
+    def width(self, text, extra_space=0):
+        width = 0
+        for char in text:
+            if char not in [' ', '\n']:
+                width += self.characters[char].get_width() + self.spacing
+            elif char == ' ':
+                width += self.base_size[0]
+        width += extra_space
+        return width
             
     def render(self, surf, text, loc):
         x_offset = 0
