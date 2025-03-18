@@ -96,7 +96,7 @@ class Entity:
     
     def collisions(self, tilemap, movement=(0, 0)):
         directions = {d: False for d in ['top', 'right', 'left', 'bottom']}
-        
+                
         # horizontal
         self.pos[0] += movement[0]
         tiles = tilemap.get_nearby_rects(self.pos)

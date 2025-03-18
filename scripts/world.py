@@ -18,7 +18,6 @@ class World:
         self.camera = Camera(game)
         self.tilemap = Tilemap(game, tile_size=config['window']['tile_size']) # tile_size is 16
         self.tilemap.load_map('data/maps/' + self.map_area + '.json')
-        print(self.tilemap.tilemap)
         self.entities = Entities(game)
         self.tilemap.load_destructables(self.entities)
         self.player = self.entities.player
@@ -51,7 +50,7 @@ class World:
     def render(self, surf):
         offset = self.camera.pos
                 
-        self.tilemap.render(surf, offset=offset)
+        self.tilemap.render_visible(surf, offset=offset)
         self.entities.render(surf, offset=offset)
         self.particle_manager.render(surf, offset=offset)
         self.spark_manager.render(surf, offset=offset)

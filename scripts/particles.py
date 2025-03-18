@@ -122,7 +122,7 @@ class ParticleManager:
         
     def environment_particles(self, surf):
         # leaf particles
-        for tree in self.game.world.tilemap.extract('trees'):
+        for tree in self.game.world.tilemap.extract(('foliage', (0, 1))):
             # if the tree is visible on the players screen
             if (self.game.world.camera.pos[0] <=  tree['pos'][0] + self.game.assets.tiles['foliage'][0].get_width() <= (self.game.world.camera.pos[0] + surf.get_width())) or (self.game.world.camera.pos[0] <=  tree['pos'][0] <= (self.game.world.camera.pos[0] + surf.get_width())):
                 r = pygame.Rect(tree['pos'][0] + 9, tree['pos'][1] + 8, 44, 17)
