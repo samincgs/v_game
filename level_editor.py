@@ -103,37 +103,45 @@ class LevelEditor:
        
     
     def render_editor(self, surf, offset=(0,0)): 
+        
+        render_queue = []
+
         for layer in sorted(int(layer) for layer in self.tilemap.offgrid_tiles):
-            layer = str(layer)
-            for tile in self.tilemap.offgrid_tiles[layer]:
+            tile_layer = self.tilemap.offgrid_tiles[str(layer)]
+            for tile in tile_layer:
                 if not self.layer_opacity:
                     img = self.assets[tile['type']][tile['variant']]
-                    surf.blit(img, (tile['pos'][0] - offset[0], tile['pos'][1] - offset[1]))
+                    render_queue.append((int(layer), img.copy(), (tile['pos'][0] - offset[0], tile['pos'][1] - offset[1])))
                 else:
-                    if self.current_layer == layer:
+                    if self.current_layer == str(layer):
                         img = self.assets[tile['type']][tile['variant']].copy()
-                        surf.blit(img, (tile['pos'][0] - offset[0], tile['pos'][1] - offset[1]))
+                        render_queue.append((int(layer), img.copy(), (tile['pos'][0] - offset[0], tile['pos'][1] - offset[1])))
                     else:
                         img = self.assets[tile['type']][tile['variant']].copy()
                         img.set_alpha(75)
-                        surf.blit(img, (tile['pos'][0] - offset[0], tile['pos'][1] - offset[1]))
+                        render_queue.append((int(layer), img.copy(), (tile['pos'][0] - offset[0], tile['pos'][1] - offset[1])))
         
         for loc in self.tilemap.tilemap:
-            for tile_layer in sorted(int(layer) for layer in self.tilemap.tilemap[loc]):
-                layer = str(tile_layer)
-                tile = self.tilemap.tilemap[loc][layer]
+            for layer in sorted(int(layer) for layer in self.tilemap.tilemap[loc]):
+                tile = self.tilemap.tilemap[loc][str(layer)]
                 if not self.layer_opacity:
                     img = self.assets[tile['type']][tile['variant']]
-                    surf.blit(img, (tile['tile_pos'][0] * self.tilemap.tile_size - offset[0], tile['tile_pos'][1] * self.tilemap.tile_size - offset[1]))
+                    render_queue.append((int(layer), img.copy(), (tile['tile_pos'][0] * self.tilemap.tile_size - offset[0], tile['tile_pos'][1] * self.tilemap.tile_size - offset[1])))
                 else:
-                    if self.current_layer == layer:
+                    if self.current_layer == str(layer):
                         img = self.assets[tile['type']][tile['variant']]
-                        surf.blit(img, (tile['tile_pos'][0] * self.tilemap.tile_size - offset[0], tile['tile_pos'][1] * self.tilemap.tile_size - offset[1]))
+                        render_queue.append((int(layer), img.copy(), (tile['tile_pos'][0] * self.tilemap.tile_size - offset[0], tile['tile_pos'][1] * self.tilemap.tile_size - offset[1])))
                     else:
                         img = self.assets[tile['type']][tile['variant']].copy()
                         img.set_alpha(75)
-                        surf.blit(img, (tile['tile_pos'][0] * self.tilemap.tile_size - offset[0], tile['tile_pos'][1] * self.tilemap.tile_size - offset[1]))
-                                            
+                        render_queue.append((int(layer), img.copy(), (tile['tile_pos'][0] * self.tilemap.tile_size - offset[0], tile['tile_pos'][1] * self.tilemap.tile_size - offset[1])))
+        
+        
+        render_queue.sort(key=lambda x: x[0]) # sort the layer
+        
+        for tile in render_queue:
+            surf.blit(tile[1], tile[2])
+        
     def run(self):
         while True:
             self.display.fill((0, 0, 0))

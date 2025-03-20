@@ -36,7 +36,7 @@ class Window:
             self.window = pygame.display.set_mode(self.config['scaled_res'])  
     
     def create(self):
-        self.clock.tick(120)
+        # self.clock.tick(120)
         
         self.dt = time.time() - self.start_frame
         self.start_frame = time.time()

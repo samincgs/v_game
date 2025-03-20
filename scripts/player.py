@@ -1,11 +1,11 @@
 import math
 import random
-import pygame
 
 from .entity import Entity
 from .inventory import Inventory
 from .utils import normalize
 from .spark import CurvedSpark
+from .skill import DashSkill
 
 
 class Player(Entity):
@@ -15,12 +15,7 @@ class Player(Entity):
         self.air_timer = 0
         self.max_jumps = 2
         self.jumps = self.max_jumps
-        self.max_dashes = 3
-        self.dashes = self.max_dashes
-        self.dash_charge = 0
-        self.dash_charge_rate = 2
-        self.dash_timer = 0
-        self.dash_info = []
+        self.skills =[DashSkill(game, self, 'dash')]
         self.aim_angle = 0
         self.inventory = Inventory()       
         self.selected_weapon = 0
@@ -73,30 +68,26 @@ class Player(Entity):
             
         r = super().update(dt)
         self.air_timer += dt
-        self.dash_timer = max(0, self.dash_timer - dt)
+        
       
         # if self.air_timer > 4 and self.pos[1] > 700:
         #     self.game.world.transition = 20
         #     self.dead = True
         
     
-        if self.dashes < self.max_dashes:
-            self.dash_charge += dt
-            if self.dash_charge > self.dash_charge_rate:
-                self.dashes += 1
-                self.dash_charge = 0
+        # if self.dashes < self.max_dashes:
+        #     self.dash_charge += dt
+        #     if self.dash_charge > self.dash_charge_rate:
+        #         self.dashes += 1
+        #         self.dash_charge = 0
                 
-        if self.dash_timer:
-            self.game.world.spark_manager.sparks.append(CurvedSpark([self.center[0], self.center[1] + 9], math.pi + self.aim_angle, random.randint(1,10) / 10, random.randint(-40, 40) / 100, scale=1, decay_rate=random.randint(10, 20) / 100))
-            if random.randint(1, 3) == 1:
-                self.dash_info.append({'pos': self.pos.copy(), 'img': self.img.copy()})
-        else:
-            self.dash_info = []
+        
+        
 
         if not self.game.world.inventory_mode:
             # player controls
             if self.game.input.mouse_states['right_click']:
-                self.dash()
+                self.skills[0].use()
             if self.game.input.states['jump']:
                 self.jump()
             if self.game.input.states['right']:
@@ -159,16 +150,21 @@ class Player(Entity):
             else:
                 self.flip[0] = False 
                 
+        for skill in self.skills:
+            skill.update(dt)     
+                
+        
+                
         return r
    
     def render(self, surf, offset=(0, 0)):
         super().render(surf, offset=offset)
         if self.weapon:
             self.weapon.render(surf, (self.center[0] - offset[0], self.center[1] - offset[1] + 2))
-        for dash in self.dash_info:
-            img = dash['img']
-            img.set_alpha(45)
-            surf.blit(img, (dash['pos'][0] - offset[0], dash['pos'][1] - offset[1]))
+            
+        for skill in self.skills:
+            skill.render(surf, offset=offset)
+        
        
         
         

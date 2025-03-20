@@ -34,22 +34,24 @@ class GUI:
           
         # skills
         skill_offset = 20
-        for i in range(1):
+        
+        for skill in self.game.world.player.skills:
+            
+            # skill placement holders
             surf.blit(assets.misc['skill_holder'], (skill_offset, surf.get_height() - assets.misc['skill_holder'].get_height()))
             skill_offset += assets.misc['skill_holder'].get_width() - 7
-        
-        
-        dash_img = assets.misc['dash'].copy()
-        
-        if player.dashes >= 1:
-            assets.fonts['small_white'].render(surf, str(player.dashes), (30, surf.get_height() - assets.misc['skill_holder'].get_height() - 6))
-        else:
-            dash_cooldown = player.dash_charge / player.dash_charge_rate
-            dash_cooldown_surf = pygame.Surface((dash_img.get_width(), dash_img.get_height() * (1 - dash_cooldown)))
-            dash_cooldown_surf.fill((120, 120, 120))
-            dash_img.blit(dash_cooldown_surf, (0, dash_img.get_height() - dash_cooldown_surf.get_height()), special_flags=pygame.BLEND_RGB_MULT)
             
-        surf.blit(dash_img, (24, surf.get_height() - assets.misc['skill_holder'].get_height() + 5))
+            skill_img = skill.img.copy()
+            if skill.amount >= 1:
+                assets.fonts['small_white'].render(surf, str(skill.amount), (30, surf.get_height() - assets.misc['skill_holder'].get_height() - 6))
+            else:
+                dash_cooldown = skill.charge / skill.charge_rate
+                dash_cooldown_surf = pygame.Surface((skill_img.get_width(), skill_img.get_height() * (1 - dash_cooldown)))
+                dash_cooldown_surf.fill((120, 120, 120))
+                            
+                skill_img.blit(dash_cooldown_surf, (0, skill_img.get_height() - dash_cooldown_surf.get_height()), special_flags=pygame.BLEND_RGB_MULT)
+                
+            surf.blit(skill_img, (24, surf.get_height() - assets.misc['skill_holder'].get_height() + 5))
     
     
     def render_minimap(self, surf, assets):
