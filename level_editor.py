@@ -12,7 +12,7 @@ class LevelEditor:
     def __init__(self):
         pygame.init()
         
-        self.config = load_json('data/editor/config.json')
+        self.config = load_json('data/images/spritesheets/config.json')
         self.display_size = (600, 400)
         self.display_scale = 2
         
@@ -24,8 +24,9 @@ class LevelEditor:
         self.file_name = None
         
         self.tilemap = Tilemap(self, tile_size=self.config['tile_size'])
+        self.spritesheet_data = self.tilemap.load_spritesheets('data/images/spritesheets/')
         
-        self.assets = self.tilemap.tiles
+        
         self.font = Font('data/fonts/main_font.png', (208, 223, 215))
         
         self.scroll = [0, 0]
@@ -40,7 +41,7 @@ class LevelEditor:
         self.scrolled_up = False
         self.scrolled_down = False
         
-        self.tile_list = list(self.assets)
+        self.tile_list = list(self.spritesheet_data)
         self.tile_group = 0
         self.tile_variant = 0
         self.selected_group = self.tile_list[0]
@@ -99,7 +100,28 @@ class LevelEditor:
         self.reset_rect()
         
     def floodfill(self, curr_pos):
-        pass
+        floodfill_list = [curr_pos]
+        visited = set()
+        
+        while floodfill_list:
+            tile = floodfill_list.pop(0)
+            
+            if tuple(tile) in visited:
+                continue
+            
+            
+            visited.add(tuple(tile))
+                
+            scaled_mpos = (tile[0] + self.scroll[0] * self.tilemap.tile_size, tile[1] + self.scroll[1] * self.tilemap.tile_size)
+            tile_data = {'type': self.tile_list[self.tile_group], 'variant': self.tile_variant, 'pos': scaled_mpos, 'tile_pos': tuple(tile), 'layer': self.current_layer }
+            self.tilemap.add_tile(tile_data)
+            
+            bordering_tiles = [[tile[0] + 1, tile[1]], [tile[0] - 1, tile[1]], [tile[0], tile[1] + 1], [tile[0], tile[1] - 1]]
+            for b in bordering_tiles:
+                if not self.tilemap.get_tile(b) and tuple(b) not in visited:
+                    floodfill_list.append(b)
+            
+            print(f"Floodfill List: {floodfill_list}")
        
     
     def render_editor(self, surf, offset=(0,0)): 
@@ -110,14 +132,14 @@ class LevelEditor:
             tile_layer = self.tilemap.offgrid_tiles[str(layer)]
             for tile in tile_layer:
                 if not self.layer_opacity:
-                    img = self.assets[tile['type']][tile['variant']]
+                    img = self.spritesheet_data[tile['type']][tile['variant']]
                     render_queue.append((int(layer), img.copy(), (tile['pos'][0] - offset[0], tile['pos'][1] - offset[1])))
                 else:
                     if self.current_layer == str(layer):
-                        img = self.assets[tile['type']][tile['variant']].copy()
+                        img = self.spritesheet_data[tile['type']][tile['variant']].copy()
                         render_queue.append((int(layer), img.copy(), (tile['pos'][0] - offset[0], tile['pos'][1] - offset[1])))
                     else:
-                        img = self.assets[tile['type']][tile['variant']].copy()
+                        img = self.spritesheet_data[tile['type']][tile['variant']].copy()
                         img.set_alpha(75)
                         render_queue.append((int(layer), img.copy(), (tile['pos'][0] - offset[0], tile['pos'][1] - offset[1])))
         
@@ -125,14 +147,14 @@ class LevelEditor:
             for layer in sorted(int(layer) for layer in self.tilemap.tilemap[loc]):
                 tile = self.tilemap.tilemap[loc][str(layer)]
                 if not self.layer_opacity:
-                    img = self.assets[tile['type']][tile['variant']]
+                    img = self.spritesheet_data[tile['type']][tile['variant']]
                     render_queue.append((int(layer), img.copy(), (tile['tile_pos'][0] * self.tilemap.tile_size - offset[0], tile['tile_pos'][1] * self.tilemap.tile_size - offset[1])))
                 else:
                     if self.current_layer == str(layer):
-                        img = self.assets[tile['type']][tile['variant']]
+                        img = self.spritesheet_data[tile['type']][tile['variant']]
                         render_queue.append((int(layer), img.copy(), (tile['tile_pos'][0] * self.tilemap.tile_size - offset[0], tile['tile_pos'][1] * self.tilemap.tile_size - offset[1])))
                     else:
-                        img = self.assets[tile['type']][tile['variant']].copy()
+                        img = self.spritesheet_data[tile['type']][tile['variant']].copy()
                         img.set_alpha(75)
                         render_queue.append((int(layer), img.copy(), (tile['tile_pos'][0] * self.tilemap.tile_size - offset[0], tile['tile_pos'][1] * self.tilemap.tile_size - offset[1])))
         
@@ -157,7 +179,7 @@ class LevelEditor:
             scaled_mpos = (mpos[0] + self.scroll[0], mpos[1] + self.scroll[1])
             tile_pos = (int(mpos[0] + self.scroll[0]) // self.tilemap.tile_size, int(mpos[1] + self.scroll[1]) // self.tilemap.tile_size)
                         
-            current_tile = self.assets[self.tile_list[self.tile_group]][self.tile_variant].copy()
+            current_tile = self.spritesheet_data[self.tile_list[self.tile_group]][self.tile_variant].copy()
             tile_choice = current_tile.copy()
             tile_choice.set_alpha(210)
                         
@@ -201,8 +223,8 @@ class LevelEditor:
             pygame.draw.line(tile_selector_surf, self.sidebar_rect_color, (tile_selector_surf.get_width() - 1, 0), (tile_selector_surf.get_width() - 1, tile_selector_surf.get_height() - 1))
             
             # SELECT TILES (BOTTOM HALF)
-            max_height = max([tile.get_height() for tile in self.assets[self.tile_list[self.tile_group]]])
-            for ix, val in enumerate(self.assets[self.tile_list[self.tile_group]]): 
+            max_height = max([tile.get_height() for tile in self.spritesheet_data[self.tile_list[self.tile_group]]])
+            for ix, val in enumerate(self.spritesheet_data[self.tile_list[self.tile_group]]): 
                 y_offset = 0
                 tile_h = sidebar_surf.get_height() + 2 + (max_height * ix * 1.5) + self.sidebar_scroll[1]
                 tile_rect = pygame.Rect(1, tile_h, val.get_width(), val.get_height())

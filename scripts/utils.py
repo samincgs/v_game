@@ -79,11 +79,11 @@ def read_file(path):
     return data
 
 # create a smaller subsurface of a bigger surface
-def clip(surf, x, y, x_size, y_size):
-    handle_surf = surf.copy()
-    clip_rect = pygame.Rect(x, y, x_size, y_size)
-    handle_surf.set_clip(clip_rect)
-    img = surf.subsurface(handle_surf.get_clip())
+def clip(surf, loc, size):
+    main_surf = surf.copy()
+    clipped_rect = pygame.Rect(loc[0], loc[1], size[0], size[1])
+    main_surf.set_clip(clipped_rect)
+    img = main_surf.subsurface(main_surf.get_clip())
     return img.copy()
 
 # do a color swap, between an old and new color

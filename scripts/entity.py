@@ -62,7 +62,7 @@ class Entity:
         
         for y in range(entity_img.get_height() // size + 1):
             for x in range(entity_img.get_width() // size + 1):
-                particle_img = clip(entity_img, x * size, y * size, size, size)
+                particle_img = clip(entity_img, (x * size, y * size), (size, size))
                 self.game.world.particle_manager.add_death_particle(self.game, particle_img, self.center.copy(), 0, random.randint(300, 500), 0.9, [random.randint(0, 150) - 75, random.randint(0, 100) - 125], duration=2)
         
         # create death sparks

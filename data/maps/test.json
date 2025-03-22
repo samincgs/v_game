@@ -4600,8 +4600,8 @@
     "34;12": {
       "-1": {
         "type": "structures",
-        "variant": 0,
-        "pos": [555, 203],
+        "variant": 1,
+        "pos": [554, 201],
         "tile_pos": [34, 12],
         "layer": "-1"
       }
@@ -4609,13 +4609,6 @@
   },
   "offgrid_tiles": {
     "-5": [
-      {
-        "type": "foliage",
-        "variant": 1,
-        "pos": [272, 52],
-        "tile_pos": [17, 3],
-        "layer": -5
-      },
       {
         "type": "decor",
         "variant": 1,
@@ -4656,13 +4649,6 @@
         "variant": 4,
         "pos": [281, 108],
         "tile_pos": [17, 6],
-        "layer": -5
-      },
-      {
-        "type": "foliage",
-        "variant": 1,
-        "pos": [589, 69],
-        "tile_pos": [36, 4],
         "layer": -5
       },
       {
@@ -4733,6 +4719,20 @@
         "variant": 4,
         "pos": [412, 156],
         "tile_pos": [25, 9],
+        "layer": "-5"
+      },
+      {
+        "type": "foliage",
+        "variant": 1,
+        "pos": [272, 58],
+        "tile_pos": [17, 3],
+        "layer": "-5"
+      },
+      {
+        "type": "foliage",
+        "variant": 1,
+        "pos": [589, 73],
+        "tile_pos": [36, 4],
         "layer": "-5"
       }
     ],

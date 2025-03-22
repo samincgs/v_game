@@ -54,6 +54,10 @@ class GUI:
             surf.blit(skill_img, (24, surf.get_height() - assets.misc['skill_holder'].get_height() + 5))
     
     
+    # def render_input(self, surf, assets):
+    #     left_input = assets.misc['left_mouse_input']
+    #     surf.blit(left_input, (38, self.game.window.display.get_height() - left_input.get_height()))
+    
     def render_minimap(self, surf, assets):
          
         dark_surf = pygame.Surface(self.game.world.minimap.map_surf.get_size())
@@ -70,6 +74,7 @@ class GUI:
         player = self.game.world.player
 
         self.render_stats(surf, assets, player)
+        # self.render_input(surf, assets)
         self.render_minimap(surf, assets)
              
         # show fps
