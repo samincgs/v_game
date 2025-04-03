@@ -59,7 +59,8 @@ class InventoryMenu:
                     if ix == j + i * self.cols:
                         color = (255, 255, 255)
                         item_img = self.get_image(item.name)
-                        surf.blit(item_img, (rect.centerx - item_img.get_width() // 2, rect.centery - item_img.get_height() // 2))
+                        w_offset = 2 if 'weapon' in item.tags else 0
+                        surf.blit(item_img, (rect.centerx - item_img.get_width() // 2 - w_offset, rect.centery - item_img.get_height() // 2))
                         if item.amount > 1:
                             self.game.assets.fonts['small_white'].render(surf, str(item.amount), (rect.centerx + 5, rect.centery + 5)) # name
                             

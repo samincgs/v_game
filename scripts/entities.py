@@ -14,12 +14,13 @@ class Entities:
         
         self.config = config['entities']
         
+        self.entities.append(Player(self.game, (240, 100), self.config['player']['size'], 'player'))
         
-        # default player items
-        self.entities.append(Player(game, (200, 90), self.config['player']['size'], 'player'))
+        
         # self.player.inventory.add_item(Weapon(game, 'rifle', self.player, tags=['active']), 'weapons')
-        self.drop_item((220, 100), (1, 1), Weapon(game, 'revolver', None), [0, 160])
-    
+        self.drop_item((260, 100), (1, 1), Weapon(self.game, 'revolver', None), [0, 160])
+        
+     
     @property
     def player(self):
         return self.entities[0]
@@ -27,9 +28,11 @@ class Entities:
     def drop_item(self, pos, size, item_data, velocity):
         self.entities.append(Itemdrop(self.game, pos, size, 'item', item_data))
         self.entities[-1].velocity = list(velocity)
-        
-    def load_destructable(self, entity_data):
-        self.entities.append(Crate(self.game, entity_data['pos'], [1, 1]))
+    
+    # additional
+    def load_destructables(self, tm):
+        for crate in tm.extract(['decor', (0, 1)], keep=False):
+            self.entities.append(Crate(self.game, crate['pos'], [1, 1]))
      
     def spawner(self):
         if random.randint(1, self.config['bat']['spawn_rate']) == 1:

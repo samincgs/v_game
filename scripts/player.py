@@ -38,7 +38,7 @@ class Player(Entity):
         active_weapons = self.inventory.get_active_weapons()
         if active_weapons:
             self.selected_weapon = (self.selected_weapon + direction) % len(active_weapons)
-            
+                
     def jump(self):
         if self.jumps:
             self.velocity[1] = -300 
@@ -70,21 +70,12 @@ class Player(Entity):
         self.air_timer += dt
         
       
-        # if self.air_timer > 4 and self.pos[1] > 700:
-        #     self.game.world.transition = 20
-        #     self.dead = True
-        
-    
-        # if self.dashes < self.max_dashes:
-        #     self.dash_charge += dt
-        #     if self.dash_charge > self.dash_charge_rate:
-        #         self.dashes += 1
-        #         self.dash_charge = 0
-                
+        # if self.pos[1] > 1200:
+        #     self.game.world.reset_level()
         
         
-
         if not self.game.world.inventory_mode:
+            
             # player controls
             if self.game.input.mouse_states['right_click']:
                 self.skills[0].use()

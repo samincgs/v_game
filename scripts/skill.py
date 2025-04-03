@@ -45,9 +45,11 @@ class DashSkill(Skill):
         self.charge = 0
         self.charge_rate = 2
         
+        self.dash_force = 450
         self.dash_timer = 0
         self.dash_info = []
     
+
     def update(self, dt):
         super().update(dt)
         
@@ -63,8 +65,8 @@ class DashSkill(Skill):
     def use(self):
         if not self.dash_timer and self.amount:
             self.dash_timer = 0.2
-            self.owner.velocity[0] = math.cos(self.owner.aim_angle) * 450 
-            self.owner.velocity[1] = math.sin(self.owner.aim_angle) * 450 
+            self.owner.velocity[0] = math.cos(self.owner.aim_angle) * self.dash_force 
+            self.owner.velocity[1] = math.sin(self.owner.aim_angle) * self.dash_force 
             for i in range(12):
                 self.game.world.spark_manager.sparks.append(CurvedSpark(self.owner.center.copy(), math.pi + self.owner.aim_angle + random.uniform(-math.pi / 6, math.pi / 6), random.randint(30,80) / 10, random.randint(-10, 10) / 100, scale=2, decay_rate=random.randint(40, 70) / 100))
                 

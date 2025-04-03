@@ -16,7 +16,7 @@ class Renderer:
         self.background.update()
         self.background.render(surf)
     
-        self.game.world.render(surf)
+        self.game.world.render(surf, self.game.world.camera.pos)
         self.gui.render(surf)
         
         # inventory

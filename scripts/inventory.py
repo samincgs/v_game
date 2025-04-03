@@ -53,6 +53,9 @@ class Inventory:
                     items.append(item)
         return items
     
+    def get_all_items(self):
+        return self.groups
+    
     def sort_weapons_by_tag(self, tag):
         self.groups['weapons'].items = sorted(self.groups['weapons'].items, key=lambda x: tag not in x.tags)
             

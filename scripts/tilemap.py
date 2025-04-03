@@ -1,9 +1,7 @@
 import pygame
 import os
 
-from .utils import load_img, load_json, save_json, load_dir_list, clip
-
-TILE_PATH = 'data/images/tiles/'
+from .utils import load_spritesheets, load_json, save_json
 
 class Tilemap:
     def __init__(self, game, tile_size):
@@ -12,6 +10,8 @@ class Tilemap:
         
         self.tilemap = {} # { {'5;7' : 0 {{'type': 'grass', 'variant': 0, 'pos': [x, x]}}}}
         self.offgrid_tiles = {} # {0: [{'type': 'grass', 'variant': 0, 'pos': [x, x]}]}
+        self.tiles = load_spritesheets('data/images/spritesheets/')
+        
         
     def collision_test(self, obj, obj_list):
         collision_list = []
@@ -37,6 +37,13 @@ class Tilemap:
         if str_pos in self.tilemap:
             return True
         return False
+    
+    # gets position in tiles
+    def get_tile_by_layer(self, pos, layer):
+        str_pos = str(pos[0]) + ';' + str(pos[1])
+        if str_pos in self.tilemap and layer in self.tilemap[str_pos]:
+            return True
+        return False
         
     def tile_collide(self, pos):
         tile_pos = (int(pos[0] // self.tile_size), int(pos[1] // self.tile_size))
@@ -54,16 +61,17 @@ class Tilemap:
                         if not keep:
                             self.offgrid_tiles[layer].remove(tile)
         else:
-            pass
+            for loc in self.tilemap:
+                for layer in self.tilemap[loc].copy():
+                    tile = self.tilemap[loc][layer]
+                    if tile['type'] in id_pairs[0] and tile['variant'] in id_pairs[1]:
+                        extract_list.append(tile)
+                        if not keep:
+                            del self.tilemap[loc][layer]
         
         return extract_list
                     
-        
-    # additional
-    def load_destructables(self, em):
-        for crate in self.extract(['decor', (0, 1)], keep=False):
-            em.load_destructable(crate)
-    
+
     def load_map(self, path):
         map_data = load_json(path)
         
@@ -116,13 +124,12 @@ class Tilemap:
                     self.offgrid_tiles[layer].remove(tile_data)
                 
     def render_visible(self, surf, offset=(0, 0)):
-        tiles = self.load_spritesheets('data/images/spritesheets/')
         render_queue = []
         
         for layer in sorted(int(layer) for layer in self.offgrid_tiles): 
             tile_layer = self.offgrid_tiles[str(layer)]
             for tile in tile_layer:
-                render_queue.append((int(layer), tiles[tile['type']][tile['variant']], (tile['pos'][0] - offset[0], tile['pos'][1] - offset[1])))
+                render_queue.append((int(layer), self.tiles[tile['type']][tile['variant']], (tile['pos'][0] - offset[0], tile['pos'][1] - offset[1])))
                 # surf.blit(tiles[tile['type']][tile['variant']], (tile['pos'][0] - offset[0], tile['pos'][1] - offset[1]))
                 
         for x in range(offset[0] // self.tile_size, ((offset[0] + surf.get_width()) // self.tile_size) + 1):
@@ -131,7 +138,7 @@ class Tilemap:
                 if tile_loc in self.tilemap:
                     for layer in sorted(int(layer) for layer in self.tilemap[tile_loc]):
                         tile = self.tilemap[tile_loc][str(layer)]
-                        render_queue.append((int(layer), tiles[tile['type']][tile['variant']], (tile['tile_pos'][0] * self.tile_size - offset[0], tile['tile_pos'][1] * self.tile_size - offset[1])))
+                        render_queue.append((int(layer), self.tiles[tile['type']][tile['variant']], (tile['tile_pos'][0] * self.tile_size - offset[0], tile['tile_pos'][1] * self.tile_size - offset[1])))
                         # surf.blit(tiles[tile['type']][tile['variant']], (tile['tile_pos'][0] * self.tile_size - offset[0], tile['tile_pos'][1] * self.tile_size - offset[1]))
                         
         render_queue.sort(key=lambda x: x[0]) # sort the layer
@@ -141,19 +148,18 @@ class Tilemap:
         
                         
     def render_all(self, surf, offset=(0, 0)):
-        tiles = self.load_spritesheets('data/images/spritesheets/')
         render_queue = []
         
         for layer in sorted(int(layer) for layer in self.offgrid_tiles): 
             tile_layer = self.offgrid_tiles[str(layer)]
             for tile in tile_layer:
-                render_queue.append((int(layer), tiles[tile['type']][tile['variant']], (tile['pos'][0] - offset[0], tile['pos'][1] - offset[1])))
+                render_queue.append((int(layer), self.tiles[tile['type']][tile['variant']], (tile['pos'][0] - offset[0], tile['pos'][1] - offset[1])))
                 # surf.blit(tiles[tile['type']][tile['variant']], (tile['pos'][0] - offset[0], tile['pos'][1] - offset[1]))
                 
         for loc in self.tilemap:
             for layer in sorted(int(layer) for layer in self.tilemap[loc]):
                 tile = self.tilemap[loc][str(layer)]
-                render_queue.append((int(layer), tiles[tile['type']][tile['variant']], (tile['tile_pos'][0] * self.tile_size - offset[0], tile['tile_pos'][1] * self.tile_size - offset[1])))
+                render_queue.append((int(layer), self.tiles[tile['type']][tile['variant']], (tile['tile_pos'][0] * self.tile_size - offset[0], tile['tile_pos'][1] * self.tile_size - offset[1])))
                 # surf.blit(tiles[tile['type']][tile['variant']], (tile['tile_pos'][0] * self.tile_size - offset[0], tile['tile_pos'][1] * self.tile_size - offset[1]))
                 
         render_queue.sort(key=lambda x: x[0]) # sort the layer
@@ -161,49 +167,8 @@ class Tilemap:
         for tile in render_queue:
             surf.blit(tile[1], tile[2])
                                 
-    def load_spritesheets(self, path):
-        """Loads all spritesheets in a directory and extracts sprites."""
-        
-        spritesheet_dict = {}
-        
-        for img_file in os.listdir(path):
-            if img_file.endswith('.png'): 
-                tile_name = img_file.split('.')[0]  
-                spritesheet_dict[tile_name] = []
-                
-                spritesheet = load_img(os.path.join(path, img_file))
-                
-                y = 1
-                start_x = 1  
-                
-                while y < spritesheet.get_height():
-                    tile_end = None
-                    end_x = None
-                    
-                    for y2 in range(y, spritesheet.get_height()):
-                        if spritesheet.get_at((start_x, y2))[:3] == (255, 0, 255): # MAGENTA
-                            tile_end = y2 - 1
-                            break
-                    
-                    for x2 in range(start_x, spritesheet.get_width()):
-                        if spritesheet.get_at((x2, y))[:3] == (255, 0, 255): # MAGENTA
-                            end_x = x2 - 1
-                            break
+    
                         
-                    
-                    if tile_end is not None and end_x is not None:
-                        width, height = end_x - start_x + 1, tile_end - y + 1
-                        img = clip(spritesheet, (start_x, y), (width, height))
-
-                        spritesheet_dict[tile_name].append(img)
-
-                        y = tile_end + 3 
-
-                    else:
-                        y = spritesheet.get_height() + 100  
-                
-        return spritesheet_dict
-                            
         
                     
                     

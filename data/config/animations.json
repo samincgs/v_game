@@ -83,6 +83,20 @@
     "offset": [0, 0],
     "outline": null
   },
+  "item_rifle": {
+    "frames": [5],
+    "loop": false,
+    "speed": 1.0,
+    "offset": [0, 0],
+    "outline": null
+  },
+  "item_smg": {
+    "frames": [5],
+    "loop": false,
+    "speed": 1.0,
+    "offset": [0, 0],
+    "outline": null
+  },
   "crate_idle": {
     "frames": [5],
     "loop": false,

@@ -16,10 +16,10 @@ class World:
         self.map_area = 'test'
         
         self.camera = Camera(game)
-        self.tilemap = Tilemap(game, tile_size=config['window']['tile_size']) # tile_size is 16
+        self.tilemap = Tilemap(game, tile_size=16) # tile_size is 16
         self.tilemap.load_map('data/maps/' + self.map_area + '.json')
         self.entities = Entities(game)
-        self.tilemap.load_destructables(self.entities)
+        self.entities.load_destructables(self.tilemap)
         self.player = self.entities.player
         self.camera.set_tracked_entity(self.player)
         self.minimap = Minimap(game, tile_size=config['window']['tile_size'])
@@ -34,7 +34,10 @@ class World:
         self.master_clock = 0
         self.transition = 0
         
-        
+    def load_level(self, map_id, new=False):
+        pass
+    
+       
     def update(self):
         dt = self.game.window.dt
         self.master_clock += dt
@@ -47,9 +50,7 @@ class World:
         self.projectile_manager.update(dt)
         self.item_notifications.update(dt)
             
-    def render(self, surf):
-        offset = self.camera.pos
-                
+    def render(self, surf, offset=(0, 0)):
         self.tilemap.render_visible(surf, offset=offset)
         self.entities.render(surf, offset=offset)
         self.particle_manager.render(surf, offset=offset)

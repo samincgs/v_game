@@ -28,7 +28,7 @@ class GUI:
             else:
                 color = (139, 171, 191)
             weapon_mask = weapon_mask.to_surface(setcolor=color, unsetcolor=(0,0,0,0))
-            surf.blit(weapon_mask, (weapon_rect.left, base_pos + offset))
+            surf.blit(weapon_mask, (2, base_pos + offset))
             offset += weapon_mask.get_height() + 3
      
           
@@ -64,7 +64,7 @@ class GUI:
         dark_surf.fill((30, 30, 40)) 
         
         # minimap
-        surf.blit(dark_surf, (323, 2)) # fix the blending and make it transparent
+        surf.blit(dark_surf, (323, 2), special_flags=pygame.BLEND_RGBA_MULT) # fix the blending and make it transparent
         surf.blit(self.game.world.minimap.map_surf, (323, 2))
         surf.blit(assets.misc['minimap'], (317, 0))
     

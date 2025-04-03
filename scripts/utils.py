@@ -71,6 +71,49 @@ def load_map_txt(path, ints=False):
            map.append([int(num) for num in row.split()])
     return map
 
+def load_spritesheets(path):
+        """Loads all spritesheets in a directory and extracts sprites."""
+        
+        spritesheet_dict = {}
+        
+        for img_file in os.listdir(path):
+            if img_file.endswith('.png'): 
+                tile_name = img_file.split('.')[0]  
+                spritesheet_dict[tile_name] = []
+                
+                spritesheet = load_img(os.path.join(path, img_file))
+                
+                y = 1
+                start_x = 1  
+                
+                while y < spritesheet.get_height():
+                    tile_end = None
+                    end_x = None
+                    
+                    for y2 in range(y, spritesheet.get_height()):
+                        if spritesheet.get_at((start_x, y2))[:3] == (255, 0, 255): # MAGENTA
+                            tile_end = y2 - 1
+                            break
+                    
+                    for x2 in range(start_x, spritesheet.get_width()):
+                        if spritesheet.get_at((x2, y))[:3] == (255, 0, 255): # MAGENTA
+                            end_x = x2 - 1
+                            break
+                        
+                    
+                    if tile_end is not None and end_x is not None:
+                        width, height = end_x - start_x + 1, tile_end - y + 1
+                        img = clip(spritesheet, (start_x, y), (width, height))
+
+                        spritesheet_dict[tile_name].append(img)
+
+                        y = tile_end + 3 
+
+                    else:
+                        y += 1
+                
+        return spritesheet_dict
+
 # read a text file
 def read_file(path):
     f = open(path, 'r')
@@ -116,7 +159,7 @@ def glow(surf, pos, radius, color):
     circle_surf = pygame.Surface((radius * 2, radius * 2))
     circle_surf.set_colorkey((0, 0, 0))
     pygame.draw.circle(circle_surf, color, (radius, radius), radius)
-    surf.blit(circle_surf, (pos[0] - radius, pos[1] - radius), special_flags=pygame.BLEND_RGB_ADD)
+    surf.blit(circle_surf, (pos[0] - radius, pos[1] - radius), special_flags=pygame.BLEND_RGBA_ADD)
     
         
 
