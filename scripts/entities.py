@@ -43,7 +43,7 @@ class Entities:
     
     def update(self, dt):
         self.spawner()
-        
+                
         for entity in self.entities.copy():
             kill = entity.update(dt)
             if kill:

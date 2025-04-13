@@ -128,7 +128,8 @@ class Player(Entity):
                     self.pickup_item(entity.item_data)
                     self.game.world.item_notifications.add_item_notif(entity.item_data)
                     
-        
+        if self.weapon:
+            self.weapon.update()
         
         # weapon
         angle = math.atan2(self.game.input.mpos[1] - self.center[1] + self.game.world.camera.pos[1], self.game.input.mpos[0] - self.center[0] + self.game.world.camera.pos[0])
@@ -140,7 +141,9 @@ class Player(Entity):
                 self.flip[0] = True
             else:
                 self.flip[0] = False 
-                
+        
+        
+              
         for skill in self.skills:
             skill.update(dt)     
                 

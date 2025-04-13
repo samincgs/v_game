@@ -13,7 +13,7 @@ from .item_notification import ItemNotification
 class World:
     def __init__(self, game):
         self.game = game
-        self.map_area = 'test'
+        self.map_area = 'map_1'
         
         self.camera = Camera(game)
         self.tilemap = Tilemap(game, tile_size=16) # tile_size is 16

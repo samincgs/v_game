@@ -38,7 +38,7 @@ class Input:
                         
       
     def update(self):
-                
+        
         mpos = pygame.mouse.get_pos()
         self.mpos = (int(mpos[0] / self.game.window.render_scale), int(mpos[1] / self.game.window.render_scale))
             

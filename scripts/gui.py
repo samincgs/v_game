@@ -1,3 +1,5 @@
+import random
+import time
 import pygame
 
 class GUI:
@@ -20,16 +22,21 @@ class GUI:
         offset = 0
         for ix, weapon in enumerate(player.inventory.get_active_weapons()):
             color = (255, 255, 255)
+            
             curr_weapon = weapon.img.copy()
             weapon_mask = pygame.mask.from_surface(curr_weapon)
             weapon_rect = weapon_mask.get_bounding_rects()[0]
+            
             if player.selected_weapon == ix:
                 pygame.draw.line(surf, color, (2, base_pos + offset), (2, base_pos + offset + weapon_rect[3]), 2)
             else:
                 color = (139, 171, 191)
-            weapon_mask = weapon_mask.to_surface(setcolor=color, unsetcolor=(0,0,0,0))
-            surf.blit(weapon_mask, (2, base_pos + offset))
-            offset += weapon_mask.get_height() + 3
+                
+            weapon_surface = weapon_mask.to_surface(setcolor=color, unsetcolor=(0,0,0,0))
+            
+            
+            surf.blit(weapon_surface, (2, base_pos + offset))
+            offset += weapon_surface.get_height() + 3
      
           
         # skills

@@ -13,8 +13,8 @@ class Weapon(Item):
         weapon_tags = ['weapon']
         if tags:
             weapon_tags.extend(tags)
-        
         super().__init__(game, name, owner=owner, tags=weapon_tags)
+        
         self.config = config['weapons'][self.name]
         self.projectile_type = self.config['projectile_type']
         self.max_ammo = self.config['max_ammo']
@@ -29,6 +29,7 @@ class Weapon(Item):
         self.flip = False
         self.last_attack = 0
         self.last_reload = 0
+        self.reload_time = 0
             
     @property
     def img(self):
@@ -76,6 +77,9 @@ class Weapon(Item):
                             physics=self.game.world.tilemap)
         
 
+    def update(self):
+        pass
+    
     def render(self, surf, loc):
         img = self.img
         if abs(self.rotation) > 90 and abs(self.rotation) < 270:

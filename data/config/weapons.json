@@ -2,7 +2,7 @@
   "revolver": {
     "projectile_type": "revolver",
     "reload_method": "shells",
-    "reload_delay": 0.9,
+    "reload_delay": 2,
     "trigger": "shoot",
     "max_ammo": 90,
     "capacity": 7,
