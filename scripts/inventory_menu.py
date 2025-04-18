@@ -2,6 +2,7 @@ import pygame
 
 from .config import config
 from .utils import load_img
+from .inventory import MAX_WEAPON_SLOTS
 
 class InventoryMenu:
     def __init__(self, game, inventory):
@@ -83,7 +84,6 @@ class InventoryMenu:
         self.game.assets.fonts['small_white'].render(surf, name.replace('_', ' ').title(), (loc[0] + img.get_width() + 5, loc[1])) # name
         self.game.assets.fonts['small_white'].render(surf, desc, (loc[0], loc[1] + 30)) # description
     
-    
     def update(self):
         self.info = []
         clicked = False
@@ -104,7 +104,7 @@ class InventoryMenu:
                 self.info = box[1] 
                 if not clicked and self.game.input.mouse_states['shoot']:
                     clicked = True
-                    if len(self.inventory.get_active_weapons()) < self.weapon_cols:
+                    if len(self.inventory.get_active_weapons()) < MAX_WEAPON_SLOTS:
                         for weapon in self.inventory.get_group('weapons').items:
                             if weapon.name == self.info.name:
                                 weapon.add_active()

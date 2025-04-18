@@ -22,6 +22,7 @@ class Weapon(Item):
         self.ammo = self.capacity
         self.reload_method = self.config['reload_method']
         self.reload_delay = self.config['reload_delay']
+        self.reload_time = self.config['reload_delay']
         self.attack_rate = self.config['attack_rate']
         self.trigger = self.config['trigger']
         
@@ -29,7 +30,7 @@ class Weapon(Item):
         self.flip = False
         self.last_attack = 0
         self.last_reload = 0
-        self.reload_time = 0
+        self.is_reloading = False
             
     @property
     def img(self):
@@ -78,8 +79,13 @@ class Weapon(Item):
         
 
     def update(self):
-        pass
-    
+        curr_time = time.time()
+        self.reload_time = min(curr_time - self.last_reload, self.reload_delay)
+        if self.reload_time > 0:
+            self.is_reloading = True
+        else:
+            self.is_reloading = False
+        
     def render(self, surf, loc):
         img = self.img
         if abs(self.rotation) > 90 and abs(self.rotation) < 270:

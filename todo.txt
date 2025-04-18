@@ -6,11 +6,10 @@
 
 
 # Game/Coding
+- add portal
 - add a grass manager
 - fix enemy chance rate and spawn location
-- fix knockback when bullet hits enemy
 - add a shopkeeper that sells weapons/items (maybe?)
-- add alpha to guns in ui to indicate reload delay (maybe?)
 - fix bat ai 
 - make inventory draggable
 - fix inventory text alignment

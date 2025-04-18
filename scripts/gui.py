@@ -29,11 +29,12 @@ class GUI:
             
             if player.selected_weapon == ix:
                 pygame.draw.line(surf, color, (2, base_pos + offset), (2, base_pos + offset + weapon_rect[3]), 2)
+                reload_ratio = weapon.reload_time / weapon.reload_delay
+                color = (220, int(min(255, 255 * reload_ratio)), int(min(255, 255 * reload_ratio)))
             else:
                 color = (139, 171, 191)
-                
-            weapon_surface = weapon_mask.to_surface(setcolor=color, unsetcolor=(0,0,0,0))
             
+            weapon_surface = weapon_mask.to_surface(setcolor=color, unsetcolor=(0,0,0,0))
             
             surf.blit(weapon_surface, (2, base_pos + offset))
             offset += weapon_surface.get_height() + 3

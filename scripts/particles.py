@@ -35,7 +35,6 @@ class Particle:
             # else:
             #     self.pos[0] -= self.wind_force * dt
             
-            
         if not self.physics:
             self.pos[0] += self.movement[0] * dt
             self.pos[1] += self.movement[1] * dt

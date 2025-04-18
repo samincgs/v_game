@@ -1,3 +1,5 @@
+import pygame
+
 from .tilemap import Tilemap
 from .camera import Camera
 from .entities import Entities
@@ -6,7 +8,6 @@ from .projectile import ProjectileManager
 from .particles import ParticleManager
 from .inventory_menu import InventoryMenu
 from .minimap import Minimap
-from .config import config
 from .item_notification import ItemNotification
 
 
@@ -15,14 +16,15 @@ class World:
         self.game = game
         self.map_area = 'map_1'
         
-        self.camera = Camera(game)
         self.tilemap = Tilemap(game, tile_size=16) # tile_size is 16
         self.tilemap.load_map('data/maps/' + self.map_area + '.json')
         self.entities = Entities(game)
-        self.entities.load_destructables(self.tilemap)
+        self.entities.load_entities(self.tilemap)
         self.player = self.entities.player
+        self.camera = Camera(game)
         self.camera.set_tracked_entity(self.player)
-        self.minimap = Minimap(game, tile_size=config['window']['tile_size'])
+        self.camera.focus()
+        self.minimap = Minimap(game, tile_size=16)
         self.particle_manager = ParticleManager(game)
         self.spark_manager = SparkManager()
         self.projectile_manager = ProjectileManager()
@@ -33,15 +35,15 @@ class World:
         
         self.master_clock = 0
         self.transition = 0
+
         
-    def load_level(self, map_id, new=False):
+    def load_level(self, new=False):
         pass
     
-       
     def update(self):
         dt = self.game.window.dt
         self.master_clock += dt
-            
+   
         self.camera.update()
         self.entities.update(dt)
         self.minimap.update()
@@ -57,6 +59,8 @@ class World:
         self.spark_manager.render(surf, offset=offset)
         self.projectile_manager.render(surf, offset=offset)
         self.item_notifications.render(surf)
+        
+        
         
         
         

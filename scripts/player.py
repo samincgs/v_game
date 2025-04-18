@@ -41,7 +41,7 @@ class Player(Entity):
                 
     def jump(self):
         if self.jumps:
-            self.velocity[1] = -300 
+            self.velocity[1] = -250
             self.jumps -= 1
     
     def dash(self):
@@ -53,7 +53,6 @@ class Player(Entity):
             for i in range(12):
                 self.game.world.spark_manager.sparks.append(CurvedSpark(self.center.copy(), math.pi + self.aim_angle + random.uniform(-math.pi / 6, math.pi / 6), random.randint(30,80) / 10, random.randint(-10, 10) / 100, scale=2, decay_rate=random.randint(40, 70) / 100))
             
-  
     # direction is 1 or 0 or -1
     def move(self, direction):
         if direction < 0:
@@ -68,12 +67,7 @@ class Player(Entity):
             
         r = super().update(dt)
         self.air_timer += dt
-        
-      
-        # if self.pos[1] > 1200:
-        #     self.game.world.reset_level()
-        
-        
+                
         if not self.game.world.inventory_mode:
             
             # player controls

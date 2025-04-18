@@ -2,7 +2,7 @@
   "revolver": {
     "projectile_type": "revolver",
     "reload_method": "shells",
-    "reload_delay": 2,
+    "reload_delay": 3,
     "trigger": "shoot",
     "max_ammo": 90,
     "capacity": 7,
@@ -11,7 +11,7 @@
   "rifle": {
     "projectile_type": "rifle",
     "reload_method": "mag",
-    "reload_delay": 1.1,
+    "reload_delay": 5,
     "trigger": "long_shoot",
     "max_ammo": 300,
     "capacity": 30,
@@ -20,7 +20,7 @@
   "smg": {
     "projectile_type": "smg",
     "reload_method": "mag",
-    "reload_delay": 1.3,
+    "reload_delay": 4,
     "trigger": "long_shoot",
     "max_ammo": 300,
     "capacity": 60,

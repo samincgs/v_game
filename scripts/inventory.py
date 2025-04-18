@@ -1,3 +1,5 @@
+MAX_WEAPON_SLOTS = 2
+
 class InventoryGroup:
     def __init__(self):
         self.items = []
@@ -23,7 +25,7 @@ class Inventory:
             self.groups[group_id] = InventoryGroup()
         if group_id == 'weapons':
             for weapon in self.groups['weapons'].items: # makes sure duplicate weapons cant be picked up
-                if item.name == weapon.name: 
+                if item.name == weapon.name or len(self.groups['weapons'].items) > MAX_WEAPON_SLOTS: 
                     return
         self.groups[group_id].add_item(item)
     

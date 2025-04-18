@@ -22,7 +22,7 @@ class Itemdrop(PhysicsEntity):
     
         
     def render(self, surf, offset=(0, 0)):
-        if math.sin(self.game.world.master_clock * 4) > 0.5:
+        if math.sin(self.pos[0] / 60 + self.game.world.master_clock * 4) > 0.5:
             color = (255, 255, 255, 255)
         else:
             color = (0, 0, 1, 100)        
