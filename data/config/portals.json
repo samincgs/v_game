@@ -1,10 +1,8 @@
 {
-  "door_1": {
-    "target": "intro_2",
-    "current_world": "intro_1"
+  "map_1": {
+    "target": "test"
   },
-  "door_2": {
-    "target": "intro_1",
-    "current_world": "intro_2"
+  "test": {
+    "target": "map_1"
   }
 }

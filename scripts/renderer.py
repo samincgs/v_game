@@ -26,6 +26,18 @@ class Renderer:
             surf.blit(dark_overlay, (0, 0))
             self.game.world.inventory_menu.update()
             self.game.world.inventory_menu.render(surf)
+            
+        # transition
+        transition = self.game.world.transition
+        if transition:
+            transition_surf = pygame.Surface(surf.get_size(), pygame.SRCALPHA)
+            if transition > 0:
+                alpha = int((transition / 30) * 255)
+            else:
+                alpha = int((abs(transition) / 30) * 255)
+            
+            transition_surf.fill((0, 0, 0, alpha))
+            surf.blit(transition_surf, (0, 0))
         
 
         

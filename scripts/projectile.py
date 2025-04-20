@@ -51,7 +51,7 @@ class Projectile:
         self.timer += dt
         
         for entity in self.game.world.entities.entities:
-            if entity.type not in {'item'}:
+            if entity.type not in {'item', 'portal'}:
                 if entity.type != self.owner.type:
                     if (entity.rect.collidepoint(self.pos)):
                         entity.damage(self.config['power'])

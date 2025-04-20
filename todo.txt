@@ -1,12 +1,11 @@
 # Pixel art
+- make portal look good
 - add decor/background tiles
 - add shopkeeper
 - add knife/swords
-- design item notification
 
 
 # Game/Coding
-- add portal
 - add a grass manager
 - fix enemy chance rate and spawn location
 - add a shopkeeper that sells weapons/items (maybe?)

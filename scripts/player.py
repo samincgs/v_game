@@ -68,8 +68,11 @@ class Player(Entity):
         r = super().update(dt)
         self.air_timer += dt
                 
-        if not self.game.world.inventory_mode:
+        if self.pos[1] > 600 and self.air_timer > 3:
+            self.air_timer = 0
+            self.game.world.transition = 1
             
+        if not self.game.world.inventory_mode and not self.game.world.transition:
             # player controls
             if self.game.input.mouse_states['right_click']:
                 self.skills[0].use()
@@ -130,14 +133,12 @@ class Player(Entity):
         self.aim_angle = angle
         if self.weapon:
             self.weapon.rotation = math.degrees(angle)
-        
+
             if (self.weapon.rotation % 360 > 90) and (self.weapon.rotation % 360 < 270):
                 self.flip[0] = True
             else:
                 self.flip[0] = False 
-        
-        
-              
+           
         for skill in self.skills:
             skill.update(dt)     
                 

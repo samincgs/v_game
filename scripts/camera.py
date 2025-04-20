@@ -1,19 +1,20 @@
 
 
 class Camera:
-    def __init__(self, game):
+    def __init__(self, game, pos=[0, 0], slowness=1):
         self.game = game
-        self.true_pos = [0, 0]
+        self.true_pos = list(pos)
         self.target_pos = [0, 0]
         self.tracked_entity = None
-        self.slowness = 40
+        self.slowness = slowness
     
     @property
     def pos(self):
         return (int(self.true_pos[0]), int(self.true_pos[1]))
     
-    def smooth_approach(self, val, target, slowness):
-        return val + (target - val) / slowness * min(self.game.window.dt * 60, slowness)
+    def smooth_approach(self, val, target, slowness=1):
+        val += (target - val) / slowness * min(self.game.window.dt, slowness)
+        return val
     
     def set_tracked_entity(self, entity):
         self.tracked_entity = entity

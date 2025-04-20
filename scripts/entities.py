@@ -6,6 +6,7 @@ from .enemy import ENEMIES
 from .weapon import Weapon
 from scripts.crate import Crate
 from .itemdrop import Itemdrop
+from .portal import Portal
 
 class Entities:
     def __init__(self, game):
@@ -26,14 +27,20 @@ class Entities:
     
     # additional
     def load_entities(self, tm):
+        # player
         for entity in tm.extract(('spawner', (0, )), keep=False, offgrid=False):
-            print(entity['pos'])
             self.entities.append(Player(self.game, entity['pos'], self.config['player']['size'], 'player'))
             self.drop_item((260, 100), (1, 1), Weapon(self.game, 'revolver', None), [0, 160])
             self.player.inventory.add_item(Weapon(self.game, 'rifle', self.player, tags=['active']), 'weapons')
-            
+        
+        # crates 
         for crate in tm.extract(('decor', (0, 1)), keep=False):
-            self.entities.append(Crate(self.game, crate['pos'], [1, 1]))
+            self.entities.append(Crate(self.game, crate['pos'], [0, 0]))
+            
+        # portal
+        for portal in tm.extract(('structures', (2,)), keep=False):
+            self.entities.append(Portal(self.game, portal['pos'], [0, 0], 'portal'))
+                
             
      
     def spawner(self):
