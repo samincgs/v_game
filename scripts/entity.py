@@ -42,7 +42,7 @@ class Entity:
     def set_action(self, action_id, force=False):
         if force:
             self.active_animation = self.game.assets.animations.new(self.type + '_' + action_id)
-        elif (not self.active_animation) or (self.active_animation.data.id != self.type + '_' + action_id):
+        elif (not self.active_animation) or (self.active_animation.id != self.type + '_' + action_id):
             self.active_animation = self.game.assets.animations.new(self.type + '_' + action_id)
 
     def damage(self, amt):
@@ -132,14 +132,14 @@ class Entity:
     def calculate_render_offset(self, offset=(0, 0)):
         offset = list(offset)
         if self.active_animation:
-            offset[0] += self.active_animation.data.config['offset'][0]
-            offset[1] += self.active_animation.data.config['offset'][1]
+            offset[0] += self.active_animation.config['offset'][0]
+            offset[1] += self.active_animation.config['offset'][1]
         return offset
     
     def render(self, surf, offset=(0, 0)):
         offset = self.calculate_render_offset(offset=offset)
-        if self.active_animation.data.config['outline']:
-            outline(surf, self.img, loc=(self.pos[0] - offset[0], self.pos[1] - offset[1]), color=self.active_animation.data.config['outline'])
+        if self.active_animation.config['outline']:
+            outline(surf, self.img, loc=(self.pos[0] - offset[0], self.pos[1] - offset[1]), color=self.active_animation.config['outline'])
         surf.blit(self.img, (int(self.pos[0] - offset[0]), int(self.pos[1] - offset[1]))) 
         if self.hurt:
             mask_img = self.gen_mask(self.img, setcolor=(255, 255, 255, int(self.hurt * 255)))

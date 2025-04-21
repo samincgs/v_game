@@ -14,7 +14,7 @@ class Window:
         pygame.display.set_caption(self.config['caption'])
         self.display = pygame.Surface(self.config['base_res'])
         self.clock = pygame.time.Clock()
-        
+                
         self.render_scale = self.config['render_scale']
         
         self.start_frame = time.time() 
@@ -43,8 +43,7 @@ class Window:
         
         self.display.blit(self.game.assets.misc['cursor'], (self.game.input.mpos[0] - self.game.assets.misc['cursor'].get_width() // 2, self.game.input.mpos[1] - self.game.assets.misc['cursor'].get_height() // 2))
         self.window.blit(pygame.transform.scale(self.display, self.window.get_size()), (0, 0))
-        pygame.display.update()
-        # self.clock.tick(60)
+        pygame.display.flip()
         self.display.fill(self.config['bg_color'])
         
         

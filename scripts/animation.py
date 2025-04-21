@@ -1,48 +1,47 @@
 import os
 
 from .config import config
-from .utils import load_img
+from .utils import load_imgs
 
-ANIMATION_PATH = 'data/images/animations'
+ANIMATIONS_PATH = 'data/images/animations/'
 COLORKEY = (0, 0, 0)
 
-class AnimationData:
-    def __init__(self, path, colorkey=None):
-        self.id = path.split('/')[-1]
+class Animation:
+    def __init__(self, anim_id, images):
+        self.id = anim_id
+        self.images = images
         self.config = config['animations'][self.id]
-        self.images = []
-        for img in sorted(os.listdir(path)):
-            self.images.append(load_img(path + '/' + img, colorkey))
-        
+        self.frame = 0
+        self.frame_index = 0
+                
+    @property
+    def img(self):
+        return self.images[self.frame_index]
+    
     @property
     def duration(self):
         return sum(self.config['frames'])
     
-class Animation:
-    def __init__(self, animation_data):
-        self.data = animation_data
-        self.frame = 0
-        self.frame_index = 0
-    
-    @property
-    def img(self):
-        return self.data.images[self.frame_index]
-    
+    def copy(self):
+        return Animation(self.id, self.images)
+        
     def play(self, dt):
-        self.frame += dt * 60 * self.data.config['speed']
+        self.frame += dt * 60 * self.config['speed']
         
-        if self.data.config['loop']:
-            if self.frame > self.data.duration:
-                self.frame -= self.data.duration
+        if self.config['loop']:
+            if self.frame > self.duration:
+                self.frame -= self.duration
         
-        self.frame_index = int(self.frame / self.data.duration * len(self.data.config['frames']))
-        self.frame_index = min(self.frame_index, len(self.data.config['frames']) - 1)
+        self.frame_index = int(self.frame / self.duration * len(self.config['frames']))
+        self.frame_index = min(self.frame_index, len(self.config['frames']) - 1)
         
 class AnimationManager:
     def __init__(self):
         self.animations = {}
-        for anim in os.listdir(ANIMATION_PATH):
-            self.animations[anim] = AnimationData(ANIMATION_PATH + '/' + anim, COLORKEY)
-                    
+        
+        for anim_id in os.listdir(ANIMATIONS_PATH):
+            images = load_imgs(path=ANIMATIONS_PATH + '/' + anim_id, colorkey=COLORKEY)
+            self.animations[anim_id] = Animation(anim_id, images)
+                                   
     def new(self, anim_id):
-        return Animation(self.animations[anim_id])
+        return self.animations[anim_id].copy()

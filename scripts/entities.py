@@ -30,8 +30,7 @@ class Entities:
         # player
         for entity in tm.extract(('spawner', (0, )), keep=False, offgrid=False):
             self.entities.append(Player(self.game, entity['pos'], self.config['player']['size'], 'player'))
-            self.drop_item((260, 100), (1, 1), Weapon(self.game, 'revolver', None), [0, 160])
-            self.player.inventory.add_item(Weapon(self.game, 'rifle', self.player, tags=['active']), 'weapons')
+            self.player.inventory.add_item(Weapon(self.game, 'revolver', self.player, tags=['active']), 'weapons')
         
         # crates 
         for crate in tm.extract(('decor', (0, 1)), keep=False):

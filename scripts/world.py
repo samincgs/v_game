@@ -1,6 +1,3 @@
-import pygame
-
-from .config import config
 from .tilemap import Tilemap
 from .camera import Camera
 from .entities import Entities
@@ -16,7 +13,6 @@ class World:
     def __init__(self, game):
         self.game = game
         self.map_area = 'map_1'
-        
         self.tilemap = Tilemap(game, tile_size=16) # tile_size is 16
         self.tilemap.load_map('data/maps/' + self.map_area + '.json')
         self.entities = Entities(game)
@@ -36,6 +32,7 @@ class World:
         
         self.master_clock = 0
         self.transition = 0
+        self.initial_spawn = True
 
     
     def start_transition(self, map_id):

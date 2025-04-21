@@ -13,20 +13,20 @@ def load_img(path, colorkey=(0, 0, 0), alpha=False):
 
 # load a directory of imgs in a list
 def load_imgs(path, colorkey=(0, 0, 0), alpha=False):
-    tiles = []
+    imgs = []
     for file in sorted(os.listdir(path)):
-        img = load_img(path + '/' + file, colorkey=colorkey, alpha=True)
-        tiles.append(img)
-    return tiles
+        img = load_img(path + '/' + file, colorkey=colorkey, alpha=alpha)
+        imgs.append(img)
+    return imgs
 
 # load a directory of images into a dictionary
 def load_dir(path, colorkey=(0, 0, 0), alpha=False):
-    tiles = {}
+    imgs = {}
     for file in sorted(os.listdir(path)):
         name = file.split('.')[0]
         img = load_img(path + '/' + file, colorkey=colorkey, alpha=alpha)
-        tiles[name] = img
-    return tiles
+        imgs[name] = img
+    return imgs
 
 # load multiple directories into a dict with lists of images
 def load_dir_list(path, colorkey=(0, 0, 0), alpha=False):
