@@ -33,7 +33,6 @@ class World:
         self.master_clock = 0
         self.transition = 0
         self.initial_spawn = True
-
     
     def start_transition(self, map_id):
         self.transition = 1

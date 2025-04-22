@@ -1,16 +1,20 @@
 import pygame
-import os
 
 from .utils import load_spritesheets, load_json, save_json
 
+
+TILES_AROUND = [(0, 0), (1, 0), (-1, 0), (0, -1), (1, -1), (-1, -1), (0, 1), (1, 1), (-1, 1)]
+TILE_N4 = [(1, 0), (-1, 0), (0, 1), (0, -1)]
+TILE_N8 = [(1, 0), (-1, 0), (0, 1), (0, -1), (1, 1), (-1, 1), (1, -1), (-1, -1)]
+
 class Tilemap:
-    def __init__(self, game, tile_size):
+    def __init__(self, game, tile_size=16, spritesheet_path='data/images/spritesheets/'):
         self.game = game
         self.tile_size = tile_size
         
         self.tilemap = {} # { {'5;7' : 0 {{'type': 'grass', 'variant': 0, 'pos': [x, x]}}}}
         self.offgrid_tiles = {} # {0: [{'type': 'grass', 'variant': 0, 'pos': [x, x]}]}
-        self.tiles = load_spritesheets('data/images/spritesheets/')
+        self.tiles = load_spritesheets(spritesheet_path)
         
         
     def collision_test(self, obj, obj_list):
@@ -23,11 +27,10 @@ class Tilemap:
     def get_nearby_rects(self, pos):
         rects = []
         tile_pos = (int(pos[0] // self.tile_size), int(pos[1] // self.tile_size))
-        check_locs = [(-1, -1), (0, -1), (1, -1), (-1, 0), (0, 0), (1, 0), (-1, 1), (0, 1), (1, 1), (-1, 2), (0, 2), (1, 2)]
-        for loc in check_locs:
+        for loc in TILES_AROUND:
             tile_loc = (tile_pos[0] + loc[0], tile_pos[1] + loc[1])
             str_loc = str(tile_loc[0]) + ';' + str(tile_loc[1])
-            if str_loc in self.tilemap and self.tilemap[str_loc]:
+            if str_loc in self.tilemap:
                 rects.append(pygame.Rect(tile_loc[0] * self.tile_size, tile_loc[1] * self.tile_size, self.tile_size, self.tile_size))
         return rects
 
@@ -48,9 +51,10 @@ class Tilemap:
     def tile_collide(self, pos):
         tile_pos = (int(pos[0] // self.tile_size), int(pos[1] // self.tile_size))
         tile_loc = str(tile_pos[0]) + ';' + str(tile_pos[1])
-        if tile_loc in self.tilemap and self.tilemap[tile_loc]:
+        if tile_loc in self.tilemap:
             return True
     
+    # make better later
     def extract(self, id_pairs, keep=True, offgrid=True): # id_pairs -> ('decor', (1, 2)) tile type, tile variants
         extract_list = []
         if offgrid:
@@ -61,13 +65,13 @@ class Tilemap:
                         if not keep:
                             self.offgrid_tiles[layer].remove(tile)
         else:
-            for loc in self.tilemap:
+            for loc in self.tilemap.copy():
                 for layer in self.tilemap[loc].copy():
                     tile = self.tilemap[loc][layer]
                     if tile['type'] in id_pairs[0] and tile['variant'] in id_pairs[1]:
                         extract_list.append(tile)
                         if not keep:
-                            del self.tilemap[loc][layer]
+                            self.remove_tile(tile)
         
         return extract_list
                     
@@ -106,6 +110,10 @@ class Tilemap:
         if tile_loc in self.tilemap:
             if layer in self.tilemap[tile_loc]:
                 del self.tilemap[tile_loc][layer]
+            # delete tile loc if there is no tile data
+            if not len(self.tilemap[tile_loc]):
+                del self.tilemap[tile_loc]
+        
     
     def add_offgrid_tile(self, tile_data):   
         layer = tile_data['layer']

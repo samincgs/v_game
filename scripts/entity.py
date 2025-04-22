@@ -99,7 +99,7 @@ class Entity:
                 
         # horizontal
         self.pos[0] += movement[0]
-        tiles = tilemap.get_nearby_rects(self.pos)
+        tiles = tilemap.get_nearby_rects(self.center)
         hit_list = tilemap.collision_test(self.rect, tiles)
         temp_rect = self.rect
         
@@ -114,7 +114,7 @@ class Entity:
 
         # vertical
         self.pos[1] += movement[1] 
-        tiles = tilemap.get_nearby_rects(self.pos)
+        tiles = tilemap.get_nearby_rects(self.center)
         hit_list = tilemap.collision_test(self.rect, tiles)
         temp_rect = self.rect
  
