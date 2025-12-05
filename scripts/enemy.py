@@ -1,9 +1,9 @@
 import math
 import random
 
-from .entity import Entity
-from .utils import normalize
-from .item import create_item
+from scripts.entity import Entity
+from scripts.pgtools.utils import normalize, get_angle, get_distance
+from scripts.item import create_item
 
 class Bat(Entity):
     def __init__(self, game, pos, size):
@@ -17,7 +17,7 @@ class Bat(Entity):
         self.hover_frequency = random.randint(10, 30) / 10
         self.target_offset_angle = random.uniform(0, 2 * math.pi)  
         
-        self.drops = [create_item(game, 'bat_wing', self) for i in range(random.randint(0, 2))]
+        self.drops = [create_item(game, 'bat_wing', None) for i in range(random.randint(0, 2))]
                 
     def update(self, dt):
         kill = super().update(dt)
@@ -41,8 +41,8 @@ class Bat(Entity):
 
         target_pos[1] += math.sin(self.hover_timer * self.hover_frequency) * self.vertical_amplitude
 
-        target_angle = self.get_angle(target_pos)
-        distance_to_target = self.get_distance(target_pos)
+        target_angle = get_angle(self, target_pos)
+        distance_to_target = get_distance(self.pos, target_pos)
                 
         if distance_to_target > self.speed * dt:
             self.pos[0] += math.cos(target_angle) * self.speed * dt
@@ -51,7 +51,7 @@ class Bat(Entity):
             self.velocity[0] = 0
             self.velocity[1] = 0
         
-        attack_angle = self.get_angle(player)
+        attack_angle = get_angle(self, player)
                 
         if distance_to_target <= 150:
             if self.attack_timer > 6:

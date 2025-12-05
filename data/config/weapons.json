@@ -4,6 +4,7 @@
     "reload_method": "shells",
     "reload_delay": 3,
     "trigger": "shoot",
+    "input_type": "press",
     "max_ammo": 90,
     "capacity": 7,
     "attack_rate": 0.09
@@ -12,7 +13,8 @@
     "projectile_type": "rifle",
     "reload_method": "mag",
     "reload_delay": 5,
-    "trigger": "long_shoot",
+    "trigger": "shoot",
+    "input_type": "hold",
     "max_ammo": 300,
     "capacity": 30,
     "attack_rate": 0.15
@@ -21,9 +23,20 @@
     "projectile_type": "smg",
     "reload_method": "mag",
     "reload_delay": 4,
-    "trigger": "long_shoot",
+    "input_type": "hold",
+    "trigger": "shoot",
     "max_ammo": 300,
     "capacity": 60,
     "attack_rate": 0.09
+  },
+  "old_knife": {
+    "projectile_type": null,
+    "reload_method": null,
+    "reload_delay": null,
+    "input_type": "press",
+    "trigger": "attack",
+    "max_ammo": null,
+    "capacity": null,
+    "attack_rate": null
   }
 }

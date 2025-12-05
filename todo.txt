@@ -10,8 +10,6 @@
 - fix enemy chance rate and spawn location
 - add a shopkeeper that sells weapons/items (maybe?)
 - fix bat ai 
-- make inventory draggable
-- fix inventory text alignment
 - create a better/more sophisticated random drop chance for crates and more
 
 # Bugs

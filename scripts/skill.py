@@ -56,7 +56,7 @@ class DashSkill(Skill):
         self.dash_timer = max(0, self.dash_timer - dt)
         
         if self.dash_timer:
-            self.game.world.spark_manager.sparks.append(CurvedSpark([self.owner.center[0], self.owner.center[1] + 9], math.pi + self.owner.aim_angle, random.randint(1,10) / 10, random.randint(-40, 40) / 100, scale=1, decay_rate=random.randint(10, 20) / 100))
+            self.game.world.spark_manager.add_curved_spark([self.owner.center[0], self.owner.center[1] + 9], math.pi + self.owner.aim_angle, random.randint(1,10) / 10, random.randint(-40, 40) / 100, scale=1, decay_rate=random.randint(10, 20) / 100)
             if random.randint(1, 3) == 1:
                 self.dash_info.append({'pos': self.owner.pos.copy(), 'img': self.owner.img.copy()})
         else:
@@ -68,7 +68,7 @@ class DashSkill(Skill):
             self.owner.velocity[0] = math.cos(self.owner.aim_angle) * self.dash_force 
             self.owner.velocity[1] = math.sin(self.owner.aim_angle) * self.dash_force 
             for i in range(12):
-                self.game.world.spark_manager.sparks.append(CurvedSpark(self.owner.center.copy(), math.pi + self.owner.aim_angle + random.uniform(-math.pi / 6, math.pi / 6), random.randint(30,80) / 10, random.randint(-10, 10) / 100, scale=2, decay_rate=random.randint(40, 70) / 100))
+                self.game.world.spark_manager.add_curved_spark(self.owner.center, math.pi + self.owner.aim_angle + random.uniform(-math.pi / 6, math.pi / 6), random.randint(30,80) / 10, random.randint(-10, 10) / 100, scale=2, decay_rate=random.randint(40, 70) / 100)
                 
         super().use()
                 

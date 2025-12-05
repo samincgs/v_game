@@ -16,11 +16,14 @@ class Spark:
         self.pos[1] += math.sin(self.angle) * self.speed * dt
         
         self.speed = max(0, self.speed - self.decay_rate * dt)
-        
         return not self.speed
 
     def render(self, surf, offset=(0, 0)):
-        pass
+        points = [
+            (self.pos[0] + math.cos(self.angle) * self.speed)
+        ]
+        
+        pygame.draw.polygon(surf, (255, 255 ,255), points=points)
 
 class CurvedSpark(Spark):
     def __init__(self, pos, angle, speed, curve, scale=2, color=(255, 255, 255), decay_rate=1):
@@ -40,7 +43,13 @@ class CurvedSpark(Spark):
 class SparkManager:
     def __init__(self):
         self.sparks = []
-            
+    
+    def add_spark(self, pos, angle, speed, color=(255, 255, 255), decay_rate=1):
+        self.sparks.append(Spark(pos, angle, speed, color, decay_rate))
+        
+    def add_curved_spark(self, pos, angle, speed, curve, scale=2, color=(255, 255, 255), decay_rate=1):
+        self.sparks.append(CurvedSpark(pos, angle, speed, curve, scale, color, decay_rate))
+    
     def update(self, dt):
         for spark in self.sparks.copy():
             kill = spark.update(dt)

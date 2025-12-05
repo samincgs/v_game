@@ -1,0 +1,121 @@
+{
+  "player_idle": {
+    "frames": [20, 5, 5, 5, 20],
+    "loop": true,
+    "speed": 1.0,
+    "offset": [5, 2],
+    "outline": null
+  },
+  "player_jump": {
+    "frames": [5],
+    "loop": false,
+    "speed": 1.0,
+    "offset": [4, 2],
+    "outline": null
+  },
+  "player_run": {
+    "frames": [5, 5, 5, 5],
+    "loop": true,
+    "speed": 1.0,
+    "offset": [5, 2],
+    "outline": null
+  },
+  "old_player_idle": {
+    "frames": [12, 5, 5, 5, 5, 5, 5, 5],
+    "loop": true,
+    "speed": 1.0,
+    "offset": [6, 2],
+    "outline": [255, 255, 255]
+  },
+  "old_player_jump": {
+    "frames": [5],
+    "loop": false,
+    "speed": 1.0,
+    "offset": [6, 2],
+    "outline": [255, 255, 255]
+  },
+  "old_player_run": {
+    "frames": [3, 4, 2, 4, 2],
+    "loop": true,
+    "speed": 1.0,
+    "offset": [6, 3],
+    "outline": [255, 255, 255]
+  },
+  "bat_idle": {
+    "frames": [25, 7],
+    "loop": true,
+    "speed": 1.0,
+    "offset": [1, 1],
+    "outline": null
+  },
+  "item_wood": {
+    "frames": [5],
+    "loop": false,
+    "speed": 1.0,
+    "offset": [0, 0],
+    "outline": null
+  },
+  "item_iron": {
+    "frames": [5],
+    "loop": false,
+    "speed": 1.0,
+    "offset": [0, 0],
+    "outline": null
+  },
+  "item_apple": {
+    "frames": [5],
+    "loop": false,
+    "speed": 1.0,
+    "offset": [0, 0],
+    "outline": null
+  },
+  "item_bat_wing": {
+    "frames": [5],
+    "loop": false,
+    "speed": 1.0,
+    "offset": [0, 0],
+    "outline": null
+  },
+  "item_revolver": {
+    "frames": [5],
+    "loop": false,
+    "speed": 1.0,
+    "offset": [0, 0],
+    "outline": null
+  },
+  "item_rifle": {
+    "frames": [5],
+    "loop": false,
+    "speed": 1.0,
+    "offset": [0, 0],
+    "outline": null
+  },
+  "item_smg": {
+    "frames": [5],
+    "loop": false,
+    "speed": 1.0,
+    "offset": [0, 0],
+    "outline": null
+  },
+  "item_old_knife": {
+    "frames": [5],
+    "loop": false,
+    "speed": 1.0,
+    "offset": [0, 0],
+    "outline": null
+  },
+  "crate_idle": {
+    "frames": [5],
+    "loop": false,
+    "speed": 1.0,
+    "offset": [0, -2],
+    "outline": null
+  },
+  "portal_idle": {
+    "frames": [5],
+    "loop": false,
+    "speed": 1.0,
+    "offset": [0, 0],
+    "outline": null
+  }
+}

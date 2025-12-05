@@ -2,9 +2,7 @@ import pygame
 import math
 import random
 
-from scripts.spark import CurvedSpark
 from scripts.effects import Goo
-from .utils import glow 
 from .config import config
 
 
@@ -51,7 +49,7 @@ class Projectile:
         self.timer += dt
         
         for entity in self.game.world.entities.entities:
-            if entity.type not in {'item', 'portal'}:
+            if (entity.type not in {'item', 'portal'}) and (entity.type.split('_')[0] != 'item'):
                 if entity.type != self.owner.type:
                     if (entity.rect.collidepoint(self.pos)):
                         entity.damage(self.config['power'])
@@ -59,7 +57,7 @@ class Projectile:
                         entity.velocity[0] += math.cos(angle) * self.config['knockback'] * 150
                         entity.velocity[1] += math.sin(angle) * self.config['knockback'] * 150
                         for i in range(random.randint(8,12)):
-                            self.game.world.spark_manager.sparks.append(CurvedSpark(pos=self.pos, speed=random.randint(30, 50) / 100 * 10 , curve=(random.random() * 0.5) - 0.1, angle=math.pi + angle + random.randint(-120, 120) / 100, decay_rate=random.randint(40, 70) / 100))
+                            self.game.world.spark_manager.add_curved_spark(pos=self.pos, speed=random.randint(30, 50) / 100 * 10 , curve=(random.random() * 0.5) - 0.1, angle=math.pi + angle + random.randint(-120, 120) / 100, decay_rate=random.randint(40, 70) / 100)
                         return True
         
         if any(collisions.values()):
@@ -75,7 +73,7 @@ class Projectile:
                 
             if self.type in {'rifle', 'revolver', 'smg'}:
                 for i in range(random.randint(2,4)):
-                    self.game.world.spark_manager.sparks.append(CurvedSpark(pos=self.pos.copy(), speed=random.randint(30, 50) / 100 * 10 , curve=(random.random() * 0.1) - 0.05, angle=math.pi + angle + random.randint(-70, 70) / 100, decay_rate=random.randint(45, 75) / 100))
+                    self.game.world.spark_manager.add_curved_spark(pos=self.pos.copy(), speed=random.randint(30, 50) / 100 * 10 , curve=(random.random() * 0.1) - 0.05, angle=math.pi + angle + random.randint(-70, 70) / 100, decay_rate=random.randint(45, 75) / 100)
             elif self.type == 'bat_goo':
                 self.game.world.projectile_manager.goo.append(Goo(self.game, self.game.assets.misc['goo'], self.last_pos, math.degrees(angle - math.pi / 2)))
             return True
@@ -89,11 +87,11 @@ class Projectile:
             pygame.draw.line(surf, self.config['shape'][1], render_pos, [render_pos[0] + math.cos(self.rot) * p_len, render_pos[1] + math.sin(self.rot) * p_len], self.config['shape'][3])
             
             
-            
 class ProjectileManager:
     def __init__(self):
         self.projectiles = []
         self.goo = []
+        self.sword_arcs = []
     
     def add_projectile(self, game, pos, owner, rot, speed, p_type):
         self.projectiles.append(Projectile(game, owner, pos, rot, speed, p_type))
@@ -103,6 +101,11 @@ class ProjectileManager:
             kill = projectile.update(dt)
             if kill:
                 self.projectiles.remove(projectile)
+                
+        for sword_arc in self.sword_arcs.copy():
+            kill = sword_arc.update(dt)
+            if kill:
+                self.sword_arcs.remove(sword_arc)
 
         for goo in self.goo.copy():
             kill = goo.update(dt)
@@ -112,6 +115,9 @@ class ProjectileManager:
     def render(self, surf, offset=(0, 0)):
         for projectile in self.projectiles:
             projectile.render(surf, offset=offset)
+            
+        for sword_arc in self.sword_arcs:
+            sword_arc.render(surf, offset=offset)
             
         for goo in self.goo:
             goo.render(surf, offset=offset)

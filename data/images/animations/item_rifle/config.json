@@ -1,0 +1,13 @@
+{
+  "id": "item_rifle",
+  "animations": {
+    "idle": {
+      "type": "idle",
+      "frames": [5],
+      "loop": false,
+      "speed": 1.0,
+      "offset": [0, 0],
+      "outline": null
+    }
+  }
+}

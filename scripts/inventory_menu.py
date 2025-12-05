@@ -1,122 +1,274 @@
 import pygame
 
-from .config import config
-from .utils import load_img
-from .inventory import MAX_WEAPON_SLOTS
+import scripts.pgtools as pt
+
+from scripts.config import config
+
+INVENTORY_LAYOUT = {
+    'active': {
+        'pos': [(0, 15), (50, 15), (60, 5), (60, -1), (0, -1)],
+        'selected_pos': [(0, 20), (50, 20), (60, 10), (60, -1), (0, -1)]
+    },
+    'skills': {
+        'pos': [(58, 15), (108, 15), (118, 5), (118, -1), (58, -1)],
+        'selected_pos': [(58, 20), (108, 20), (118, 10), (118, -1), (58, -1)]
+    },
+    'items': {
+        'pos': [(116, 15), (166, 15), (176, 5), (176, -1), (116, -1)],
+        'selected_pos': [(116, 20), (166, 20), (176, 10), (176, -1), (116, -1)]
+    }
+}
+
+INVENTORY_CATEGORIES = list(INVENTORY_LAYOUT)
+ITEM_STARTING_POS = [(15, 30), (175, 30), (165, 40), (5, 40)]
+TAB_POINTS = [(85, 20), (165, 20), (155, 30), (75, 30)]
+TAB_HEIGHT = 15
 
 class InventoryMenu:
     def __init__(self, game, inventory):
         self.game = game
         self.inventory = inventory
-        self.rows, self.cols = 4, 4
-        self.weapon_rows,  self.weapon_cols = 2, 2
-        self.size = 25 # size of each box
         self.config = config['items']
-        
-        self.base_pos = [80, 40]
-        self.border_radius = 3
-        self.item_boxes = [] # [[rect of box, weapon/item name]]
-        self.weapon_boxes = [] # 
-        self.info = [] # [[item name (from config), item description, weapon/item name (weapon type), item_type]]
-        
+
         self.images = {}
+        
+        self.category_selection_index = 0
+        self.item_index = 0
+        self.options_index = 0
+        self.show_equip_options = False
+        self.category_selected = INVENTORY_CATEGORIES[self.category_selection_index]
+        
+        self.animation_speed = 0.1
+        self.line_progress = 0
+        
+        
+        # lerp positions
+        self.current_positions = {}
+        self.tab_offsets = [0, -30]
+        
+        for category in INVENTORY_LAYOUT:
+            self.current_positions[category] = [list(point) for point in INVENTORY_LAYOUT[category]['pos']]
         
     def get_image(self, type):
         if 'item_' + type in self.images:
             return self.images['item_' + type]
-        img = load_img('data/images/animations/item_' + type + '/0.png')
+        img = pt.utils.load_img('data/images/animations/item_' + type + '/idle/0.png')
         self.images['item_' + type] = img
         return self.images['item_' + type]
-        
-    def draw_weapon_boxes(self, surf):
-        surf.blit(self.game.assets.misc['weapons_logo'], (self.base_pos[0] - self.game.assets.misc['weapons_logo'].get_width() + 3, self.base_pos[1]))
-
-        self.weapon_boxes = []
-        # weapon boxes
-        for i in range(self.weapon_cols):
-            rect = pygame.Rect(self.base_pos[0] + i * self.size, self.base_pos[1], self.size, self.size)
-            color = (154, 170, 186)
-            for ix, weapon in enumerate(self.inventory.get_active_weapons()):
-                if ix == i:
-                    weapon_img = self.get_image(weapon.name)
-                    color = (255, 255, 255)
-                    surf.blit(weapon_img, (rect.centerx - weapon_img.get_width() // 2 - 2, rect.centery - weapon_img.get_height() // 2 ))
-                    self.weapon_boxes.append([rect, weapon])
-            
-            pygame.draw.rect(surf, color, rect, 1, self.border_radius)
-
-    def draw_item_boxes(self, surf):
-        # item logo
-        surf.blit(self.game.assets.misc['items_logo'], (self.base_pos[0] - self.game.assets.misc['weapons_logo'].get_width() + 3, self.base_pos[1] + 40))
-        
-        self.item_boxes = []
-         # item boxes
-        for i in range(self.rows):
-            item_pos = [self.base_pos[0], self.base_pos[1] + 40]
-            for j in range(self.cols):
-                color = (154, 170, 186)
-                rect = pygame.Rect(item_pos[0] + j * self.size, item_pos[1] + i * self.size, self.size, self.size)
-                for ix, item in enumerate(self.inventory.get_items()):
-                    if ix == j + i * self.cols:
-                        color = (255, 255, 255)
-                        item_img = self.get_image(item.name)
-                        w_offset = 2 if 'weapon' in item.tags else 0
-                        surf.blit(item_img, (rect.centerx - item_img.get_width() // 2 - w_offset, rect.centery - item_img.get_height() // 2))
-                        if item.amount > 1:
-                            self.game.assets.fonts['small_white'].render(surf, str(item.amount), (rect.centerx + 5, rect.centery + 5)) # name
-                            
-                        self.item_boxes.append([rect, item])
-                    
-                pygame.draw.rect(surf, color, rect, 1, self.border_radius)
-                
-            item_pos[1] += self.size
     
-    def draw_ui(self, surf):  
-        self.draw_weapon_boxes(surf)
-        self.draw_item_boxes(surf)
-                    
-    def draw_info(self, info, surf, loc):
-        # img = self.game.assets.weapons[info.name] if isinstance(info, Weapon) else self.game.assets.items[info.name]
-        name, desc = info.name, self.config[info.name]['description']
-        
-        img = self.get_image(name)
-        surf.blit(img, loc)
-        self.game.assets.fonts['small_white'].render(surf, name.replace('_', ' ').title(), (loc[0] + img.get_width() + 5, loc[1])) # name
-        self.game.assets.fonts['small_white'].render(surf, desc, (loc[0], loc[1] + 30)) # description
+    def get_tabs(self, category, item):
+        options = ['unequip', 'cancel']
+        if item is None:
+                return options
+        if category == 'active':
+            pass
+        elif category == 'skills':
+            options = ['equip', 'cancel']
+        elif category == 'items':
+            options = ['cancel']
+            if item.is_weapon or item.is_consumeable:
+                options.insert(0, 'equip')
+        return options
     
+    def reset(self):
+        self.category_selection_index = 0
+        self.item_index = 0
+        self.options_index = 0
+        self.show_equip_options = False
+       
     def update(self):
-        self.info = []
-        clicked = False
         
-        for box in self.weapon_boxes:
-            if box[0].collidepoint(self.game.input.mpos):
-                self.info = box[1] 
-                if not clicked and self.game.input.mouse_states['shoot']:
-                    clicked = True
-                    for weapon in self.inventory.get_active_weapons():
-                        if weapon.name == self.info.name:
-                            weapon.remove_active()
-                            self.game.world.player.slot_weapon(-1)
-                            return
+        if self.game.input.pressing('inventory_toggle'):
+            self.reset()
+        
+        if self.game.input.pressing('right'):
+            self.category_selection_index  = (self.category_selection_index + 1) % len(INVENTORY_CATEGORIES)
+            # self.game.input.pressing['right'] = False
+            self.item_index = 0
+            self.options_index = 0
+            self.show_equip_options = False
+        if self.game.input.pressing('left'):
+            self.category_selection_index  = (self.category_selection_index - 1) % len(INVENTORY_CATEGORIES)
+            # self.game.input.pressing['left'] = False
+            self.item_index = 0
+            self.options_index = 0
+            self.show_equip_options = False
+        
+            
+        self.category_selected = INVENTORY_CATEGORIES[self.category_selection_index]
+        active_weapons = self.inventory.get_active_weapons()
+        items = self.inventory.get_items()
+        
+               
+        if not self.show_equip_options:
+            if self.category_selected == 'active':
+                if self.game.input.pressing('down'):
+                    self.item_index  = (self.item_index + 1) % len(active_weapons)
+                    # self.game.input.pressing('down') = False
+                    self.options_index = 0
+                if self.game.input.pressing('up'):
+                    self.item_index  = (self.item_index - 1) % len(active_weapons)
+                    # self.game.input.pressing('up') = False
+                    self.options_index = 0
+                if self.game.input.pressing('equip'):
+                    self.show_equip_options = True
+                    
+            elif self.category_selected == 'skills':
+                pass
+            elif self.category_selected == 'items':
+                if self.game.input.pressing('down'):
+                    self.item_index  = (self.item_index + 1) % len(items)
+                    # self.game.input.pressing('down') = False
+                if self.game.input.pressing('up'):
+                    self.item_index  = (self.item_index - 1) % len(items)
+                    # self.game.input.pressing('up') = False
+                if self.game.input.pressing('equip'):
+                    self.show_equip_options = True
+        else:
+            if self.category_selected == 'active':
+                current_weapon = active_weapons[self.item_index] if active_weapons else None
+                if current_weapon:
+                    tabs = self.get_tabs(self.category_selected, current_weapon)
+                    if self.game.input.pressing('down'):
+                        self.options_index  = (self.options_index + 1) % len(tabs)
+                        # self.game.input.pressing('down') = False
+                    if self.game.input.pressing('up'):
+                        self.options_index  = (self.options_index - 1) % len(tabs)
+                        # self.game.input.pressing('up') = False
+                    if self.game.input.pressing('equip'):
+                        selected = tabs[self.options_index]
+                        if selected == 'cancel':
+                            self.show_equip_options = False
+                            self.tab_offsets = [0, -30]
+                            self.options_index = 0
+                        elif selected == 'unequip':
+                            self.inventory.remove_active_weapon(current_weapon)
+                            self.show_equip_options = False
+                            self.game.world.player.selected_weapon = 0
+                            self.item_index = 0
+                            self.category_selection_index = 0
                             
-        for box in self.item_boxes:
-            if box[0].collidepoint(self.game.input.mpos):
-                self.info = box[1] 
-                if not clicked and self.game.input.mouse_states['shoot']:
-                    clicked = True
-                    if len(self.inventory.get_active_weapons()) < MAX_WEAPON_SLOTS:
-                        for weapon in self.inventory.get_group('weapons').items:
-                            if weapon.name == self.info.name:
-                                weapon.add_active()
-                                return
+            elif self.category_selected == 'skills':
+                pass
+            elif self.category_selected == 'items':
+                current_item = items[self.item_index] if items else None
+                if current_item:
+                    tabs = self.get_tabs(self.category_selected, current_item)
+                    if self.game.input.pressing('down'):
+                        self.options_index  = (self.options_index + 1) % len(tabs)
+                        # self.game.input.pressing('down') = False
+                    if self.game.input.pressing('up'):
+                        self.options_index  = (self.options_index - 1) % len(tabs)
+                        # self.game.input.pressing('up') = False
+                    if self.game.input.pressing('equip'):
+                        selected = tabs[self.options_index]
+                        if selected == 'cancel':
+                            self.show_equip_options = False
+                            self.tab_offsets = [0, -30]
+                            self.options_index = 0
+                        elif selected == 'equip':
+                            self.inventory.add_active_weapon(current_item) # currently only weapon
+                            self.show_equip_options = False
+                            self.category_selection_index = 0
+
+    def draw_categories(self, surf, color, points, category, text_loc):
+        pygame.draw.polygon(surf, (0, 0, 1), points=points)
+        pygame.draw.lines(surf, color, False, points=points, width=1)
+        self.game.assets.fonts['small_white'].render(surf, category, text_loc)
+        
+    def draw_items(self, surf, points, item, selected=False, amt=None):
+        name = self.config[item.name]['name']
+        pygame.draw.polygon(surf, (0, 0, 0), points)
+        if selected:
+            pygame.draw.polygon(surf, (255, 255, 255), points, width=1)
+        self.game.assets.fonts['small_white'].render(surf, name, (points[0][0] + 2, points[0][1] + 3))
+        if amt and amt > 1:
+            self.game.assets.fonts['small_white'].render(surf, 'x' + str(amt), (points[0][0] + self.game.assets.fonts['small_white'].get_width(name) + 6, points[0][1] + 3))
+        
+    def draw_item_description(self, surf, item):
+        name = self.config[item.name]['name']
+        desc = self.config[item.name]['description']
+        
+        img = self.get_image(item.name)
+        pt.utils.outline(surf, img, (surf.get_width() // 2, 23))
+        surf.blit(img, (surf.get_width() // 2, 23))
+        
+        line_start_x = surf.get_width() // 2 + img.get_width() + 10
+        line_end_x = line_start_x + self.game.assets.fonts['small_white'].get_width(name) + 2
+        
+        self.line_progress += (line_end_x - self.line_progress) * self.animation_speed
+        
+        self.game.assets.fonts['small_black'].render(surf, name, (surf.get_width() // 2 + img.get_width() + 10 + 1, 23 + 1))
+        self.game.assets.fonts['small_white'].render(surf, name, (surf.get_width() // 2 + img.get_width() + 10, 23))
+        pygame.draw.line(surf, (255, 255, 255), (line_start_x, 31), (self.line_progress, 31))
+        self.game.assets.fonts['small_white'].render(surf, desc, (surf.get_width() // 2 + 7, 43), line_width=160)
+        
+        
+    def draw_tabs(self, surf, options, current_option, base_points):
+        base_x, base_y = base_points[0]
+        for i, option in enumerate(options):
+            target_offset = 0 if current_option == i else -30
+            
+            current = self.tab_offsets[i]
+            self.tab_offsets[i] = current + (target_offset - current) * self.animation_speed
+            x_offset = self.tab_offsets[i]
+            
+            y_offset = 12 * i
+            
+            poly_points = [
+            (base_x + point[0] + x_offset, base_y + point[1] + y_offset) for point in TAB_POINTS
+        ]
+            
+            pygame.draw.polygon(surf, (0, 0, 0), poly_points)   
+            
+            if i == current_option:
+                pygame.draw.polygon(surf, (255, 255, 255), poly_points, width=1)
+                
+            text_pos = (poly_points[0][0] + 2, poly_points[0][1] + 2)
+            self.game.assets.fonts['small_white'].render(surf, str(option), text_pos)
      
     def render(self, surf):
-        self.draw_ui(surf)
-        if self.info:
-            self.draw_info(self.info, surf, (self.base_pos[0] + 110, self.base_pos[1] + 10))
+
+        if self.category_selected == 'active':
+            for i, weapon in enumerate(self.inventory.get_active_weapons()):
+                selected = True if i == self.item_index else False
+                extra_y = TAB_HEIGHT * len(self.get_tabs(self.category_selected, self.inventory.get_active_weapons()[self.item_index])) if self.show_equip_options and i > self.item_index else 0
+                points = [(pos[0], pos[1] + i * 20 + extra_y) for pos in ITEM_STARTING_POS]
+                self.draw_items(surf, points, weapon, selected=selected)
+                if selected:
+                    self.draw_item_description(surf, weapon)
+                    if self.show_equip_options:
+                        tabs = self.get_tabs(self.category_selected, self.inventory.get_active_weapons()[self.item_index])
+                        self.draw_tabs(surf, tabs, self.options_index, base_points=points)
+        elif self.category_selected == 'skills':
+            pass
+        elif self.category_selected == 'items':
+            for i, item in enumerate(self.inventory.get_items()):
+                selected = True if i == self.item_index else False
+                extra_y = TAB_HEIGHT * len(self.get_tabs(self.category_selected, self.inventory.get_items()[self.item_index])) if self.show_equip_options and i > self.item_index else 0
+                points = [(pos[0], pos[1] + i * 20 + extra_y) for pos in ITEM_STARTING_POS]
+                self.draw_items(surf, points=points, item=item, amt=item.amount, selected=selected)
+                if selected:
+                    self.draw_item_description(surf, item)
+                    if self.show_equip_options:
+                        tabs = self.get_tabs(self.category_selected, self.inventory.get_items()[self.item_index])
+                        self.draw_tabs(surf, tabs, self.options_index, base_points=points)
             
-            
-        
-        
+        for category in reversed(INVENTORY_CATEGORIES):
+            if category == self.category_selected:
+                color = (255, 255, 255)
+                target_pos = INVENTORY_LAYOUT[category]['selected_pos']
+            else:
+                target_pos = INVENTORY_LAYOUT[category]['pos']
+                color = (73, 80, 101)
                 
+            for i, target_point in enumerate(target_pos):
+                current_point = self.current_positions[category][i]
+                self.current_positions[category][i] = [current_point[0] + (target_point[0] - current_point[0]) * self.animation_speed, current_point[1] + (target_point[1] - current_point[1]) * self.animation_speed]
+            
+            pos = self.current_positions[category]
+                
+            self.draw_categories(surf, color, pos, category, (pos[0][0] + 6, pos[0][1] - 8))
+        
+        
         

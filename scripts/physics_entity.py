@@ -1,29 +1,25 @@
-from .entity import Entity
-from .utils import normalize
+from scripts.entity import Entity
+import scripts.pgtools as pt
 
 
-class PhysicsEntity(Entity):
+class PhysicsEntity(Entity, pt.PhysicsEntity):
     def __init__(self, game, pos, size, e_type):
         super().__init__(game, pos, size, e_type)
-        self.velocity = [0, 0]
-        self.velocity_normalization = [250, 250]
+        
+        self.gravity = 600
+        self.terminal_velocity = 400
+        self.horizontal_normalization = 250
         
     def update(self, dt):
         r = super().update(dt)
         
-        self.velocity[0] = normalize(self.velocity[0], self.velocity_normalization[0] * dt)
-        self.velocity[1] = normalize(self.velocity[1], self.velocity_normalization[1] * dt)
+        self.velocity[0] = pt.utils.normalize(self.velocity[0], self.horizontal_normalization * dt)
+        self.velocity[1] = min(self.terminal_velocity, self.velocity[1] + dt * self.gravity)
         
-        self.motion = self.velocity.copy()
+        self.frame_movement[0] = self.velocity[0] * dt
+        self.frame_movement[1] = self.velocity[1] * dt
         
-        self.motion[0] *= dt
-        self.motion[1] *= dt
-                      
-        last_collisions = self.collisions(self.game.world.tilemap, movement=self.motion)
+        self.physics_movement(self.game.world.tilemap, self.frame_movement)
         
-        if last_collisions['bottom']:
-            self.velocity[1] = 0
-          
-        self.velocity[1] = min(500, self.velocity[1] + dt * 700)
-           
         return r
+        

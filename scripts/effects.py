@@ -12,7 +12,6 @@ class Goo:
         self.img = pygame.transform.rotate(self.img, self.rot)
         self.rect = pygame.Rect(self.pos[0] - self.img.get_width() // 2, self.pos[1] - self.img.get_height() // 2, *self.img.get_size())
         
-        
     def update(self, dt):
         self.duration = max(0, self.duration - self.decay_rate * dt)
         

@@ -2,7 +2,7 @@ import pygame
 import math
 import random
 
-from .utils import palette_swap
+import scripts.pgtools as pt
 
 class Particle:
     def __init__(self, game, p_type, pos, movement, decay_rate=0.1, frame=0, custom_color=None, physics=None):
@@ -53,8 +53,8 @@ class Particle:
                 self.movement[1] *= -0.7
                 hit = True
             if hit:
-                self.pos[0] += self.movement[0] * dt * 3
-                self.pos[1] += self.movement[1] * dt * 3
+                self.pos[0] += self.movement[0] * dt * 2
+                self.pos[1] += self.movement[1] * dt * 2
         
         self.frame += self.decay_rate * dt
         self.frame = min(self.frame, len(self.game.assets.particles[self.type]) - 1)
@@ -66,7 +66,7 @@ class Particle:
     def render(self, surf, offset=(0,0)):
         img = self.game.assets.particles[self.type][int(self.frame)]
         if self.color:
-            img = palette_swap(img, (255, 255, 255), self.color)
+            img = pt.utils.palette_swap(img, (255, 255, 255), self.color)
             img.set_colorkey((0, 0, 0))
         if self.rotation:
             img = pygame.transform.rotate(img, self.rotation)
@@ -121,11 +121,12 @@ class ParticleManager:
         
     def environment_particles(self, surf):
         # leaf particles
-        for tree in self.game.world.tilemap.extract(('foliage', (0, 1))):
+        leaf_extract = ('foliage', (0, 1))
+        for tree in self.game.world.tilemap.extract(leaf_extract):
             # if the tree is visible on the players screen
             if (self.game.world.camera.pos[0] <=  tree['pos'][0] + self.game.world.tilemap.tiles['foliage'][1].get_width() <= (self.game.world.camera.pos[0] + surf.get_width())) or (self.game.world.camera.pos[0] <=  tree['pos'][0] <= (self.game.world.camera.pos[0] + surf.get_width())):
                 r = pygame.Rect(tree['pos'][0] + 9, tree['pos'][1] + 8, 44, 17)
-                if random.randint(0, 6999) < (r.width - r.height):
+                if random.randint(0, 2000) < (r.width - r.height):
                     pos = [r.x + random.random() * r.width, r.y + random.random() * r.height]
                     color = (random.randint(100, 150), random.randint(80, 130), random.randint(10, 50))
                     self.add_particle(self.game, 'leaf', pos, [random.randint(-60, -35), random.randint(35, 50)], 0.8, random.randint(0, 2), color)

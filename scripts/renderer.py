@@ -1,6 +1,10 @@
+import math
 import pygame
+import random
 from scripts.background import Background
 from scripts.gui import GUI
+from scripts.minimap import Minimap
+from scripts.tooltips import Tooltips
 
 
 class Renderer:
@@ -8,17 +12,27 @@ class Renderer:
         self.game = game
         
         self.background = Background(game)
+        self.minimap = Minimap(game, tile_size=16)
         self.gui = GUI(game)
+        self.tooltips = Tooltips(game)
+        
 
     def render(self):
         surf = self.game.window.display
+        offset = self.game.world.camera.pos
                   
         self.background.update()
         self.background.render(surf)
     
-        self.game.world.render(surf, self.game.world.camera.pos)
+        self.game.world.render(surf, offset)
+                
+        self.minimap.update()
+
         self.gui.render(surf)
         
+        self.tooltips.update(self.game.window.dt)
+        self.tooltips.render(surf, offset)
+            
         # inventory
         if self.game.world.inventory_mode:
             dark_overlay = pygame.Surface(surf.get_size(), flags=pygame.SRCALPHA)
@@ -26,6 +40,7 @@ class Renderer:
             surf.blit(dark_overlay, (0, 0))
             self.game.world.inventory_menu.update()
             self.game.world.inventory_menu.render(surf)
+            
             
         # transition
         transition = self.game.world.transition

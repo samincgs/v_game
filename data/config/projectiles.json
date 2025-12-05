@@ -15,7 +15,7 @@
     "knockback": 0.5
   },
   "bat_goo": {
-    "shape": ["line", [168, 27, 209], 1, 2],
+    "shape": ["line", [168, 27, 209], 4, 3],
     "power": 6,
     "knockback": 0
   }

@@ -1,5 +1,4 @@
 import random
-import time
 import pygame
 
 class GUI:
@@ -29,8 +28,9 @@ class GUI:
             
             if player.selected_weapon == ix:
                 pygame.draw.line(surf, color, (2, base_pos + offset), (2, base_pos + offset + weapon_rect[3]), 2)
-                reload_ratio = weapon.reload_time / weapon.reload_delay
-                color = (220, int(min(255, 255 * reload_ratio)), int(min(255, 255 * reload_ratio)))
+                if weapon.is_gun:
+                    reload_ratio = weapon.reload_time / weapon.reload_delay
+                    color = (220, int(min(255, 255 * reload_ratio)), int(min(255, 255 * reload_ratio)))
             else:
                 color = (139, 171, 191)
             
@@ -68,12 +68,12 @@ class GUI:
     
     def render_minimap(self, surf, assets):
          
-        dark_surf = pygame.Surface(self.game.world.minimap.map_surf.get_size())
+        dark_surf = pygame.Surface(self.game.renderer.minimap.map_surf.get_size())
         dark_surf.fill((30, 30, 40)) 
         
         # minimap
         surf.blit(dark_surf, (323, 2), special_flags=pygame.BLEND_RGBA_MULT) # fix the blending and make it transparent
-        surf.blit(self.game.world.minimap.map_surf, (323, 2))
+        surf.blit(self.game.renderer.minimap.map_surf, (323, 2))
         surf.blit(assets.misc['minimap'], (317, 0))
     
     def render(self, surf):
@@ -83,10 +83,12 @@ class GUI:
 
         self.render_stats(surf, assets, player)
         # self.render_input(surf, assets)
-        self.render_minimap(surf, assets)
+        
+        if not self.game.world.inventory_mode:
+            self.render_minimap(surf, assets)
              
         # show fps
-        if self.game.input.show_fps:
-            assets.fonts['small_white'].render(surf, 'FPS: ' + str(int(self.game.window.fps)), (surf.get_width() - 35, 2))
+        if self.game.world.show_fps:
+            assets.fonts['small_white'].render(surf, 'FPS: ' + str(int(self.game.window.fps)), (surf.get_width() - 100, 2))
             print(str(int(self.game.window.fps)))
         
