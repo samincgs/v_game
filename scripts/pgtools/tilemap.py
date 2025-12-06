@@ -1,5 +1,7 @@
 import os
 import pygame
+import random
+
 from .utils import load_json, save_json, load_img, clip
 
 SPRITESHEET_PATH = 'data/images/spritesheets/'
@@ -103,7 +105,13 @@ class Tilemap:
                             self.remove_tile(tile)
         
         return extract_list
-            
+    
+    # Grass must be placed on grid in level editor
+    def load_grass(self, gm, grass_variants, quantity_range=(7, 11), id_pairs=('grass', (0,))):
+        for grass_tiles in self.extract(id_pairs, offgrid=False):
+            gm.place_grass(grass_tiles['tile_pos'], grass_variants, random.randint(quantity_range[0], quantity_range[1]))
+        
+    
     def load_map(self, path):
         map_data = load_json(path)
         
@@ -271,7 +279,7 @@ class Tilemap:
                 tileset_config[name] = load_json(SPRITESHEET_PATH + tile_json)
         return tileset_config
     
-    def render_visible(self, surf, visible_range=(0, 0), offset=(0, 0)):
+    def render_visible(self, surf, visible_range, offset=(0, 0)):
         render_queue = []
         
         for layer in sorted(int(layer) for layer in self.offgrid_tiles): 
@@ -279,8 +287,8 @@ class Tilemap:
             for tile in tile_layer:
                 render_queue.append((int(layer), self.tiles[tile['type']][tile['variant']], (tile['pos'][0] - offset[0], tile['pos'][1] - offset[1])))
         
-        for y in range(visible_range[1]):
-            for x in range(visible_range[0]):
+        for y in visible_range[1]:
+            for x in visible_range[0]:
                 tile_loc = str(x) + ';' + str(y)
                 if tile_loc in self.tilemap:
                     for layer in sorted(int(layer) for layer in self.tilemap[tile_loc]):
@@ -288,7 +296,7 @@ class Tilemap:
                         render_queue.append((int(layer), self.tiles[tile['type']][tile['variant']], (tile['tile_pos'][0] * self.tile_size - offset[0], tile['tile_pos'][1] * self.tile_size - offset[1])))
                         
         render_queue.sort(key=lambda x: x[0]) # sort the layer
-        
+                
         for tile in render_queue:
             surf.blit(tile[1], (int(tile[2][0]), int(tile[2][1])))
  

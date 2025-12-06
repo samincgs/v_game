@@ -1,4 +1,3 @@
-import math
 import pygame
 
 class Camera:
@@ -37,7 +36,9 @@ class Camera:
     
     @property
     def get_visible_screen(self):
-        return (int((self.pos[0] + self.display_size[0]) // self.tile_size) + 1), (int((self.pos[1] + self.display_size[1]) // self.tile_size) + 1)
+        screen_x = range(int(self.pos[0] // self.tile_size), int((self.pos[0] + self.display_size[0]) // self.tile_size) + 1)
+        screen_y = range(int(self.pos[1] // self.tile_size), int((self.pos[1] + self.display_size[1]) // self.tile_size) + 1)
+        return (screen_x, screen_y)
         
     def follow_target(self, val, target, lag):
         val += (target - val) / lag 
