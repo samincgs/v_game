@@ -8,7 +8,9 @@ class Item:
         self.amount = amount
         
         self.info = config['items'][self.name]
+        self.item_name = config['items'][self.name]['name']
         self.type = self.info['type']
+        self.desc = self.info['description']
         
         self.tags = tags if tags else []
     

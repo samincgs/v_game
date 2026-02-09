@@ -1,0 +1,13 @@
+{
+  "id": "chicken",
+  "animations": {
+    "idle": {
+      "type": "idle",
+      "frames": [300, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5],
+      "loop": true,
+      "speed": 1,
+      "offset": [-2, -1],
+      "outline": null
+    }
+  }
+}

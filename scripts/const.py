@@ -1,4 +1,4 @@
 ENTITY_COLLIDEABLES = {
     'items',
-    'portal'
+    'portal',
 }

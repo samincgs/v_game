@@ -25,7 +25,6 @@ class Entity(pt.Entity):
         
     def die(self): 
         self.dead = True
-        
         size = 4
         entity_img = self.img.copy()
         
@@ -41,7 +40,7 @@ class Entity(pt.Entity):
             self.game.world.spark_manager.add_curved_spark(self.center, angle + random.random() / 5, speed=random.random() * 2 + 1, curve=0, scale=4, decay_rate=0.08)
             
         for item_drop in self.drops:
-            self.game.world.entities.drop_item(self.pos.copy(), (1, 1), item_drop, velocity=(random.randint(0, 320) - 150, random.randint(0, 20) - 200))
+            self.game.world.entities.drop_item(self.pos.copy(), (1, 1), item_drop, velocity=(random.randint(0, 250) - 150, random.randint(0, 20) - 200))
     
     def in_range(self, target, radius):
         return pt.utils.get_distance(self.pos, target) <= radius
@@ -53,7 +52,11 @@ class Entity(pt.Entity):
     
     def render(self, surf, offset=(0, 0)):
         super().render(surf, offset=offset)
-        
+        if self.hurt:
+            temp_mask = pygame.mask.from_surface(self.img)
+            mask_img = temp_mask.to_surface(setcolor=(255, 255, 255, int(self.hurt * 255)), unsetcolor=(0, 0, 0, 0))
+            surf.blit(mask_img, (self.pos[0] - offset[0], self.pos[1] - offset[1]))
+
     def update(self, dt):
         super().update(dt)
         if self.hurt:

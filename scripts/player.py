@@ -1,12 +1,8 @@
 import math
-import random
-
-import scripts.pgtools as pt
 
 from scripts.physics_entity import PhysicsEntity
 from scripts.inventory import Inventory
 from scripts.old.utils import normalize
-from scripts.skill import DashSkill
 
 
 class Player(PhysicsEntity):
@@ -15,17 +11,18 @@ class Player(PhysicsEntity):
         self.air_timer = 0
         self.max_jumps = 2
         self.jumps = self.max_jumps
-        self.skills =[DashSkill(game, self, 'dash')]
         self.aim_angle = 0
         self.inventory = Inventory()       
         self.selected_weapon = 0
+        self.dropthrough = True
+        self.dropthrough_timer = 0
                
     @property
     def weapon(self):
         active_weapons = self.inventory.get_active_weapons()
         if active_weapons:
             return active_weapons[self.selected_weapon]
-    
+
     def pickup_item(self, item):
         item.dead = True
         item.item_data.owner = self
@@ -48,16 +45,7 @@ class Player(PhysicsEntity):
         if self.jumps:
             self.velocity[1] = -250
             self.jumps -= 1
-            
-    def dash(self):
-        if not self.dash_timer and self.dashes > 0:
-            self.dashes -= 1
-            self.dash_timer = 0.2
-            self.velocity[0] = math.cos(self.aim_angle) * 450 
-            self.velocity[1] = math.sin(self.aim_angle) * 450 
-            for i in range(12):
-                self.game.world.spark_manager.add_curved_spark(self.center, math.pi + self.aim_angle + random.uniform(-math.pi / 6, math.pi / 6), random.randint(30,80) / 10, random.randint(-10, 10) / 100, scale=2, decay_rate=random.randint(40, 70) / 100)
-            
+
     # direction is 1 or 0 or -1
     def move(self, direction):
         if direction < 0:
@@ -73,6 +61,7 @@ class Player(PhysicsEntity):
             self.active_animation.update(dt)
                 
         self.air_timer += dt
+        self.dropthrough_timer = max(0, self.dropthrough_timer - dt)
                 
         if self.pos[1] > 600 and self.air_timer > 3:
             self.air_timer = 0
@@ -86,12 +75,16 @@ class Player(PhysicsEntity):
           
         if not self.game.world.inventory_mode and not self.game.world.transition:
             # player controls
-            if self.game.input.clicking('dash'):
-                self.skills[0].use()
+            for i, skill in enumerate(self.inventory.get_active_skills()):
+                if self.game.input.clicking('skill_1') and i == 0:
+                    print(skill.amount)
+                    skill.use()
             if self.game.input.holding('right'):
                 self.move(1)
             if self.game.input.holding('left'):
                 self.move(-1)
+            if self.game.input.pressing('drop'):
+                self.dropthrough_timer = 0.3
             if self.weapon:
                 if self.game.input.pressing('reload'):
                     self.weapon.reload()
@@ -146,17 +139,22 @@ class Player(PhysicsEntity):
             else:
                 self.flip[0] = False 
            
-        for skill in self.skills:
-            skill.update(dt)         
+        for skill in self.inventory.get_active_skills():
+            skill.update(dt)      
             
         return self.dead
    
-    def render(self, surf, offset=(0, 0)):
-        offset = self.game.world.camera.float_pos
-        super().render(surf, offset=offset)
+    def render(self, surf, offset=(0, 0)):        
+        dash_skill = [skill for skill in self.inventory.get_active_skills() if skill.skill_name == 'dash']
+        if len(dash_skill):
+            dash_skill = dash_skill[0]
+            if not (dash_skill and dash_skill.dash_timer):
+                super().render(surf, offset=self.game.world.camera.float_pos)
+        else:
+            super().render(surf, offset=self.game.world.camera.float_pos)
         if self.weapon:
             self.weapon.render(surf, offset=offset)
-        for skill in self.skills:
+        for skill in self.inventory.get_active_skills():
             skill.render(surf, offset=offset)
         
        

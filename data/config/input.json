@@ -1,0 +1,29 @@
+{
+  "mouse": {
+    "shoot": 1,
+    "attack": 1,
+    "skill_1": 3,
+    "scroll_up": 4,
+    "scroll_down": 5
+  },
+  "keyboard": {
+    "left": 97,
+    "right": 100,
+    "drop": 115,
+    "jump": 32,
+    "reload": 114,
+    "up": 119,
+    "down": 115,
+    "inventory_toggle": 101,
+    "shift": 1073742049,
+    "quit": 27,
+    "fps": 9,
+    "screen_toggle": 96,
+    "equip": 122,
+    "1": 49,
+    "2": 50,
+    "3": 51,
+    "4": 52,
+    "collect": 102
+  }
+}

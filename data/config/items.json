@@ -38,5 +38,10 @@
     "name": "Apple",
     "type": "item",
     "description": "A fruit fallen from a flourishing tree"
+  },
+  "dash": {
+    "name": "Dash",
+    "type": "skill",
+    "description": "A fast movement to get out of tough situations, use it to run away from enemies or move swiftly across terrain."
   }
 }

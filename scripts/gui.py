@@ -40,23 +40,21 @@ class GUI:
             offset += weapon_surface.get_height() + 3
      
           
-        # skills
+        # # skills
         skill_offset = 20
         
-        for skill in self.game.world.player.skills:
-            
+        for skill in player.inventory.get_active_skills():
             # skill placement holders
             surf.blit(assets.misc['skill_holder'], (skill_offset, surf.get_height() - assets.misc['skill_holder'].get_height()))
             skill_offset += assets.misc['skill_holder'].get_width() - 7
             
             skill_img = skill.img.copy()
-            if skill.amount >= 1:
-                assets.fonts['small_white'].render(surf, str(skill.amount), (30, surf.get_height() - assets.misc['skill_holder'].get_height() - 6))
+            if skill.count >= 1:
+                assets.fonts['small_white'].render(surf, str(skill.count), (30, surf.get_height() - assets.misc['skill_holder'].get_height() - 6))
             else:
                 dash_cooldown = skill.charge / skill.charge_rate
                 dash_cooldown_surf = pygame.Surface((skill_img.get_width(), skill_img.get_height() * (1 - dash_cooldown)))
                 dash_cooldown_surf.fill((120, 120, 120))
-                            
                 skill_img.blit(dash_cooldown_surf, (0, skill_img.get_height() - dash_cooldown_surf.get_height()), special_flags=pygame.BLEND_RGB_MULT)
                 
             surf.blit(skill_img, (24, surf.get_height() - assets.misc['skill_holder'].get_height() + 5))

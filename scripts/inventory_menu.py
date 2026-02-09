@@ -44,7 +44,7 @@ class InventoryMenu:
         
         # lerp positions
         self.current_positions = {}
-        self.tab_offsets = [0, -30]
+        self.tab_offsets = [0, -30, -60]
         
         for category in INVENTORY_LAYOUT:
             self.current_positions[category] = [list(point) for point in INVENTORY_LAYOUT[category]['pos']]
@@ -61,7 +61,8 @@ class InventoryMenu:
         if item is None:
                 return options
         if category == 'active':
-            pass
+            options = ['unequip', 'swap', 'cancel']
+            # pass
         elif category == 'skills':
             options = ['equip', 'cancel']
         elif category == 'items':
@@ -83,73 +84,88 @@ class InventoryMenu:
         
         if self.game.input.pressing('right'):
             self.category_selection_index  = (self.category_selection_index + 1) % len(INVENTORY_CATEGORIES)
-            # self.game.input.pressing['right'] = False
             self.item_index = 0
             self.options_index = 0
             self.show_equip_options = False
         if self.game.input.pressing('left'):
             self.category_selection_index  = (self.category_selection_index - 1) % len(INVENTORY_CATEGORIES)
-            # self.game.input.pressing['left'] = False
             self.item_index = 0
             self.options_index = 0
             self.show_equip_options = False
         
             
         self.category_selected = INVENTORY_CATEGORIES[self.category_selection_index]
-        active_weapons = self.inventory.get_active_weapons()
+        active = self.inventory.get_active_weapons() + self.inventory.get_active_skills()
         items = self.inventory.get_items()
+        skills = self.inventory.get_non_active_skills()
         
-               
         if not self.show_equip_options:
             if self.category_selected == 'active':
                 if self.game.input.pressing('down'):
-                    self.item_index  = (self.item_index + 1) % len(active_weapons)
-                    # self.game.input.pressing('down') = False
+                    self.item_index  = (self.item_index + 1) % len(active)
                     self.options_index = 0
                 if self.game.input.pressing('up'):
-                    self.item_index  = (self.item_index - 1) % len(active_weapons)
-                    # self.game.input.pressing('up') = False
+                    self.item_index  = (self.item_index - 1) % len(active)
                     self.options_index = 0
                 if self.game.input.pressing('equip'):
                     self.show_equip_options = True
-                    
             elif self.category_selected == 'skills':
-                pass
+                if self.game.input.pressing('down'):
+                    self.item_index  = (self.item_index + 1) % len(skills)
+                if self.game.input.pressing('up'):
+                    self.item_index  = (self.item_index - 1) % len(skills)
+                if self.game.input.pressing('equip'):
+                    self.show_equip_options = True
             elif self.category_selected == 'items':
                 if self.game.input.pressing('down'):
                     self.item_index  = (self.item_index + 1) % len(items)
-                    # self.game.input.pressing('down') = False
                 if self.game.input.pressing('up'):
                     self.item_index  = (self.item_index - 1) % len(items)
-                    # self.game.input.pressing('up') = False
                 if self.game.input.pressing('equip'):
                     self.show_equip_options = True
         else:
             if self.category_selected == 'active':
-                current_weapon = active_weapons[self.item_index] if active_weapons else None
+                current_weapon = active[self.item_index] if active else None
                 if current_weapon:
                     tabs = self.get_tabs(self.category_selected, current_weapon)
                     if self.game.input.pressing('down'):
                         self.options_index  = (self.options_index + 1) % len(tabs)
-                        # self.game.input.pressing('down') = False
                     if self.game.input.pressing('up'):
                         self.options_index  = (self.options_index - 1) % len(tabs)
-                        # self.game.input.pressing('up') = False
                     if self.game.input.pressing('equip'):
                         selected = tabs[self.options_index]
                         if selected == 'cancel':
                             self.show_equip_options = False
-                            self.tab_offsets = [0, -30]
+                            self.tab_offsets = [0, -30, -60]
                             self.options_index = 0
                         elif selected == 'unequip':
-                            self.inventory.remove_active_weapon(current_weapon)
+                            if current_weapon.type == 'weapon':
+                                self.inventory.remove_active_weapon(current_weapon)
+                            if current_weapon.type == 'skill':
+                                self.inventory.remove_active_skill(current_weapon)
                             self.show_equip_options = False
                             self.game.world.player.selected_weapon = 0
                             self.item_index = 0
                             self.category_selection_index = 0
                             
             elif self.category_selected == 'skills':
-                pass
+                current_skill = skills[self.item_index] if skills else None
+                if current_skill:
+                    tabs = self.get_tabs(self.category_selected, current_skill)
+                    if self.game.input.pressing('down'):
+                        self.options_index  = (self.options_index + 1) % len(tabs)
+                    if self.game.input.pressing('up'):
+                        self.options_index  = (self.options_index - 1) % len(tabs)
+                    if self.game.input.pressing('equip'):
+                        selected = tabs[self.options_index]
+                        if selected == 'cancel':
+                            self.show_equip_options = False
+                            self.tab_offsets = [0, -30, -60]
+                            self.options_index = 0
+                        elif selected == 'equip':
+                            self.inventory.add_active_skill(current_skill) 
+                            self.show_equip_options = False
+                            self.category_selection_index = 0
             elif self.category_selected == 'items':
                 current_item = items[self.item_index] if items else None
                 if current_item:
@@ -164,7 +180,7 @@ class InventoryMenu:
                         selected = tabs[self.options_index]
                         if selected == 'cancel':
                             self.show_equip_options = False
-                            self.tab_offsets = [0, -30]
+                            self.tab_offsets = [0, -30, -60]
                             self.options_index = 0
                         elif selected == 'equip':
                             self.inventory.add_active_weapon(current_item) # currently only weapon
@@ -201,7 +217,7 @@ class InventoryMenu:
         self.game.assets.fonts['small_black'].render(surf, name, (surf.get_width() // 2 + img.get_width() + 10 + 1, 23 + 1))
         self.game.assets.fonts['small_white'].render(surf, name, (surf.get_width() // 2 + img.get_width() + 10, 23))
         pygame.draw.line(surf, (255, 255, 255), (line_start_x, 31), (self.line_progress, 31))
-        self.game.assets.fonts['small_white'].render(surf, desc, (surf.get_width() // 2 + 7, 43), line_width=160)
+        self.game.assets.fonts['small_white'].render(surf, desc, (surf.get_width() // 2 + 7, 45), line_width=160)
         
         
     def draw_tabs(self, surf, options, current_option, base_points):
@@ -228,20 +244,33 @@ class InventoryMenu:
             self.game.assets.fonts['small_white'].render(surf, str(option), text_pos)
      
     def render(self, surf):
-
+        
+        active = self.inventory.get_active_weapons() + self.inventory.get_active_skills()
+        items = self.inventory.get_items()
+        skills = self.inventory.get_non_active_skills()
+        
         if self.category_selected == 'active':
-            for i, weapon in enumerate(self.inventory.get_active_weapons()):
+            for i, weapon in enumerate(active):
                 selected = True if i == self.item_index else False
-                extra_y = TAB_HEIGHT * len(self.get_tabs(self.category_selected, self.inventory.get_active_weapons()[self.item_index])) if self.show_equip_options and i > self.item_index else 0
+                extra_y = TAB_HEIGHT * len(self.get_tabs(self.category_selected, active[self.item_index])) if self.show_equip_options and i > self.item_index else 0
                 points = [(pos[0], pos[1] + i * 20 + extra_y) for pos in ITEM_STARTING_POS]
                 self.draw_items(surf, points, weapon, selected=selected)
                 if selected:
                     self.draw_item_description(surf, weapon)
                     if self.show_equip_options:
-                        tabs = self.get_tabs(self.category_selected, self.inventory.get_active_weapons()[self.item_index])
+                        tabs = self.get_tabs(self.category_selected, active[self.item_index])
                         self.draw_tabs(surf, tabs, self.options_index, base_points=points)
         elif self.category_selected == 'skills':
-            pass
+            for i, item in enumerate(skills):
+                selected = True if i == self.item_index else False
+                extra_y = TAB_HEIGHT * len(self.get_tabs(self.category_selected, skills[self.item_index])) if self.show_equip_options and i > self.item_index else 0
+                points = [(pos[0], pos[1] + i * 20 + extra_y) for pos in ITEM_STARTING_POS]
+                self.draw_items(surf, points=points, item=item, amt=item.amount, selected=selected)
+                if selected:
+                    self.draw_item_description(surf, item)
+                    if self.show_equip_options:
+                        tabs = self.get_tabs(self.category_selected, skills[self.item_index])
+                        self.draw_tabs(surf, tabs, self.options_index, base_points=points)
         elif self.category_selected == 'items':
             for i, item in enumerate(self.inventory.get_items()):
                 selected = True if i == self.item_index else False

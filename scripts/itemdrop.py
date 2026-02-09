@@ -10,7 +10,7 @@ class Itemdrop(PhysicsEntity):
         super().__init__(game, pos, size, e_type)
         self.item_data = item_data
         self.category = e_type
-        self.type = e_type + '_' + item_data.name
+        self.type = 'item' + '_' + item_data.name
         self.set_action('idle', force=True)
         
         self.size = (self.img.get_width(), self.img.get_height() - 2)
@@ -28,8 +28,8 @@ class Itemdrop(PhysicsEntity):
             color = (255, 255, 255, 255)
         else:
             color = (0, 0, 1, 100)        
-        pt.utils.outline(surf, self.img, (self.pos[0] - offset[0], self.pos[1] - offset[1]), color=color)
-        surf.blit(self.img, (self.pos[0] - offset[0], self.pos[1] - offset[1])) 
+        pt.utils.outline(surf, self.img, (self.pos[0] - offset[0], self.pos[1] - offset[1] - 2), color=color)
+        surf.blit(self.img, (self.pos[0] - offset[0], self.pos[1] - offset[1] - 2)) 
         
         
     

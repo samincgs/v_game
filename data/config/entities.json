@@ -10,7 +10,12 @@
     "spawn_rate": 50000
   },
   "crate": {
-    "base_health": 14,
+    "base_health": 15,
+    "size": [15, 7],
+    "spawn_rate": null
+  },
+  "chicken": {
+    "base_health": 12,
     "size": [15, 7],
     "spawn_rate": null
   }

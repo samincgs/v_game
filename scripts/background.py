@@ -20,10 +20,10 @@ class Background:
             self.squares.append(
                 Square([random.randint(0, self.game.window.display.get_width()), -60], 
                         rot=random.randint(0, 359),   
-                        rot_speed=random.uniform(2, 4),  
-                        speed=random.uniform(1, 1.5),               
-                        decay_rate=random.uniform(0.005, 0.05),            
-                        size=random.randint(5, 15))
+                        rot_speed=random.uniform(1, 2),  
+                        speed=random.uniform(60, 90),               
+                        decay_rate=random.uniform(0.05, 0.05),            
+                        size=random.randint(20, 60))
                         )
         for square in self.squares:
             kill = square.update(1/60)
@@ -35,9 +35,9 @@ class Background:
         
             
     
-    def render(self, surf):       
-        
-            
+    def render(self, surf): 
+        for square in self.squares:
+            square.render(surf)      
         # background
         angle = math.sin(self.angle) / math.cos(self.angle)  
         offset = angle * surf.get_width()
@@ -45,8 +45,7 @@ class Background:
             base_y = i * (self.thickness * 2) + self.pos
             pygame.draw.line(surf, self.color, (0, base_y), (surf.get_width(), base_y + offset), self.thickness)
             
-        for square in self.squares:
-            square.render(surf)
+        
 
 class Square:
     def __init__(self, pos, rot, rot_speed, speed, size, decay_rate):
@@ -58,6 +57,8 @@ class Square:
         self.decay_rate = decay_rate
         self.color = (0, 0, 0)
         
+        self.color = (30, 29, 126)
+        
     def update(self, dt):
         self.pos[1] += self.speed * dt
         self.rot += self.rot_speed
@@ -67,16 +68,18 @@ class Square:
             return True
         
     def vector_move(self, pos, angle, amt):
-        new_pos = (pos[0] * math.cos(angle) * amt, pos[1] * math.sin(angle) * amt)
+        new_pos = (pos[0] + math.cos(angle) * amt, pos[1] + math.sin(angle) * amt)
         return new_pos
     
     def render(self, surf, offset=(0, 0)):
+        render_pos = (self.pos[0] - offset[0], self.pos[1] - offset[1])
         points = [
-            self.vector_move((self.pos[0] - offset[0], self.pos[1] - offset[1]), self.rot, self.size),
-            self.vector_move((self.pos[0] - offset[0], self.pos[1] - offset[1]), self.rot + math.radians(90), self.size),
-            self.vector_move((self.pos[0] - offset[0], self.pos[1] - offset[1]), self.rot + math.radians(180), self.size),
-            self.vector_move((self.pos[0] - offset[0], self.pos[1] - offset[1]), self.rot + math.radians(270), self.size),
+            self.vector_move(render_pos, self.rot, self.size),
+            self.vector_move(render_pos, self.rot + math.radians(90), self.size),
+            self.vector_move(render_pos, self.rot + math.radians(180), self.size),
+            self.vector_move(render_pos, self.rot + math.radians(270), self.size),
         ]
+        
         
         pygame.draw.polygon(surf, self.color, points=points, width=6)
         

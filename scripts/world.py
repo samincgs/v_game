@@ -1,18 +1,19 @@
 import scripts.pgtools as pt
 
-from .entities import Entities
-from .spark import SparkManager
-from .projectile import ProjectileManager
-from .particles import ParticleManager
-from .inventory_menu import InventoryMenu
-from .grass import GrassManager
+from scripts.entities import Entities
+from scripts.tilemap import Tilemap
+from scripts.spark import SparkManager
+from scripts.projectile import ProjectileManager
+from scripts.particles import ParticleManager
+from scripts.inventory_menu import InventoryMenu
+from scripts.grass import GrassManager
 
 
 class World:
     def __init__(self, game):
         self.game = game
         self.map_area = 'map_3'
-        self.tilemap = pt.Tilemap(game, tile_size=16) # tile_size is 16
+        self.tilemap = Tilemap(game, tile_size=16) # tile_size is 16
         self.entities = Entities(game)
         self.camera = pt.Camera(self.game.window.display.get_size(), tile_size=16, lag=30)
         self.particle_manager = ParticleManager(game)
@@ -22,7 +23,7 @@ class World:
         
         
         self.tilemap.load_map('data/maps/' + self.map_area + '.json')
-        self.tilemap.load_grass(self.grass_manager, id_pairs=('vegetation', (0,)), grass_variants=[0, 1, 2, 3, 4])
+        self.tilemap.load_grass(self.grass_manager, id_pairs=('vegetation', (0,)), grass_variants=[0, 1, 2, 3, 4], quantity_range=[5, 9])
         
         self.entities.load_entities(self.tilemap)
         self.player = self.entities.player 
@@ -54,6 +55,9 @@ class World:
         self.spark_manager = SparkManager()
         self.projectile_manager = ProjectileManager()
         self.camera.snap_to_target()
+        
+        self.grass_manager = GrassManager(tile_size=16)
+        self.tilemap.load_grass(self.grass_manager, id_pairs=('vegetation', (0,)), grass_variants=[0, 1, 2, 3, 4], quantity_range=[5, 9])
     
     def update(self):        
         if self.game.input.pressing('fps'):
@@ -78,11 +82,10 @@ class World:
         self.particle_manager.update(dt)
         self.spark_manager.update(dt)
         self.projectile_manager.update(dt)
-        self.grass_manager.update(self.master_clock)
             
     def render(self, surf, offset=(0, 0)):
         self.entities.tile_render(surf, offset=offset)
-        self.grass_manager.render(surf, offset=offset, visible_range=self.camera.get_visible_screen)
+        self.grass_manager.update_render(surf, self.camera.get_visible_screen, offset=offset, master_clock=self.master_clock)
         self.tilemap.render_visible(surf, offset=offset, visible_range=self.camera.get_visible_screen)
         self.entities.render(surf, offset=offset)
         self.particle_manager.render(surf, offset=offset)

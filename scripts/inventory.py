@@ -1,19 +1,3 @@
-class InventoryGroup:
-    def __init__(self):
-        self.items = []
-        
-    def add_item(self, item):
-        for i in self.items: # if the item is stackable
-            if i.is_stackable and i.name == item.name:
-                i.amount += item.amount
-                return 
-            
-        self.items.append(item)
-                    
-    def remove_item(self, item):
-        if item in self.items:
-            self.items.remove(item)
-                 
 class Inventory:
     def __init__(self):
         self.groups = {}  # dict for different inventoryGroups {'weapons' : InventoryGroup()}     
@@ -49,9 +33,16 @@ class Inventory:
         items = []
         for group in self.groups:
             for item in self.groups[group].items:
-                if 'active' not in item.tags:
+                if 'active' not in item.tags and 'skill' not in item.tags:
                     items.append(item)
         return items
+    
+    def get_non_active_skills(self):
+        skills = []
+        for item in self.get_by_tag('skill'):
+            if 'active' not in item.tags:
+                skills.append(item)
+        return skills
     
     def get_all_items(self):
         return self.groups
@@ -61,9 +52,18 @@ class Inventory:
             weapon.tags.append('active')
         return True
     
+    def add_active_skill(self, skill):
+        if 'active' not in skill.tags and skill.type == 'skill':
+            skill.tags.append('active')
+        return True
+    
     def remove_active_weapon(self, weapon):
         if weapon.is_weapon and 'active' in weapon.tags:
             weapon.tags.remove('active')
+            
+    def remove_active_skill(self, skill):
+        if not skill.is_weapon and 'active' in skill.tags:
+            skill.tags.remove('active')
     
     def sort_weapons_by_tag(self, tag):
         self.groups['weapons'].items = sorted(self.groups['weapons'].items, key=lambda x: tag not in x.tags)
@@ -77,5 +77,29 @@ class Inventory:
             self.sort_weapons_by_tag('active')
                 
         return weapons
+    
+    def get_active_skills(self):
+        skills = []
+        for item in self.get_by_tag('active'):
+            if 'skill' in item.tags:
+                skills.append(item)
+        return skills
+
+class InventoryGroup:
+    def __init__(self):
+        self.items = []
         
+    def add_item(self, item):
+        for i in self.items: # if the item is stackable
+            if i.is_stackable and i.name == item.name:
+                i.amount += item.amount
+                return 
+            
+        self.items.append(item)
+                    
+    def remove_item(self, item):
+        if item in self.items:
+            self.items.remove(item)
+                 
+
             

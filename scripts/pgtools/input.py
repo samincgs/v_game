@@ -5,7 +5,7 @@ INPUT_MAP = {
     'mouse': {
         'shoot': 1,
         'attack': 1,
-        'dash': 3,
+        'skill_1': 3,
         'scroll_up': 4,
         'scroll_down': 5
         },

@@ -1,5 +1,4 @@
 import os
-
 from .utils import load_imgs_list, load_json, save_json
 
 ANIMATIONS_PATH = 'data/images/animations/'
@@ -14,6 +13,10 @@ class Animation:
         self.frame = 0
         self.frame_index = 0
         self.finished = False
+        
+    @property
+    def frames(self):
+        return self.animation['frames']
     
     @property
     def entity_id(self):
@@ -22,10 +25,14 @@ class Animation:
     @property
     def img(self):
         return self.images[self.frame_index]
+
+    @property
+    def speed(self):
+        return self.animation['speed']
     
     @property
-    def type(self):
-        return self.animation['type']
+    def looping(self):
+        return self.animation['loop']
     
     @property
     def duration(self):
@@ -39,16 +46,20 @@ class Animation:
         return Animation(self.config, self.images, self.anim_state)
         
     def update(self, dt):
-        self.frame += dt * 60 * self.animation['speed']
-        if self.animation['loop']:
-            if self.frame > self.duration:
-                self.frame -= self.duration
-                                
-        self.frame_index = int(self.frame / self.duration * len(self.animation['frames']))
-        self.frame_index = min(self.frame_index, len(self.animation['frames']) - 1)
-        if self.frame_index >= len(self.animation['frames']) - 1:
-            if not self.animation['loop']:
-                self.finished = True
+        self.frame += dt * 60 * self.speed
+        
+        if self.looping:
+            self.frame %= self.duration
+        
+        frame_total = 0
+        for i, frame_count in enumerate(self.frames):
+            frame_total += frame_count
+            if self.frame < frame_total:
+                self.frame_index = i
+                break
+        
+        if not self.looping and self.frame >= self.duration:
+            self.finished = True
         
 class AnimationManager:
     def __init__(self):

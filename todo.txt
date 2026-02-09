@@ -11,5 +11,7 @@
 - add a shopkeeper that sells weapons/items (maybe?)
 - fix bat ai 
 - create a better/more sophisticated random drop chance for crates and more
+- add save points
 
 # Bugs
+- fix inventory cancel option popping up later then the rest

@@ -69,15 +69,13 @@ class Tilemap:
     def get_tile(self, pos):
         str_pos = str(pos[0]) + ';' + str(pos[1])
         if str_pos in self.tilemap:
-            return True
-        return False
+            return self.tilemap[str_pos]
     
     # gets position in tiles
     def get_tile_by_layer(self, pos, layer):
         str_pos = str(pos[0]) + ';' + str(pos[1])
         if str_pos in self.tilemap and layer in self.tilemap[str_pos]:
-            return True
-        return False
+            return self.tilemap[str_pos]
         
     def tile_collide(self, pos):
         tile_pos = (int(pos[0] // self.tile_size), int(pos[1] // self.tile_size))
@@ -106,10 +104,10 @@ class Tilemap:
         
         return extract_list
     
-    # Grass must be placed on grid in level editor
-    def load_grass(self, gm, grass_variants, quantity_range=(7, 11), id_pairs=('grass', (0,))):
+    # Grass must be placed ongrid in level editor
+    def load_grass(self, gm, grass_variants, quantity_range=(7, 11), id_pairs=('grass', (0,)), y_range=(2,8)):
         for grass_tiles in self.extract(id_pairs, offgrid=False):
-            gm.place_grass(grass_tiles['tile_pos'], grass_variants, random.randint(quantity_range[0], quantity_range[1]))
+            gm.place_grass(grass_tiles['tile_pos'], grass_variants, random.randint(quantity_range[0], quantity_range[1]), y_range)
         
     
     def load_map(self, path):

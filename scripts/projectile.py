@@ -4,6 +4,7 @@ import random
 
 from scripts.effects import Goo
 from .config import config
+from .const import ENTITY_COLLIDEABLES
 
 
 class Projectile:
@@ -49,7 +50,7 @@ class Projectile:
         self.timer += dt
         
         for entity in self.game.world.entities.entities:
-            if (entity.type not in {'item', 'portal'}) and (entity.type.split('_')[0] != 'item'):
+            if (entity.type not in ENTITY_COLLIDEABLES) and (entity.type.split('_')[0] != 'item'):
                 if entity.type != self.owner.type:
                     if (entity.rect.collidepoint(self.pos)):
                         entity.damage(self.config['power'])

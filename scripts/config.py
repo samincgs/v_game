@@ -3,7 +3,6 @@ import json
 
 
 CONFIG_PATH = 'data/config'
-
 config = {}
 
 for file in os.listdir(CONFIG_PATH):

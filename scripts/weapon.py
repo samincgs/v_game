@@ -51,7 +51,6 @@ class Weapon(Item):
                     self.ammo -= 1
                     self.game.world.projectile_manager.add_projectile(self.game, self.owner.center, self.owner, math.radians(self.rotation), 300, self.name)
                     self.last_attack = curr_time    
-                    # TODO add sparks for gun shot
                     for amt in [random.uniform(-math.pi / 8, -math.pi / 4), 0, random.uniform(+math.pi / 8, +math.pi / 4)]:
                         self.game.world.spark_manager.add_curved_spark(pos=self.owner.center, angle=math.radians(self.rotation) + amt, speed=4 + random.random() * 2, curve=-0.05 + random.random() * 0.1)
                                     
@@ -108,7 +107,7 @@ class Weapon(Item):
             img = pygame.transform.flip(img, False, True)
         img = pygame.transform.rotate(img, -self.rotation)
         if self.owner:
-            surf.blit(img, (self.owner.center[0] - offset[0] + 5 - img.get_width() // 2, self.owner.center[1] - offset[1] - img.get_height() // 2 + 3))
+            surf.blit(img, (int(self.owner.center[0] - offset[0] - img.get_width() // 2), int(self.owner.center[1] - offset[1] - img.get_height() // 2)))
             # pygame.draw.rect(surf, (255, 0, 0), pygame.Rect(self.owner.center[0] - offset[0] + 5 - img.get_width() // 2, self.owner.center[1] - offset[1] - img.get_height() // 2 + 3, img.get_width(), img.get_height()), width=1)
             
             

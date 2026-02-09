@@ -24,7 +24,7 @@ class Particle:
         if self.type in ['shells', 'mag']:
             self.movement[1] += 300 * dt
             abs_motion = abs(self.movement[1]) + abs(self.movement[0])
-            if abs_motion > 12:
+            if abs_motion > 20:
                 self.rotation += 20 * dt * abs_motion
         elif self.type == 'leaf':
             # TODO: fix sin wave
