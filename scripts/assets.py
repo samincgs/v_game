@@ -13,7 +13,6 @@ class Assets:
         self.animations = pt.AnimationManager()
         self.misc = pt.utils.load_imgs_dict(BASE_PATH + 'misc')
         self.weapons = pt.utils.load_imgs_dict(BASE_PATH + 'weapons')
-        self.particles = pt.utils.load_directory(BASE_PATH + 'particles')
         
         self.fonts = {font_name: pt.Font(font[0], font[1]) for font_name, font in FONTS.items()}
     

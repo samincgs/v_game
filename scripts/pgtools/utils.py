@@ -123,7 +123,7 @@ def get_angle(entity, target):
     try:
         return math.atan2(target.center[1] - entity.center[1], target.center[0] - entity.center[0])
     except:
-        return math.atan2(target[1] - entity.pos[1], target[0] - entity.pos[0])
+        return math.atan2(target[1] - entity[1], target[0] - entity[0])
 
 def get_distance(entity_pos, target_pos): # order of x, y doesnt matter because it calculates a linear distance and is being squared
     return math.sqrt((target_pos[0] - entity_pos[0]) ** 2 + (target_pos[1] - entity_pos[1]) ** 2)

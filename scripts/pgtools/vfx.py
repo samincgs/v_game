@@ -22,11 +22,9 @@ class VFX:
     def add_anim(self, pos, a_type, size=(1, 1)):
         self.action_animations.append(ActionAnimation(self.game, pos, size, a_type))
         
-    def update(self, dt, custom_func_sparks=None):
+    def update(self, dt):
         for spark in self.sparks.copy():
             kill = spark.update(dt)
-            if custom_func_sparks:
-                kill = kill or custom_func_sparks(spark)
             if kill:
                 self.sparks.remove(spark)
                 
@@ -49,19 +47,21 @@ class VFX:
             circle.render(surf, offset=offset)
         
 class Spark:
-    def __init__(self, pos, angle, speed, decay_rate=2, custom_color=None):
+    def __init__(self, pos, angle, speed, decay_rate=2, custom_color=None, custom_func=None):
         self.pos = list(pos)
         self.angle = angle
         self.speed = speed
         self.decay_rate = decay_rate
         self.custom_color = custom_color
+        self.custom_func = custom_func
             
     def update(self, dt):
-        
         self.pos[0] += math.cos(self.angle) * self.speed * dt
         self.pos[1] += math.sin(self.angle) * self.speed * dt
-        
-        self.speed -= self.decay_rate * dt
+        self.speed = max(0, self.speed - self.decay_rate * dt)
+        if self.custom_func:
+            self.custom_func(self, dt)
+
         if self.speed <= 0:
             return True 
         
@@ -76,7 +76,6 @@ class Spark:
         ]
         
         pygame.draw.polygon(surf, self.custom_color if self.custom_color else (255, 255, 255), points=points)
-        
         
 class Circle:
     def __init__(self, game, pos, speed, radius, color, width, decay_rate):

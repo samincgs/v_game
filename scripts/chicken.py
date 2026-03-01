@@ -17,7 +17,7 @@ class Chicken(PhysicsEntity):
         for i in range(32):
             vel = [-100 + random.random() * 200, -100 + random.random() * 200]
             frame = 1 + random.random()
-            self.game.world.particle_manager.add_particle(self.game, 'feather', self.center, vel, decay_rate=7 + random.random(), frame=frame)
+            # add feather particles
 
     
     def die(self):

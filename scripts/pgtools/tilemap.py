@@ -105,9 +105,9 @@ class Tilemap:
         return extract_list
     
     # Grass must be placed ongrid in level editor
-    def load_grass(self, gm, grass_variants, quantity_range=(7, 11), id_pairs=('grass', (0,)), y_range=(2,8)):
+    def load_grass(self, gm, grass_variants, quantity_range=(7, 11), id_pairs=('grass', (0,)), vertical_range=(2,6)):
         for grass_tiles in self.extract(id_pairs, offgrid=False):
-            gm.place_grass(grass_tiles['tile_pos'], grass_variants, random.randint(quantity_range[0], quantity_range[1]), y_range)
+            gm.place_grass(grass_tiles['tile_pos'], grass_variants, random.randint(quantity_range[0], quantity_range[1]), vertical_range)
         
     
     def load_map(self, path):

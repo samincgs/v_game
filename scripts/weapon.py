@@ -55,7 +55,7 @@ class Weapon(Item):
                         self.game.world.spark_manager.add_curved_spark(pos=self.owner.center, angle=math.radians(self.rotation) + amt, speed=4 + random.random() * 2, curve=-0.05 + random.random() * 0.1)
                                     
                     if self.name in ['rifle', 'smg']:
-                        self.game.world.particle_manager.add_particle(self.game, 'shells', self.owner.center, movement=[(self.owner.flip[0] - 0.5) * random.randint(60, 90), -random.randint(30, 50)], decay_rate=0.05, frame=0, custom_color=(244, 176, 60), physics=self.game.world.tilemap)
+                        self.game.world.particle_manager.add_particle(self.game, p_type='shells', pos=self.owner.center, velocity=[(self.owner.flip[0] - 0.5) * random.randint(60, 90), -random.randint(30, 50)], decay_rate=0.05, start_frame=0, custom_color=(244, 176, 60), physics=self.game.world.tilemap)
         else:
             arc_x = self.owner.center[0] + math.cos(math.radians(self.rotation)) * self.attack_distance
             arc_y = self.owner.center[1] + math.sin(math.radians(self.rotation)) * self.attack_distance
@@ -78,14 +78,14 @@ class Weapon(Item):
                             self.game.world.particle_manager.add_particle(game=self.game, 
                                 p_type='shells', 
                                 pos=self.owner.center, 
-                                movement=[(self.owner.flip[0] - 0.5) * random.randint(60, 90), -random.randint(40, 80)], 
+                                velocity=[(self.owner.flip[0] - 0.5) * random.randint(60, 90), -random.randint(40, 80)], 
                                 custom_color=(244, 176, 60),  
                                 physics=self.game.world.tilemap)
                     elif self.reload_method == 'mag':
                         self.game.world.particle_manager.add_particle(game=self.game, 
                                 p_type='mag', 
                                 pos=self.owner.center, 
-                                movement=[(self.owner.flip[0] - 0.5) * random.randint(40, 70), -random.randint(30, 60)], 
+                                velocity=[(self.owner.flip[0] - 0.5) * random.randint(40, 70), -random.randint(30, 60)], 
                                 custom_color=(98, 38, 28),
                                 physics=self.game.world.tilemap)
         

@@ -1,4 +1,5 @@
 import math
+import pygame
 
 from scripts.physics_entity import PhysicsEntity
 from scripts.inventory import Inventory
@@ -16,6 +17,7 @@ class Player(PhysicsEntity):
         self.selected_weapon = 0
         self.dropthrough = True
         self.dropthrough_timer = 0
+        self.grass_effect = (6, 12)
                
     @property
     def weapon(self):
@@ -77,14 +79,13 @@ class Player(PhysicsEntity):
             # player controls
             for i, skill in enumerate(self.inventory.get_active_skills()):
                 if self.game.input.clicking('skill_1') and i == 0:
-                    print(skill.amount)
                     skill.use()
             if self.game.input.holding('right'):
                 self.move(1)
             if self.game.input.holding('left'):
                 self.move(-1)
-            if self.game.input.pressing('drop'):
-                self.dropthrough_timer = 0.3
+            if self.game.input.pressing('drop') and not self.dropthrough_timer:
+                self.dropthrough_timer = 0.35
             if self.weapon:
                 if self.game.input.pressing('reload'):
                     self.weapon.reload()
@@ -141,7 +142,10 @@ class Player(PhysicsEntity):
            
         for skill in self.inventory.get_active_skills():
             skill.update(dt)      
-            
+        
+        force_point = (self.rect.centerx, self.rect.bottom)
+        self.game.world.grass_manager.apply_bend(force_point, self.grass_effect[0], self.grass_effect[1])    
+        
         return self.dead
    
     def render(self, surf, offset=(0, 0)):        
@@ -155,9 +159,7 @@ class Player(PhysicsEntity):
         if self.weapon:
             self.weapon.render(surf, offset=offset)
         for skill in self.inventory.get_active_skills():
-            skill.render(surf, offset=offset)
-        
-       
+            skill.render(surf, offset=offset)       
         
         
         

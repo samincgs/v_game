@@ -50,7 +50,7 @@ class DashSkill(Skill):
         for i in range(32):
             vel = [-100 + random.random() * 200, -100 + random.random() * 200]
             frame = 1 + random.random()
-            self.game.world.particle_manager.add_particle(self.game, 'p', self.owner.center, vel, decay_rate=7 + random.random(), frame=frame, custom_color=color)
+            self.game.world.particle_manager.add_particle(self.game, p_type='p', pos=self.owner.center, velocity=vel, decay_rate=7 + random.random(), start_frame=frame, custom_color=color)
 
     def update(self, dt):
         super().update(dt)

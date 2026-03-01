@@ -15,11 +15,17 @@ class Itemdrop(PhysicsEntity):
         
         self.size = (self.img.get_width(), self.img.get_height() - 2)
         
+        self.grass_effect = (3, 6)
+        
         self.timer = 0
     
        
     def update(self, dt):
         r = super().update(dt)
+        
+        force_point = (self.rect.centerx, self.rect.bottom)
+        self.game.world.grass_manager.apply_bend(force_point, self.grass_effect[0], self.grass_effect[1])   
+        
         return r
     
         

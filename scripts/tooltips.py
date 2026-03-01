@@ -24,7 +24,7 @@ class Tooltips:
         
     
     def update(self, dt):
-        self.items = [item for item in self.game.world.entities.entities if isinstance(item, Itemdrop)] 
+        self.items = [item for item in self.game.world.entities.items if isinstance(item, Itemdrop)] 
         
         player = self.game.world.player
 

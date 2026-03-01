@@ -14,6 +14,7 @@ class Entity(pt.Entity):
         self.hurt = 0
         self.dead = False
         self.drops = []
+        self.grass_effect = (0, 0)
 
     def damage(self, amt):
         self.health -= amt
@@ -35,8 +36,8 @@ class Entity(pt.Entity):
                 particle_img = pt.utils.clip(entity_img, (x * size, y * size), (size, size))
                 self.game.world.particle_manager.add_death_particle(self.game, particle_img, self.center, 0, random.randint(300, 500), 0.9, [random.randint(0, 150) - 75, random.randint(0, 100) - 125], duration=2)
         
-        for i in range(16):
-            angle = i / 8 * math.pi
+        for i in range(32):
+            angle = i / 16 * math.pi
             self.game.world.spark_manager.add_curved_spark(self.center, angle + random.random() / 5, speed=random.random() * 2 + 1, curve=0, scale=4, decay_rate=0.08)
             
         for item_drop in self.drops:
