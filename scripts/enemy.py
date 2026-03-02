@@ -41,7 +41,7 @@ class Bat(Entity):
 
         target_pos[1] += math.sin(self.hover_timer * self.hover_frequency) * self.vertical_amplitude
 
-        target_angle = get_angle(self, target_pos)
+        target_angle = get_angle(self.pos, target_pos)
         distance_to_target = get_distance(self.pos, target_pos)
                 
         if distance_to_target > self.speed * dt:

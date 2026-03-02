@@ -17,7 +17,7 @@ class Player(PhysicsEntity):
         self.selected_weapon = 0
         self.dropthrough = True
         self.dropthrough_timer = 0
-        self.grass_effect = (6, 12)
+        self.grass_effect = (6, 10)
                
     @property
     def weapon(self):

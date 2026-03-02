@@ -33,7 +33,6 @@ class Entities:
         for entity in tm.extract(player_extract, keep=False, offgrid=True):
             self.entities.append(Player(self.game, entity['pos'], (9, 21), 'player'))
         
-        print(self.player)
         self.player.inventory.add_item(Weapon(self.game, 'revolver', self.player, tags=['active']), 'weapons')
         self.player.inventory.add_item(Weapon(self.game, 'old_knife', self.player, tags=['active']), 'weapons')
         self.drop_item((entity['pos'][0] + 20, entity['pos'][1]), (0, 0), Weapon(self.game, 'rifle', None), [0, -3])

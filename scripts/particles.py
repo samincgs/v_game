@@ -33,10 +33,7 @@ class ParticleManager(pt.ParticleManager):
             
         # grass particles    
         
-        
-        
-        
-               
+
     def update(self, dt):
         for particle in self.destruction_particles.copy():
             kill = particle.update(dt)
@@ -58,22 +55,9 @@ class Particle(pt.Particle):
         super().__init__(game, pos, velocity, p_type, decay_rate, start_frame, custom_color, custom_func, physics, damping, glow, glow_radius)
         self.spawn = True
         self.wind_force = 0
+        self.phase = random.uniform(0, math.pi * 2)
         
-    def update(self, dt):
-        if self.type in ['shells', 'mag']:
-            self.velocity[1] += 300 * dt
-            abs_motion = abs(self.velocity[1]) + abs(self.velocity[0])
-            if abs_motion > 20:
-                self.rotation += 20 * dt * abs_motion
-        elif self.type == 'leaf':
-            # TODO: fix sin wave
-            self.pos[0] += math.sin(self.frame * 0.76) * 0.21
-            # if not self.wind_force:
-            #     if random.randint(0, 999) == 1:
-            #         self.wind_force = 0.6
-            # else:
-            #     self.pos[0] -= self.wind_force * dt
-            
+    def update(self, dt):    
         if not self.physics:
             self.pos[0] += self.velocity[0] * dt
             self.pos[1] += self.velocity[1] * dt
@@ -94,6 +78,21 @@ class Particle(pt.Particle):
             if hit:
                 self.pos[0] += self.velocity[0] * dt * 2
                 self.pos[1] += self.velocity[1] * dt * 2
+        
+        if self.type in ['shells', 'mag']:
+            self.velocity[1] += 300 * dt
+            abs_motion = abs(self.velocity[1]) + abs(self.velocity[0])
+            if abs_motion > 20:
+                self.rotation += 20 * dt * abs_motion
+        elif self.type == 'leaf':
+            # TODO: fix sin wave
+            self.pos[0] += math.sin(self.frame * 0.76) * 0.21
+        elif self.type == 'feather':
+            # TODO: fix sin wave
+            self.velocity[1] = min(300, self.velocity[1] + 300 * dt)
+            
+            self.pos[0] += math.sin(self.game.world.master_clock * 2 + self.phase) * 1.3
+            
         
         self.frame += self.decay_rate * dt
         self.frame = min(self.frame, len(self.active_animation.images))
