@@ -39,6 +39,11 @@
     "type": "item",
     "description": "A fruit fallen from a flourishing tree"
   },
+  "chicken_drumstick": {
+    "name": "Raw Chicken Drumstick",
+    "type": "item",
+    "description": "A raw drumstick that makes you drool thinking about cooking it and eating it"
+  },
   "dash": {
     "name": "Dash",
     "type": "skill",

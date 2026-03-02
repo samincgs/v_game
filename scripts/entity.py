@@ -10,6 +10,7 @@ class Entity(pt.Entity):
     def __init__(self, game, pos, size, e_type):
         super().__init__(game, pos, size, e_type)
         self.max_health = config['entities'][e_type]['base_health'] if self.type in config['entities'] else 0
+        self.category = config['items'][e_type]['name'] if e_type in config['items'] else str(e_type).title()
         self.health = self.max_health
         self.hurt = 0
         self.dead = False

@@ -18,6 +18,7 @@ class Portal(Entity):
             return r
         
         current_map_area = self.game.world.map_area
-        if self.game.world.player.rect.colliderect(self.rect) and self.game.world.transition == 0:
-            if current_map_area in self.config:
-                self.game.world.start_transition(self.config[current_map_area]['target'])
+        if self.game.world.player.rect.colliderect(self.rect) and self.game.world.transition == 0: #TODO: do distance instead of rect collide
+            if self.game.input.pressing('interact'):
+                if current_map_area in self.config:
+                    self.game.world.start_transition(self.config[current_map_area]['target'])

@@ -12,7 +12,7 @@ from scripts.grass import GrassManager
 class World:
     def __init__(self, game):
         self.game = game
-        self.map_area = 'map_2'
+        self.map_area = 'map_3'
         self.tilemap = Tilemap(game, tile_size=16) # tile_size is 16
         self.entities = Entities(game)
         self.camera = pt.Camera(self.game.window.display.get_size(), tile_size=16, lag=30)
@@ -23,7 +23,7 @@ class World:
         
         
         self.tilemap.load_map('data/maps/' + self.map_area + '.json')
-        self.tilemap.load_grass(self.grass_manager, id_pairs=('vegetation', (0,)), grass_variants=[0, 1, 2, 2, 3, 4, 4, 5, 5, 6, 6, 6], quantity_range=[5, 7], vertical_range=[1, 3])
+        self.tilemap.load_grass(self.grass_manager, id_pairs=('vegetation', (0,)), grass_variants=[0, 1, 2, 2, 3, 4, 4, 5, 5, 6, 6, 6], quantity_range=[6, 8], vertical_range=[1, 3])
         
         self.entities.load_entities(self.tilemap)
         self.player = self.entities.player 

@@ -55,7 +55,6 @@ class Player(PhysicsEntity):
         if direction > 0:
             self.flip[0] = False
         self.frame_movement[0] += 135 * direction
-    
         
     def update(self, dt):      
         
@@ -108,7 +107,8 @@ class Player(PhysicsEntity):
         self.velocity[0] = normalize(self.velocity[0], 550 * dt)
         self.velocity[1] = min(500, self.velocity[1] + dt * 700)
         
-            
+        self.last_movement = self.frame_movement.copy()
+        
         self.frame_movement[0] *= dt
         self.frame_movement[1] *= dt
         

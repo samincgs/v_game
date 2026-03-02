@@ -1,6 +1,6 @@
 import pygame
 
-from .utils import palette_swap, glow_blit
+from .utils import palette_swap, glow_blit, outline
 from .entities import Entity
 
 class ParticleManager:
@@ -36,9 +36,21 @@ class Particle(Entity):
         self.despawn = False
         self.set_action(p_type, force=True) 
         
+        self.size = self.img.get_size()
+        
     @property
     def img(self):
-        return self.active_animation.images[int(self.frame)]
+        if self.active_animation:
+            img = self.active_animation.images[int(self.frame)]
+            if self.active_animation.outline:
+                self.outline = self.active_animation.outline
+        if any(self.flip):
+            img = pygame.transform.flip(img, self.flip[0], self.flip[1])
+        if self.rotation:
+            img = pygame.transform.rotate(img, self.rotation)
+        if self.alpha:
+            img.set_alpha(self.alpha)
+        return img
 
     def set_action(self, action, force=False):
         if force or action != self.action:
@@ -61,7 +73,7 @@ class Particle(Entity):
                 self.velocity[1] *= self.damping[1]
         if self.custom_func:
             self.custom_func(self, dt)
-
+            
         self.frame += self.decay_rate * dt
         self.frame = min(self.frame, len(self.active_animation.images))
         if self.frame >= len(self.active_animation.images):
@@ -74,8 +86,8 @@ class Particle(Entity):
         if self.custom_color:
             img = palette_swap(img, (255, 255, 255), self.custom_color)
             img.set_colorkey((0, 0, 0))
-        if self.rotation:
-            img = pygame.transform.rotate(img, self.rotation)
+        if self.outline:
+            outline(surf, img, (self.pos[0] - offset[0] - img.get_width() // 2, self.pos[1] - offset[1] - img.get_height() // 2), self.outline)
         surf.blit(img, (self.pos[0] - offset[0] - img.get_width() // 2, self.pos[1] - offset[1] - img.get_height() // 2))
         if self.glow:
             glow_blit(surf, (self.pos[0] - offset[0] - self.glow_radius, self.pos[1] - offset[1] - self.glow_radius), self.glow_radius, self.glow)

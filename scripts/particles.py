@@ -4,7 +4,7 @@ import random
 
 import scripts.pgtools as pt
 
-from scripts.pgtools.utils import glow_blit
+from scripts.pgtools.utils import glow_blit, outline
 
 class ParticleManager(pt.ParticleManager):
     def __init__(self, game):
@@ -19,27 +19,46 @@ class ParticleManager(pt.ParticleManager):
     def add_death_particle(self, *args, **kwargs):
         self.destruction_particles.append(DestructionParticle(*args, **kwargs))
     
-    def environment_particles(self, surf):
+    def environment_particles(self):
         # leaf particles
         leaf_extract = ('foliage', (0, 1))
         for tree in self.game.world.tilemap.extract(leaf_extract, keep=True):
             # if the tree is visible on the players screen
-            if (self.game.world.camera.pos[0] <=  tree['pos'][0] + self.game.world.tilemap.tiles['foliage'][1].get_width() <= (self.game.world.camera.pos[0] + surf.get_width())) or (self.game.world.camera.pos[0] <=  tree['pos'][0] <= (self.game.world.camera.pos[0] + surf.get_width())):
+            if (self.game.world.camera.pos[0] <=  tree['pos'][0] + self.game.world.tilemap.tiles['foliage'][1].get_width() <= (self.game.world.camera.pos[0] + self.game.window.display.get_width())) or (self.game.world.camera.pos[0] <=  tree['pos'][0] <= (self.game.world.camera.pos[0] + self.game.window.display.get_width())):
                 r = pygame.Rect(tree['pos'][0] + 9, tree['pos'][1] + 8, 44, 17)
-                if random.randint(0, 1200) < (r.width - r.height):
+                if random.randint(0, 1500) < (r.width - r.height):
                     pos = [r.x + random.random() * r.width, r.y + random.random() * r.height]
                     color = (random.randint(100, 150), random.randint(80, 130), random.randint(10, 50))
-                    self.particles.append(Particle(self.game, pos, [random.randint(-60, -35), random.randint(35, 50)], 'leaf', start_frame=random.randint(0, 1), custom_color=color, decay_rate=1.4))
+                    self.particles.append(Particle(self.game, pos, velocity=[random.randint(-60, -35), random.randint(35, 50)], p_type='leaf', start_frame=random.randint(0, 1), custom_color=color, decay_rate=1.4))
             
         # grass particles    
-        
-
-    def update(self, dt):
+        visible_screen = self.game.world.camera.get_visible_screen
+        tile_size = self.game.world.tilemap.tile_size
+        player = self.game.world.entities.player
+        for y in visible_screen[1]:
+            for x in visible_screen[0]:
+                tile_loc = (x, y)
+                if tile_loc in self.game.world.grass_manager.grass:
+                    px_pos = (tile_loc[0] * tile_size, tile_loc[1] * tile_size)
+                    if player.rect.collidepoint(px_pos):
+                        if random.random() < 0.02 and player.last_movement[0] != 0:
+                            for i in range(random.randint(3, 7)):
+                                colors = [(171, 221, 100), (91, 166 ,117)]
+                                self.particles.append(Particle(self.game, (player.center[0], player.rect.bottom), [random.uniform(-50, 50), random.uniform(-80, -50)], 'p', start_frame=random.choice([4, 4, 5]), custom_color=random.choice(colors), decay_rate=0.4, gravity=random.uniform(140, 200), terminal_velocity=200))
+                                
+    def update(self, dt):   
         for particle in self.destruction_particles.copy():
             kill = particle.update(dt)
             if kill:
                 self.destruction_particles.remove(particle)
-        super().update(dt)
+                
+        for particle in self.particles.copy():
+            kill = particle.update(dt)
+            if kill:
+                self.particles.remove(particle)
+        
+        self.environment_particles()
+        
 
     def render(self, surf, offset=(0, 0)):
         for particle in self.destruction_particles:
@@ -48,17 +67,23 @@ class ParticleManager(pt.ParticleManager):
         for particle in self.particles:
             particle.render(surf, offset=offset)
             
-        self.environment_particles(surf)
 
 class Particle(pt.Particle):
-    def __init__(self, game, pos, velocity, p_type, decay_rate=0.1, start_frame=0, custom_color=None, custom_func=None, physics=None, damping=(0.8, -0.7), glow=None, glow_radius=None):
+    def __init__(self, game, pos, velocity, p_type, gravity=0, terminal_velocity=None, decay_rate=0.1, start_frame=0, custom_color=None, custom_func=None, physics=None, damping=(0.8, -0.7), glow=None, glow_radius=None, scale=1):
         super().__init__(game, pos, velocity, p_type, decay_rate, start_frame, custom_color, custom_func, physics, damping, glow, glow_radius)
         self.spawn = True
+        self.terminal_velocity = terminal_velocity
         self.wind_force = 0
+        self.scale = scale
+        self.gravity = gravity
         self.phase = random.uniform(0, math.pi * 2)
+        self.timer = 0
         
     def update(self, dt):    
         if not self.physics:
+            self.velocity[1] += self.gravity * dt
+            if self.terminal_velocity:
+                self.velocity[1] = min(self.velocity[1], self.terminal_velocity)
             self.pos[0] += self.velocity[0] * dt
             self.pos[1] += self.velocity[1] * dt
         else:
@@ -88,27 +113,35 @@ class Particle(pt.Particle):
             # TODO: fix sin wave
             self.pos[0] += math.sin(self.frame * 0.76) * 0.21
         elif self.type == 'feather':
-            # TODO: fix sin wave
-            self.velocity[1] = min(300, self.velocity[1] + 300 * dt)
+            self.timer += dt            
             
-            self.pos[0] += math.sin(self.game.world.master_clock * 2 + self.phase) * 1.3
+            self.velocity[1] = min(150, self.velocity[1] + 100 * dt)
+            self.pos[0] += math.sin(self.game.world.master_clock / 10 + self.phase) * 0.8
             
         
         self.frame += self.decay_rate * dt
         self.frame = min(self.frame, len(self.active_animation.images))
         if self.frame >= len(self.active_animation.images):
             self.despawn = True
-                    
+        
+        if self.timer > 5:
+            self.despawn = True
+        
         return self.despawn
     
     def render(self, surf, offset=(0,0)):
         img = self.img
+        render_pos = (self.pos[0] - img.get_width() // 2 - offset[0], self.pos[1] - img.get_height() // 2 - offset[1] + 1)
+        if self.scale != 1:
+            img = pygame.transform.scale(img, (int(img.get_width() * self.scale), int(img.get_height() * self.scale)))
         if self.custom_color:
             img = pt.utils.palette_swap(img, (255, 255, 255), self.custom_color)
             img.set_colorkey((0, 0, 0))
         if self.rotation:
             img = pygame.transform.rotate(img, self.rotation)
-        surf.blit(img, (self.pos[0] - img.get_width() // 2 - offset[0], self.pos[1] - img.get_height() // 2 - offset[1] + 1))
+        if self.outline:
+            outline(surf, img, render_pos, self.outline)
+        surf.blit(img, render_pos)
         if self.glow:
             glow_blit(surf, (self.pos[0] - offset[0] - self.glow_radius, self.pos[1] - offset[1] - self.glow_radius), self.glow_radius, self.glow)
         

@@ -76,24 +76,26 @@ class InventoryMenu:
         self.item_index = 0
         self.options_index = 0
         self.show_equip_options = False
+        self.line_progress = 0
        
     def update(self):
         
         if self.game.input.pressing('inventory_toggle'):
             self.reset()
-        
+                
         if self.game.input.pressing('right'):
             self.category_selection_index  = (self.category_selection_index + 1) % len(INVENTORY_CATEGORIES)
             self.item_index = 0
             self.options_index = 0
             self.show_equip_options = False
+            self.line_progress = 0
         if self.game.input.pressing('left'):
             self.category_selection_index  = (self.category_selection_index - 1) % len(INVENTORY_CATEGORIES)
             self.item_index = 0
             self.options_index = 0
             self.show_equip_options = False
+            self.line_progress = 0
         
-            
         self.category_selected = INVENTORY_CATEGORIES[self.category_selection_index]
         active = self.inventory.get_active_weapons() + self.inventory.get_active_skills()
         items = self.inventory.get_items()
@@ -104,25 +106,31 @@ class InventoryMenu:
                 if self.game.input.pressing('down'):
                     self.item_index  = (self.item_index + 1) % len(active)
                     self.options_index = 0
+                    self.line_progress = 0
                 if self.game.input.pressing('up'):
                     self.item_index  = (self.item_index - 1) % len(active)
                     self.options_index = 0
+                    self.line_progress = 0
                 if self.game.input.pressing('equip'):
                     self.show_equip_options = True
             elif self.category_selected == 'skills':
                 if self.game.input.pressing('down'):
                     self.item_index  = (self.item_index + 1) % len(skills)
+                    self.line_progress = 0
                 if self.game.input.pressing('up'):
                     self.item_index  = (self.item_index - 1) % len(skills)
+                    self.line_progress = 0
                 if self.game.input.pressing('equip'):
                     self.show_equip_options = True
             elif self.category_selected == 'items':
                 if self.game.input.pressing('down'):
                     self.item_index  = (self.item_index + 1) % len(items)
+                    self.line_progress = 0
                 if self.game.input.pressing('up'):
                     self.item_index  = (self.item_index - 1) % len(items)
                 if self.game.input.pressing('equip'):
                     self.show_equip_options = True
+                    self.line_progress = 0
         else:
             if self.category_selected == 'active':
                 current_weapon = active[self.item_index] if active else None
@@ -209,10 +217,13 @@ class InventoryMenu:
         pt.utils.outline(surf, img, (surf.get_width() // 2, 23))
         surf.blit(img, (surf.get_width() // 2, 23))
         
+        if not self.line_progress:
+            self.line_progress = surf.get_width() // 2 + img.get_width() + 10
         line_start_x = surf.get_width() // 2 + img.get_width() + 10
         line_end_x = line_start_x + self.game.assets.fonts['small_white'].get_width(name) + 2
         
         self.line_progress += (line_end_x - self.line_progress) * self.animation_speed
+        print(self.line_progress)
         
         self.game.assets.fonts['small_black'].render(surf, name, (surf.get_width() // 2 + img.get_width() + 10 + 1, 23 + 1))
         self.game.assets.fonts['small_white'].render(surf, name, (surf.get_width() // 2 + img.get_width() + 10, 23))

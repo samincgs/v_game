@@ -1,4 +1,5 @@
 import random
+import time
 
 from scripts.config import config
 from scripts.player import Player
@@ -10,8 +11,9 @@ from scripts.itemdrop import Itemdrop
 from scripts.item import Item
 from scripts.portal import Portal
 from scripts.chicken import Chicken
+from scripts.const import CRATE_RESPAWN_TIMER, TILE_RENDERS
 
-TILE_RENDERS = ['crate', 'portal']
+
 
 class Entities:
     def __init__(self, game):
@@ -19,10 +21,15 @@ class Entities:
         self.entities = []
         self.items = []
         self.config = config['entities']
+        
+        self.crate_updates = {}
             
     @property
     def player(self):
-        return self.entities[-1] if len(self.entities) else None
+        for entity in self.entities:
+            if isinstance(entity, Player):
+                return entity
+        return None
 
     def drop_item(self, pos, size, item_data, velocity):
         self.items.append(Itemdrop(self.game, pos, size, 'item_drop', item_data))
@@ -62,7 +69,13 @@ class Entities:
         # crates 
         crate_extract = ('decor', (0, 1))
         for crate in tm.extract(crate_extract, keep=False):
-            self.entities.append(Crate(self.game, crate['pos'], [0, 0]))
+            crate = Crate(self.game, crate['pos'], [0, 0])
+            self.entities.append(crate)
+            self.crate_updates[crate.id] = {
+                'current_time': time.time(),
+                'trigger_time': -1,
+                'pos': list(crate.pos)  
+            }
             
         # portal
         portal_extract = ('structures', (2,))
@@ -75,7 +88,6 @@ class Entities:
             self.entities.append(Chicken(self.game, chicken['pos'], [14, 14]))
             
         self.load_player(tm)
-            
      
     def spawner(self):
         if random.randint(1, self.config['bat']['spawn_rate']) == 1:
@@ -84,8 +96,18 @@ class Entities:
             for i in range(3):
                 self.entities.append(ENEMIES['bat'](self.game, spawn_point, self.config['bat']['size']))
     
+    def track_crate_updates(self):
+        for crate_id in self.crate_updates:
+            if self.crate_updates[crate_id]['trigger_time'] != -1:
+                self.crate_updates[crate_id]['current_time'] = time.time()
+                time_diff = self.crate_updates[crate_id]['current_time'] - self.crate_updates[crate_id]['trigger_time']
+                if time_diff > CRATE_RESPAWN_TIMER: #TODO: add the fact that it can only spawn when not on screen
+                    self.entities.append(Crate(self.game, self.crate_updates[crate_id]['pos'], [0, 0], cid=crate_id))
+                    self.crate_updates[crate_id]['trigger_time'] = -1
+    
     def update(self, dt):
         self.spawner()
+        self.track_crate_updates()
         
         for item in self.items.copy():
             kill = item.update(dt)

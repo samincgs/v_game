@@ -2,18 +2,15 @@
 - make portal look good
 - add decor/background tiles
 - add shopkeeper
-- add feathers on chicken death
-- add chicken itemdrop on chicken death
 
 
 # Game/Coding
 - fix enemy chance rate and spawn location
 - add a shopkeeper that sells weapons/items (maybe?)
 - fix bat ai 
-- create a better/more sophisticated random drop chance for crates and more
 - add save points
 - fix code for dynamic sword swipes
-- add particles on grass walk
+- fix feather sin
 
 # Bugs
 - fix inventory cancel option popping up later then the rest

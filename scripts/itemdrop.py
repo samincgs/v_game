@@ -3,16 +3,17 @@ import math
 import scripts.pgtools as pt
 
 from scripts.physics_entity import PhysicsEntity
+from scripts.config import config
 
 
 class Itemdrop(PhysicsEntity):
     def __init__(self, game, pos, size, e_type, item_data):
         super().__init__(game, pos, size, e_type)
         self.item_data = item_data
-        self.category = e_type
         self.type = 'item' + '_' + item_data.name
         self.set_action('idle', force=True)
-        
+        self.category = config['items'][item_data.name]['name'] if item_data.name in config['items'] else str(item_data.name).title()
+        print(self.category)
         self.size = (self.img.get_width(), self.img.get_height() - 2)
         
         self.grass_effect = (3, 6)
