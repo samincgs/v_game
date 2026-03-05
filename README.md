@@ -1,5 +1,6 @@
 ﻿# v_game
  
-![Image](https://github.com/user-attachments/assets/c2b2996d-c263-49eb-822a-0a3205a2aefe)
+<img width="772" height="459" alt="Image" src="https://github.com/user-attachments/assets/f307c0ed-e39b-48fa-aca5-7eec73aa77a0" />
+
 
 
