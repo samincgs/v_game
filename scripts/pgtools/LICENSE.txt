@@ -1,0 +1,7 @@
+Copyright 2026 samincgs
+
+You are free to use, copy, modify, and share this software (the "pgtools framework”), as long as this notice is included.  
+
+This license applies only to pgtools. Other code using pgtools may have separate licenses.  
+
+THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT ANY WARRANTY. THE AUTHORS ARE NOT LIABLE FOR ANY CLAIMS OR DAMAGES.
