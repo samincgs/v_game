@@ -37,7 +37,13 @@ class Font:
     def get_height(self):
         return self.base_size[1]
     
-    def outline_text(self, surf, text, loc, outline_color, spacing=(1, 1)):
+    def outline_text(self, surf, text, loc, outline_color=(0, 0, 1)): 
+        outline_font = Font(font_color=outline_color)
+        for i in [(1, 0), (-1, 0), (0, 1), (0, -1)]:
+            outline_font.render(surf, text, (loc[0] + i[0], loc[1] + i[1]))
+        self.render(surf, text, loc)
+    
+    def shadow_text(self, surf, text, loc, outline_color, spacing=(1, 1)):
         outline_font = Font(font_color=outline_color)
         outline_font.render(surf, text, (loc[0] + spacing[0], loc[1] + spacing[1]))
         self.render(surf, text, loc)

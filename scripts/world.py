@@ -19,11 +19,13 @@ class World:
         self.particle_manager = ParticleManager(game)
         self.spark_manager = SparkManager()
         self.projectile_manager = ProjectileManager()
-        self.grass_manager = GrassManager(tile_size=16, grass_path='data/images/new_grass')
+        # self.grass_manager = GrassManager(tile_size=16, grass_path='data/images/new_grass')
+        self.grass_manager = GrassManager(tile_size=16, grass_path='data/images/grass')
         
         
         self.tilemap.load_map('data/maps/' + self.map_area + '.json')
-        self.tilemap.load_grass(self.grass_manager, id_pairs=('vegetation', (0,)), grass_variants=[0, 1, 2, 2, 3, 4, 4, 5, 5, 6, 6, 6], quantity_range=[6, 8], vertical_range=[1, 3])
+        # self.tilemap.load_grass(self.grass_manager, id_pairs=('vegetation', (0,)), grass_variants=[0, 1, 2, 2, 3, 4, 4, 5, 5, 6, 6, 6], quantity_range=[6, 8], vertical_range=[1, 3])
+        self.tilemap.load_grass(self.grass_manager, id_pairs=('vegetation', (0,)), grass_variants=[0, 0, 1, 1, 2, 3, 4, 4, 5], quantity_range=[5, 9], vertical_range=[1, 3])
         
         self.entities.load_entities(self.tilemap)
         self.player = self.entities.player 
@@ -31,18 +33,19 @@ class World:
         
 
         self.inventory_menu = InventoryMenu(game, self.player.inventory)
-        self.inventory_mode = False
         
         self.master_clock = 0
         self.transition = 0
-        self.show_fps = False
     
     def start_transition(self, map_id):
         self.transition = 1
         self.map_area = map_id
          
     def load_level(self, new=False):
+        self.grass_manager = GrassManager(tile_size=16, grass_path='data/images/grass')
         self.tilemap.load_map('data/maps/' + self.map_area + '.json')
+        self.tilemap.load_grass(self.grass_manager, id_pairs=('vegetation', (0,)), grass_variants=[0, 0, 1, 1, 2, 3, 4, 4, 5], quantity_range=[5, 9], vertical_range=[1, 3])
+        
         self.entities = Entities(self.game)
         self.entities.load_entities(self.tilemap)
         self.player = self.entities.player
@@ -52,15 +55,8 @@ class World:
         self.projectile_manager = ProjectileManager()
         self.camera.snap_to_target()
         
-        self.grass_manager = GrassManager(tile_size=16)
-        # self.tilemap.load_grass(self.grass_manager, id_pairs=('vegetation', (0,)), grass_variants=[1, 3,], quantity_range=[5, 9])
     
-    def update(self):        
-        if self.game.input.pressing('fps'):
-            self.show_fps = not self.show_fps
-        if self.game.input.pressing('screen_toggle'):
-            self.game.window.toggle_window()
-                    
+    def update(self):                    
         dt = self.game.window.dt
         self.master_clock += dt
                 
@@ -73,14 +69,16 @@ class World:
                 self.transition = -30
                 self.load_level()
 
-        self.camera.update()
-        self.entities.update(dt)
-        self.particle_manager.update(dt)
-        self.spark_manager.update(dt)
-        self.projectile_manager.update(dt)
+
+        if not self.game.window.pause_state:
+            self.entities.update(dt)
+            self.camera.update()
+            self.particle_manager.update(dt)
+            self.spark_manager.update(dt)
+            self.projectile_manager.update(dt)
             
     def render(self, surf, offset=(0, 0)):
-        self.grass_manager.update_render(surf, self.camera.get_visible_screen, offset=offset, master_clock=self.master_clock)
+        self.grass_manager.update_render(self.game, surf, self.camera.get_visible_screen, offset=offset, master_clock=self.master_clock)
         
         self.entities.tile_render(surf, offset=offset)
         

@@ -62,9 +62,9 @@ class Entities:
     def load_entities(self, tm):
         
             
-            # spawn_point = (random.randint(-500, -200), random.randint(-100, 100))
-            # for i in range(3):
-            #     self.entities.append(ENEMIES['bat'](self.game, spawn_point, self.config['bat']['size']))
+        spawn_point = (random.randint(-500, -200), random.randint(-100, 100))
+        for i in range(3):
+            self.entities.append(ENEMIES['bat'](self.game, spawn_point, self.config['bat']['size']))
         
         # crates 
         crate_extract = ('decor', (0, 1))

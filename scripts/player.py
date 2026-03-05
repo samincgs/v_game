@@ -68,41 +68,35 @@ class Player(PhysicsEntity):
             self.air_timer = 0
             self.game.world.transition = 1
 
-        if not self.game.world.inventory_mode and not self.game.world.transition:
-            if self.game.input.pressing('jump'):
-                self.jump()
+        if self.game.input.pressing('jump'):
+            self.jump()
         
         self.frame_movement = self.velocity.copy()
           
-        if not self.game.world.inventory_mode and not self.game.world.transition:
             # player controls
-            for i, skill in enumerate(self.inventory.get_active_skills()):
-                if self.game.input.clicking('skill_1') and i == 0:
-                    skill.use()
-            if self.game.input.holding('right'):
-                self.move(1)
-            if self.game.input.holding('left'):
-                self.move(-1)
-            if self.game.input.pressing('drop') and not self.dropthrough_timer:
-                self.dropthrough_timer = 0.35
-            if self.weapon:
-                if self.game.input.pressing('reload'):
-                    self.weapon.reload()
-                if self.weapon.input_type == 'press':
-                    if self.game.input.clicking(self.weapon.trigger):
-                        self.weapon.attack()
-                if self.weapon.input_type == 'hold':
-                    if self.game.input.holding(self.weapon.trigger):
-                        self.weapon.attack()
-                if self.game.input.clicking('scroll_up'):
-                    self.slot_weapon(-1)
-                if self.game.input.clicking('scroll_down'):
-                    self.slot_weapon(1)
-                self.weapon_hotkeys()
-        
-            
-        if self.game.input.pressing("inventory_toggle"):
-            self.game.world.inventory_mode = not self.game.world.inventory_mode
+        for i, skill in enumerate(self.inventory.get_active_skills()):
+            if self.game.input.clicking('skill_1') and i == 0:
+                skill.use()
+        if self.game.input.holding('right'):
+            self.move(1)
+        if self.game.input.holding('left'):
+            self.move(-1)
+        if self.game.input.pressing('drop') and not self.dropthrough_timer:
+            self.dropthrough_timer = 0.35
+        if self.weapon:
+            if self.game.input.pressing('reload'):
+                self.weapon.reload()
+            if self.weapon.input_type == 'press':
+                if self.game.input.clicking(self.weapon.trigger):
+                    self.weapon.attack()
+            if self.weapon.input_type == 'hold':
+                if self.game.input.holding(self.weapon.trigger):
+                    self.weapon.attack()
+            if self.game.input.clicking('scroll_up'):
+                self.slot_weapon(-1)
+            if self.game.input.clicking('scroll_down'):
+                self.slot_weapon(1)
+            self.weapon_hotkeys()
         
         self.velocity[0] = normalize(self.velocity[0], 550 * dt)
         self.velocity[1] = min(500, self.velocity[1] + dt * 700)

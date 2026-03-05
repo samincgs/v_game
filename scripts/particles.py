@@ -42,9 +42,16 @@ class ParticleManager(pt.ParticleManager):
                     px_pos = (tile_loc[0] * tile_size, tile_loc[1] * tile_size)
                     if player.rect.collidepoint(px_pos):
                         if random.random() < 0.02 and player.last_movement[0] != 0:
+                            grass_tile = self.game.world.grass_manager.grass[tile_loc]
+                            img = grass_tile.grass_assets[random.choice(grass_tile.grass_variants)]
+                            color = None
                             for i in range(random.randint(3, 7)):
-                                colors = [(171, 221, 100), (91, 166 ,117)]
-                                self.particles.append(Particle(self.game, (player.center[0], player.rect.bottom), [random.uniform(-50, 50), random.uniform(-80, -50)], 'p', start_frame=random.choice([4, 4, 5]), custom_color=random.choice(colors), decay_rate=0.4, gravity=random.uniform(140, 200), terminal_velocity=200))
+                                while True:
+                                    img_color_loc = (random.randint(0, img.get_width() - 1), random.randint(0, img.get_height() - 1))
+                                    color = img.get_at(img_color_loc)
+                                    if color != (0, 0, 0, 255):
+                                        break 
+                                self.particles.append(Particle(self.game, (player.center[0], player.rect.bottom), [random.uniform(-50, 50), random.uniform(-80, -50)], 'p', start_frame=random.choice([4, 4, 5]), custom_color=color, decay_rate=0.4, gravity=random.uniform(140, 200), terminal_velocity=200))
                                 
     def update(self, dt):   
         for particle in self.destruction_particles.copy():
@@ -69,10 +76,11 @@ class ParticleManager(pt.ParticleManager):
             
 
 class Particle(pt.Particle):
-    def __init__(self, game, pos, velocity, p_type, gravity=0, terminal_velocity=None, decay_rate=0.1, start_frame=0, custom_color=None, custom_func=None, physics=None, damping=(0.8, -0.7), glow=None, glow_radius=None, scale=1):
+    def __init__(self, game, pos, velocity, p_type, gravity=0, terminal_velocity=None, decay_rate=0.1, start_frame=0, custom_color=None, custom_func=None, physics=None, damping=(0.8, -0.7), glow=None, glow_radius=None, scale=1, grass_effect=(1, 3)):
         super().__init__(game, pos, velocity, p_type, decay_rate, start_frame, custom_color, custom_func, physics, damping, glow, glow_radius)
         self.spawn = True
         self.terminal_velocity = terminal_velocity
+        self.grass_effect = grass_effect
         self.wind_force = 0
         self.scale = scale
         self.gravity = gravity
@@ -116,8 +124,10 @@ class Particle(pt.Particle):
             self.timer += dt            
             
             self.velocity[1] = min(150, self.velocity[1] + 100 * dt)
-            self.pos[0] += math.sin(self.game.world.master_clock / 10 + self.phase) * 0.8
+            self.pos[0] += math.sin(self.game.world.master_clock * 2 + self.phase) * 1.1
             
+        force_point = (self.rect.centerx, self.rect.bottom)
+        self.game.world.grass_manager.apply_bend(force_point, self.grass_effect[0], self.grass_effect[1])   
         
         self.frame += self.decay_rate * dt
         self.frame = min(self.frame, len(self.active_animation.images))

@@ -105,10 +105,6 @@ class Input:
                     if event.button == self.mouse[btn].id and (self.mouse[btn].id not in [4, 5]): # make sure it doesn't release on scroll
                         self.mouse[btn].release()
             if event.type == pygame.KEYDOWN:
-                # print(event.key)
-                if event.key == pygame.K_ESCAPE:
-                    pygame.quit()
-                    sys.exit()
                 for key in self.keyboard:
                     if event.key == self.keyboard[key].id:
                         self.keyboard[key].press() 

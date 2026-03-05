@@ -1,8 +1,8 @@
 {
   "map_3": {
-    "target": "map_4"
+    "target": "map_2"
   },
   "test": {
-    "target": "map_1"
+    "target": "map_2"
   }
 }

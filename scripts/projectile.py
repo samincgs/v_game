@@ -55,7 +55,6 @@ class Projectile:
                     if (entity.rect.collidepoint(self.pos)):
                         entity.damage(self.config['power'])
                         angle = math.atan2(entity.pos[1] - self.game.world.entities.player.pos[1], entity.pos[0] - self.game.world.entities.player.pos[0])
-                        print(angle, entity, self.game.world.entities.player.pos, entity.pos)
                         entity.velocity[0] += math.cos(angle) * self.config['knockback'] * 150
                         entity.velocity[1] += math.sin(angle) * self.config['knockback'] * 150
                         for i in range(random.randint(8,12)):

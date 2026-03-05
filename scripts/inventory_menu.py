@@ -223,7 +223,6 @@ class InventoryMenu:
         line_end_x = line_start_x + self.game.assets.fonts['small_white'].get_width(name) + 2
         
         self.line_progress += (line_end_x - self.line_progress) * self.animation_speed
-        print(self.line_progress)
         
         self.game.assets.fonts['small_black'].render(surf, name, (surf.get_width() // 2 + img.get_width() + 10 + 1, 23 + 1))
         self.game.assets.fonts['small_white'].render(surf, name, (surf.get_width() // 2 + img.get_width() + 10, 23))

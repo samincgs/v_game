@@ -33,13 +33,14 @@ class GrassManager:
                         blade.bend(pos, radius, dropoff)
 
                 
-    def update_render(self, surf, visible_range, offset=(0, 0), master_clock=0, rot_func=None):            
+    def update_render(self, game, surf, visible_range, offset=(0, 0), master_clock=0, rot_func=None):            
         for y in visible_range[1]:
             for x in visible_range[0]:
                 tile_loc = (x, y)
                 if tile_loc in self.grass:
                     grass = self.grass[tile_loc]
-                    grass.update(master_clock, rot_func)
+                    if not game.window.pause_state:
+                        grass.update(master_clock, rot_func)
                     grass.render(surf, offset=offset)
 
 class GrassTile:
@@ -54,7 +55,7 @@ class GrassTile:
         
         for _ in range(quantity):
             img = self.grass_assets[random.choice(self.grass_variants)]
-            horizontal_offset = random.uniform(-tile_size / 2, tile_size / 2)
+            horizontal_offset = random.uniform(-tile_size / 2 + 1, tile_size / 2 - 1)
             vertical_offset = random.uniform(vertical_range[0], vertical_range[1])
             self.blades.append(GrassBlade(tile_size, tile_pos, img, horizontal_offset, vertical_offset))
             

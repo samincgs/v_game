@@ -13,7 +13,6 @@ class Itemdrop(PhysicsEntity):
         self.type = 'item' + '_' + item_data.name
         self.set_action('idle', force=True)
         self.category = config['items'][item_data.name]['name'] if item_data.name in config['items'] else str(item_data.name).title()
-        print(self.category)
         self.size = (self.img.get_width(), self.img.get_height() - 2)
         
         self.grass_effect = (3, 6)
@@ -31,10 +30,11 @@ class Itemdrop(PhysicsEntity):
     
         
     def render(self, surf, offset=(0, 0)):
-        if math.sin(self.pos[0] / 60 + self.game.world.master_clock * 4) > 0.5:
-            color = (255, 255, 255, 255)
-        else:
-            color = (0, 0, 1, 100)        
+        color = (0, 0, 1, 100)        
+        
+        if not self.game.window.pause_state:
+            if math.sin(self.pos[0] / 60 + self.game.world.master_clock * 4) > 0.5:
+                color = (255, 255, 255, 255)
         pt.utils.outline(surf, self.img, (self.pos[0] - offset[0], self.pos[1] - offset[1] - 2), color=color)
         surf.blit(self.img, (self.pos[0] - offset[0], self.pos[1] - offset[1] - 2)) 
         

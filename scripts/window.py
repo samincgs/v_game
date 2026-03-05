@@ -1,6 +1,7 @@
 import pygame
 import time
 import random
+import sys
 
 from .config import config
 
@@ -10,7 +11,8 @@ class Window:
         
         self.game = game
         self.config = config['window']
-                
+        
+        
         self.window = pygame.display.set_mode(self.config['scaled_res']) # pygame.RESIZABLE
         pygame.display.set_caption(self.config['caption'])
         self.display = pygame.Surface(self.config['base_res'])
@@ -27,10 +29,22 @@ class Window:
         
         self.scaled = False
         self.screenshake = 0
+        
+        self.inventory_mode = False
+        self.show_fps = False
+        self.show_settings = False
     
     @property
     def fps(self):
         return 1 / self.dt if self.dt > 0 else 0
+    
+    @property
+    def pause_state(self):
+        return self.inventory_mode or self.show_settings or self.game.world.transition
+    
+    def quit_window(self):
+        pygame.quit()
+        sys.exit()
     
     def toggle_window(self):
         self.scaled = not self.scaled
@@ -44,6 +58,14 @@ class Window:
         
         self.dt = time.time() - self.start_frame
         self.start_frame = time.time()
+
+        if (not self.inventory_mode) or self.game.world.transition:
+            if self.game.input.pressing('quit'):
+                self.show_settings = not self.show_settings
+                self.game.renderer.settings_menu.reset()
+        if (not self.show_settings) or self.game.world.transition:
+            if self.game.input.pressing("inventory_toggle"):
+                self.inventory_mode = not self.inventory_mode
         
         screenshake_offset = (0, 0)
         if self.screenshake:
