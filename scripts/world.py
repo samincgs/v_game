@@ -19,12 +19,10 @@ class World:
         self.particle_manager = ParticleManager(game)
         self.spark_manager = SparkManager()
         self.projectile_manager = ProjectileManager()
-        # self.grass_manager = GrassManager(tile_size=16, grass_path='data/images/new_grass')
         self.grass_manager = GrassManager(tile_size=16, grass_path='data/images/grass')
         
         
         self.tilemap.load_map('data/maps/' + self.map_area + '.json')
-        # self.tilemap.load_grass(self.grass_manager, id_pairs=('vegetation', (0,)), grass_variants=[0, 1, 2, 2, 3, 4, 4, 5, 5, 6, 6, 6], quantity_range=[6, 8], vertical_range=[1, 3])
         self.tilemap.load_grass(self.grass_manager, id_pairs=('vegetation', (0,)), grass_variants=[0, 0, 1, 1, 2, 3, 4, 4, 5], quantity_range=[5, 9], vertical_range=[1, 3])
         
         self.entities.load_entities(self.tilemap)

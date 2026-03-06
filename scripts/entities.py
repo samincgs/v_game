@@ -29,7 +29,6 @@ class Entities:
         for entity in self.entities:
             if isinstance(entity, Player):
                 return entity
-        return None
 
     def drop_item(self, pos, size, item_data, velocity):
         self.items.append(Itemdrop(self.game, pos, size, 'item_drop', item_data))

@@ -5,6 +5,9 @@ import scripts.pgtools as pt
 from .itemdrop import Itemdrop
 from .portal import Portal
 
+INTERACTABLE_ENTITIES = [Itemdrop, Portal]
+
+
 def lerp(a, b, t):
     return a + (b - a) * t
 
@@ -24,12 +27,10 @@ class Tooltips:
         
     
     def update(self, dt):
-        all_interactable_entities = [entity for entity in self.game.world.entities.items + self.game.world.entities.entities if (isinstance(entity, Itemdrop) or isinstance(entity, Portal))] 
+        all_interactable_entities = [entity for entity in self.game.world.entities.items + self.game.world.entities.entities if (isinstance(entity, Itemdrop) or isinstance(entity, Portal))] #TODO: adapt to INTERACTABLE_ENTITIES
         
         player = self.game.world.player
         self.closest_entity = min([entity for entity in all_interactable_entities if player.in_range(entity.pos, 20)], key=lambda entity: pt.utils.get_distance(player.pos, entity.pos), default=None)
-
-
 
         if self.closest_entity != self.prev_entity:
             self.tooltip_time = 0

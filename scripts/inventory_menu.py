@@ -104,30 +104,36 @@ class InventoryMenu:
         if not self.show_equip_options:
             if self.category_selected == 'active':
                 if self.game.input.pressing('down'):
-                    self.item_index  = (self.item_index + 1) % len(active)
-                    self.options_index = 0
-                    self.line_progress = 0
+                    if active:
+                        self.item_index  = (self.item_index + 1) % len(active)
+                        self.options_index = 0
+                        self.line_progress = 0
                 if self.game.input.pressing('up'):
-                    self.item_index  = (self.item_index - 1) % len(active)
-                    self.options_index = 0
-                    self.line_progress = 0
+                    if active:
+                        self.item_index  = (self.item_index - 1) % len(active)
+                        self.options_index = 0
+                        self.line_progress = 0
                 if self.game.input.pressing('equip'):
                     self.show_equip_options = True
             elif self.category_selected == 'skills':
                 if self.game.input.pressing('down'):
-                    self.item_index  = (self.item_index + 1) % len(skills)
-                    self.line_progress = 0
+                    if skills:
+                        self.item_index  = (self.item_index + 1) % len(skills)
+                        self.line_progress = 0
                 if self.game.input.pressing('up'):
-                    self.item_index  = (self.item_index - 1) % len(skills)
-                    self.line_progress = 0
+                    if skills:
+                        self.item_index  = (self.item_index - 1) % len(skills)
+                        self.line_progress = 0
                 if self.game.input.pressing('equip'):
                     self.show_equip_options = True
             elif self.category_selected == 'items':
                 if self.game.input.pressing('down'):
-                    self.item_index  = (self.item_index + 1) % len(items)
-                    self.line_progress = 0
+                    if items:
+                        self.item_index  = (self.item_index + 1) % len(items)
+                        self.line_progress = 0
                 if self.game.input.pressing('up'):
-                    self.item_index  = (self.item_index - 1) % len(items)
+                    if items:
+                        self.item_index  = (self.item_index - 1) % len(items)
                 if self.game.input.pressing('equip'):
                     self.show_equip_options = True
                     self.line_progress = 0

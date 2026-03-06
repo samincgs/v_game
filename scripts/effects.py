@@ -16,7 +16,7 @@ class Goo:
         self.duration = max(0, self.duration - self.decay_rate * dt)
         
         if self.rect.colliderect(self.game.world.player):
-            pass
+            pass #TODO: add damage to player and if player steps and stays in goo
         
         return not self.duration
     

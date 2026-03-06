@@ -35,6 +35,9 @@ class ParticleManager(pt.ParticleManager):
         visible_screen = self.game.world.camera.get_visible_screen
         tile_size = self.game.world.tilemap.tile_size
         player = self.game.world.entities.player
+        if not player:
+            return 
+        
         for y in visible_screen[1]:
             for x in visible_screen[0]:
                 tile_loc = (x, y)
@@ -52,7 +55,7 @@ class ParticleManager(pt.ParticleManager):
                                     if color != (0, 0, 0, 255):
                                         break 
                                 self.particles.append(Particle(self.game, (player.center[0], player.rect.bottom), [random.uniform(-50, 50), random.uniform(-80, -50)], 'p', start_frame=random.choice([4, 4, 5]), custom_color=color, decay_rate=0.4, gravity=random.uniform(140, 200), terminal_velocity=200))
-                                
+                            
     def update(self, dt):   
         for particle in self.destruction_particles.copy():
             kill = particle.update(dt)

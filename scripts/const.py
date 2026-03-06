@@ -9,7 +9,7 @@ CRATE_RESPAWN_TIMER = 1200 #20 mins
 SETTINGS = {
     'window_resolution': {
         'title': 'Display Resolution',
-        'options': ['384x216', '768x432', '1152x648', '1536x864', '1920x1080', '2560x1440', '3840x2160', 'native'],
+        'options': ['384x216', '768x432', '1152x648', '1536x864', '1920x1080'],
         'submenu': 'display',
     },
     'show_fps': {

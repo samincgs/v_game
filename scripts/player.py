@@ -143,13 +143,14 @@ class Player(PhysicsEntity):
         return self.dead
    
     def render(self, surf, offset=(0, 0)):        
-        dash_skill = [skill for skill in self.inventory.get_active_skills() if skill.skill_name == 'dash']
-        if len(dash_skill):
-            dash_skill = dash_skill[0]
-            if not (dash_skill and dash_skill.dash_timer):
-                super().render(surf, offset=self.game.world.camera.float_pos)
-        else:
-            super().render(surf, offset=self.game.world.camera.float_pos)
+        #TODO: FIX
+        # dash_skill = [skill for skill in self.inventory.get_active_skills() if skill.skill_name == 'dash']
+        # if len(dash_skill):
+        #     dash_skill = dash_skill[0]
+        #     if not (dash_skill and dash_skill.dash_timer):
+        #         super().render(surf, offset=self.game.world.camera.float_pos)
+        # else:
+        super().render(surf, offset=self.game.world.camera.float_pos)
         if self.weapon:
             self.weapon.render(surf, offset=offset)
         for skill in self.inventory.get_active_skills():

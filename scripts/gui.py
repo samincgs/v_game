@@ -82,9 +82,8 @@ class GUI:
         self.render_stats(surf, assets, player)
         # self.render_input(surf, assets)
         
-        if self.game.window.show_fps:
+        if self.game.window.show_fps_index:
             assets.fonts['small_white'].render(surf, 'FPS: ' + str(int(self.game.window.fps)), (surf.get_width() - 100, 2))
-            print(str(int(self.game.window.fps)))
         
         if not self.game.window.pause_state:
             self.render_minimap(surf, assets)
